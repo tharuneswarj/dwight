@@ -4,7 +4,7 @@ Dwight is a [Grasshopper](https://www.rhino3d.com/features/#grasshopper) plugin 
 
 The plugin computes every id, coordinate and check. Every change to your definition sits behind a consent card and one Ctrl-Z; Full control, off by default, is the one exception. Open source, Apache 2.0.
 
-[![Dwight's Step by step on a Grasshopper canvas](docs/public/assets/dwight-hero.png)](https://dwight.tha.run/)
+[![The Ctrl+Shift+Right-click menu on a Grasshopper canvas: Explain, Diagnose, Reorganise, Simplify and Build, each beside the question it answers](docs/public/assets/dwight-hero.png)](https://dwight.tha.run/)
 
 The picture opens [dwight.tha.run](https://dwight.tha.run/), where the film of the five tools plays.
 
@@ -26,33 +26,33 @@ The read-only tools (Explain, Diagnose) are always safe to reach for. Detail is 
 
 **Explain**
 
-![Explain's Step by step, with a step lit on the canvas](docs/public/assets/explain-steps.png)
+![Explain's Step by step on a lamp definition, on step 2 of 7: Range (20) and the Panel (25) holding its 21 values lit on the canvas](docs/public/assets/explain-steps.png)
 
-A finished Step by step explanation in the panel, with a step lit on the canvas and what travels on its wires.
+Step by step on a lamp definition, on step 2 of 7: Range (20) makes the lamp's 21 layer heights, lit on the canvas with what travels on its wires (21 numbers), and the panel says the selection's components last took 264 ms.
 
 **Diagnose**
 
-![Diagnose naming the root cause of a fault](docs/public/assets/diagnose.png)
+![Diagnose on the lamp: 11 issues traced to one root cause, Divide Curve (51), with the downstream Dispatch (54) lit on the canvas](docs/public/assets/diagnose.png)
 
-"Found 1 issue in the selection": the Division marked as the root cause, with a fix; it changes nothing.
+"Found 11 issues in the selection. They trace back to 1 root cause": Divide Curve (51), with nothing wired into its Curve input, and the fix, with the issues it causes downstream listed under it; it changes nothing.
 
 **Reorganise**
 
-![Reorganise's labelled groups on the canvas](docs/public/assets/reorganise.png)
+![Reorganise on the lamp: 106 components in 12 labelled groups, read left to right, in the Compact arrangement](docs/public/assets/reorganise.png)
 
-Labelled groups laid out, "Wiring and values are unchanged (verified)", and one Ctrl-Z reverts it.
+"Reorganised - moved 106 component(s), 12 labelled group(s), faded 11 wire(s)": it replaced 13 existing groups, "Wiring and values are unchanged (verified)", and one Ctrl-Z reverts the layout and the wire display.
 
 **Simplify**
 
-![Simplify's applied change, verified by re-solve](docs/public/assets/simplify.png)
+![Simplify on the lamp: the Contour Slicing group lit on the canvas, and the panel showing the Python 3 script it wrote, before anything on the canvas changes](docs/public/assets/simplify.png)
 
-An Externalize change applied, "The outputs are unchanged for your current inputs (verified by re-solve)", and Undo.
+To a script: Simplify writes the lamp's contour slicing as one Python 3 component and shows you the whole source; nothing changes until you accept.
 
 **Build**
 
-![The Build chat with a consent card](docs/public/assets/build.png)
+![The Build chat on the lamp after two approved cards: nine components placed as Spot 6 and three wires removed, the lamp now a twisting tower in Rhino](docs/public/assets/build.png)
 
-The chat with a built region and a consent card that says it is checked after it runs and is one Ctrl-Z.
+The chat after two cards, each approved by you: nine components placed as Spot 6, then three wires removed, and Dwight's report of what it applied and checked: "the canvas still holds 167 objects. One Ctrl-Z undoes all of it."
 
 ## Install
 
