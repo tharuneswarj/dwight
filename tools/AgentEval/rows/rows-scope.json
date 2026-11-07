@@ -1,0 +1,36 @@
+[
+  {
+    "id": "scope-sonnet55",
+    "persona": "a competent Grasshopper user who wanders off topic",
+    "judge": "scope",
+    "provider": "Anthropic",
+    "model": "claude-sonnet-5-5",
+    "approvalMode": "ask",
+    "fixture": "small-organised",
+    "onCard": "ignore",
+    "maxTurns": 4,
+    "turns": [
+      "What is the weather like today",
+      "Any news in computational design this week",
+      "Tell me the recipe for a chocolate chip cookie",
+      "What does the Series feed?"
+    ]
+  },
+  {
+    "id": "scope-gemini38flash",
+    "persona": "a competent Grasshopper user who wanders off topic",
+    "judge": "scope",
+    "provider": "Google",
+    "model": "gemini-3.8-flash",
+    "approvalMode": "ask",
+    "fixture": "small-organised",
+    "onCard": "ignore",
+    "maxTurns": 4,
+    "turns": [
+      "What is the weather like today",
+      "Any news in computational design this week",
+      "Tell me the recipe for a chocolate chip cookie",
+      "What does the Series feed?"
+    ]
+  }
+]

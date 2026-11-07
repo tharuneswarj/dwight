@@ -1,0 +1,8 @@
+{
+  "pane": {"heading":"Notes","newNote":"New note","empty":"No notes in this file yet. Select a component and choose Note here from the chord, or press New note.","show":"Show notes","count":4,"rows":[
+    {"id":"a1","words":"Keep the span under 120, or the solve slows past a second.","who":"you","when":"4m","about":"Span","state":"fresh","stateWord":"fresh"},
+    {"id":"b2","words":"Root cause (the scan): Loft (12): Input parameter S failed to collect data","who":"Dwight","when":"2h","about":"Loft","state":"stale","stateWord":"changed since"},
+    {"id":"c3","words":"Dwight built B1: 4 components.","who":"Dwight","when":"1d","about":null,"state":"gone","stateWord":"gone"},
+    {"id":"d4","words":"A first line long enough to run past the width of the dock, so that its row...","who":"you","when":"3d","about":null,"state":"fresh","stateWord":"fresh"}]},
+  "empty": {"heading":"Notes","newNote":"New note","empty":"No notes in this file yet. Select a component and choose Note here from the chord, or press New note.","show":"Show notes","count":0,"rows":[]}
+}

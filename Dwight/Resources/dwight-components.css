@@ -1,0 +1,756 @@
+/* DWIGHT - the component library (Brief BK, docs/dwight-ui-system.md): each control drawn once, in tokens only, in the tha.run
+   drawing-set look: sharp corners, hard-offset shadows, mono chrome labels, square status dots, amber chrome, lavender only while
+   thinking. tools/ui-style-audit.js holds every rule to the scale: a literal size, a primitive, a hue or an id selector fails the gate.
+   The C#<->JS bridge generates markup against these class names, so a rename is a change to the C# too. Inlined into every WebView
+   surface by ShellAssets; body fills the surface, .app is the flex column. */
+
+*{box-sizing:border-box}
+html,body{margin:0}
+.app{display:flex;flex-direction:column;height:100vh}
+.spacer{flex:1}
+
+@keyframes breathe{
+  0%,100%{transform:scale(.8);opacity:.7}
+  50%{transform:scale(1);opacity:1}
+}
+
+body{font:var(--type-body) var(--font-body);color:var(--body);background:var(--surface);-webkit-font-smoothing:antialiased}
+body :focus-visible{outline:var(--border-w-strong) solid var(--focus);outline-offset:var(--border-w)}
+::-webkit-scrollbar{width:var(--scrollbar);height:var(--scrollbar)}
+::-webkit-scrollbar-thumb{background:var(--border-strong)}
+::-webkit-scrollbar-track{background:transparent}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
+
+/* the icon, and the one icon button: the title bar's and the composer line's */
+.ic{width:var(--icon);height:var(--icon);fill:none;stroke:currentColor;stroke-width:var(--icon-stroke);stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic.sm{width:var(--icon-sm);height:var(--icon-sm)}
+.iconbtn{flex:0 0 auto;width:var(--control-h);height:var(--control-h);padding:0;border:0;background:transparent;color:var(--subtle);
+  display:inline-grid;place-items:center;cursor:pointer;transition:background var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
+.iconbtn:hover{background:var(--hover);color:var(--text)}
+.iconbtn.on{color:var(--accent-ink)}
+.iconbtn.on .ic{fill:currentColor}
+.iconbtn.pressed{background:var(--hover);color:var(--accent-ink)}
+
+/* the button: one height, three looks, one small size for a row */
+.btn{height:var(--control-h);padding:0 var(--space-m);display:inline-flex;align-items:center;justify-content:center;gap:var(--space-xs);
+  font:var(--type-control) var(--font-mono);color:var(--text);background:var(--raised);border:var(--border-w) solid var(--border-strong);white-space:nowrap;cursor:pointer;
+  transition:background var(--dur-fast) var(--ease-out),border-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
+.btn:hover{background:var(--inset)}
+.btn:active{transform:translate(1px,1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-inverse)}
+.btn.primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--subtle)}
+.btn.ghost:hover{background:var(--hover);color:var(--text)}
+.btn.sm{height:var(--control-h-sm);padding:0 var(--space-s)}
+.btn[disabled],.iconbtn[disabled],.field :disabled{opacity:var(--disabled-opacity);cursor:not-allowed}
+.iconbtn[disabled]:hover{background:transparent;color:var(--subtle)}
+
+/* the segmented control: the box is one control height, an option is as wide as its words, and spare width is shared */
+
+/* the field and the dropdown: the same box as the segment */
+.field input,.field textarea,.dd-sel{width:100%;height:var(--control-h);padding:0 var(--space-s);font:var(--type-body) var(--font-body);color:var(--text);
+  background:var(--raised);border:var(--border-w) solid var(--border-strong)}
+.field textarea{height:auto;min-height:var(--control-h);padding:var(--space-xs) var(--space-s);display:block;resize:none}
+.field input::placeholder,.field textarea::placeholder{color:var(--subtle)}
+.field input:focus,.field textarea:focus,.dd.open .dd-sel{border-color:var(--accent-ink)}
+.dd-sel{display:flex;align-items:center;cursor:pointer}
+
+/* the tick */
+.check{width:var(--icon);height:var(--icon);margin:0;accent-color:var(--accent);cursor:pointer}
+
+/* the info icon: one box, sitting on the label's line, with a row-sized hit area drawn around it */
+
+/* the tag: a fact in a box. Colour only for a verdict. */
+.tag{display:inline-flex;align-items:center;gap:var(--space-xs);padding:0 var(--space-xs);font:var(--type-caption) var(--font-mono);color:var(--subtle);border:var(--border-w) solid var(--border-strong);white-space:nowrap}
+.tag.ok{color:var(--ok-ink);border-color:var(--ok)}
+.tag.warn{color:var(--warn-ink);border-color:var(--warn)}
+.tag.err{color:var(--err-ink);border-color:var(--err)}
+.tag.info{color:var(--info-ink);border-color:var(--info)}
+
+/* the section heading and the hint */
+.section-head{display:flex;align-items:center;gap:var(--space-s);margin:var(--space-xl) 0 var(--space-s);font:var(--type-caption-strong) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--subtle)}
+.section-head::after{content:"";flex:1;height:var(--border-w);background:var(--border)}
+.hint{margin:var(--space-xs) 0 0;font:var(--type-body) var(--font-body);color:var(--subtle)}
+
+/* the fold: one control, wherever something is folded */
+.fold>summary{padding:var(--space-2xs) 0;font:var(--type-caption) var(--font-mono);color:var(--subtle);cursor:pointer}
+.fold[open]>summary{margin:0 0 var(--space-xs)}
+
+/* source and diff */
+.code{margin:0;padding:var(--space-s) var(--space-m);overflow:auto;white-space:pre;font:var(--type-caption) var(--font-mono);color:var(--text);background:var(--inset);border:var(--border-w) solid var(--border)}
+.diff-add{display:block;color:var(--ok-ink);background:var(--ok-tint)}
+.diff-del{display:block;color:var(--err-ink);background:var(--err-tint)}
+.diff-ctx{display:block;color:var(--body)}
+.diff-gap{display:block;color:var(--faint)}
+
+/* ---- THE PANEL, on the system (Brief BK). Everything the panel-shell draws, in tokens, under body. A rule here is held by
+   the same strict gate as the controls above, and by the measuring leg: it must win on what it matches and something must
+   reach it. No id selector: the old `.doc p,#body p` rules beat every class in the panel for a year, so the answer's rules are
+   weightless here (:where), and a card's or a hint's own class wins without a fight. ---- */
+
+/* the window */
+.titlebar{display:flex;align-items:center;height:var(--bar-h);flex:none;gap:var(--space-s);padding:0 var(--space-s) 0 var(--space-m);background:var(--bar);border-bottom:var(--border-w) solid var(--border)}
+.mark{width:var(--mark);height:var(--mark);flex:0 0 var(--mark);display:block;image-rendering:pixelated}
+.titlebar .mark{width:var(--mark);height:var(--mark);flex:none}
+.titlebar .navbtn{flex:none;margin:0 var(--space-nudge)}
+.title{flex:1;min-width:0;display:flex;align-items:center;white-space:nowrap;overflow:hidden;font:var(--type-title) var(--font-display);letter-spacing:0}
+.title .who{color:var(--text)}
+.title .sep{margin:0 var(--space-s);color:var(--faint)}
+.title .act{min-width:0;overflow:hidden;text-overflow:ellipsis;padding:0;font:var(--type-title) var(--font-mono);color:var(--accent-ink)}
+.foot{display:flex;align-items:center;gap:var(--space-s);padding:var(--space-s) var(--space-l);background:var(--bar);border-top:var(--border-w) solid var(--border)}
+.meta{display:flex;align-items:center;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;gap:var(--space-xs);font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.statusdot{width:var(--dot);height:var(--dot);flex:none;background:var(--ok)}
+.statusdot.err{background:var(--err)}
+.doc{flex:1;padding:var(--space-l);overflow:auto;user-select:text}
+
+/* the model's answer, and any text in the panel. Weightless, so a class always wins. */
+:where(.doc) p{margin:0 0 var(--space-m);font:var(--type-body) var(--font-body);color:var(--body)}
+:where(.doc) h1{margin:var(--space-l) 0 var(--space-s);font:var(--type-title) var(--font-display);color:var(--text)}
+:where(.doc) h2{display:flex;align-items:center;gap:var(--space-s);margin:var(--space-xl) 0 var(--space-s);font:var(--type-caption-strong) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--subtle)}
+:where(.doc) h2::after{content:"";flex:1;height:var(--border-w);background:var(--border)}
+:where(.doc) h3{margin:var(--space-m) 0 var(--space-xs);font:var(--type-label) var(--font-display);color:var(--text)}
+:where(.doc) h4{margin:var(--space-m) 0 var(--space-xs);font:var(--type-caption-strong) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--subtle)}
+:where(.doc) :is(h1,h2,h3,h4):first-child{margin-top:0}
+:where(.doc) ul{margin:0 0 var(--space-m);padding:0;list-style:none}
+:where(.doc) ul li{position:relative;margin:0 0 var(--space-xs);padding-left:var(--space-l);font:var(--type-body) var(--font-body);color:var(--body)}
+:where(.doc) ul li::before{content:"";position:absolute;left:var(--space-2xs);top:var(--space-s);width:var(--bullet);height:var(--bullet);background:var(--accent-ink)}
+:where(.doc) ol{margin:0 0 var(--space-m);padding-left:var(--space-xl)}
+:where(.doc) ol li{margin:0 0 var(--space-xs);font:var(--type-body) var(--font-body);color:var(--body)}
+:where(.doc) ol li::marker{font:var(--type-body) var(--font-mono);color:var(--accent-ink)}
+:where(.doc) :is(strong,b){font:var(--type-label) var(--font-body);color:var(--text)}
+:where(.doc) em{color:var(--body)}
+:where(.doc) a{color:var(--link-ink);text-decoration:none;border-bottom:var(--border-w) solid var(--border-strong)}
+:where(.doc) a:hover{border-bottom-color:var(--link)}
+:where(.doc) blockquote{margin:0 0 var(--space-m);padding:0 0 0 var(--space-m);border-left:var(--border-w-strong) solid var(--accent-ink);font:var(--type-body) var(--font-body);font-style:italic;color:var(--subtle)}
+:where(.doc) blockquote p{margin:0;color:var(--subtle)}
+code{padding:0 var(--space-xs);font:var(--type-caption) var(--font-mono);color:var(--text);background:var(--inset);border:var(--border-w) solid var(--border)}
+pre{margin:0 0 var(--space-m);padding:var(--space-s) var(--space-m);overflow:auto;font:var(--type-caption) var(--font-mono);color:var(--text);background:var(--inset);border:var(--border-w) solid var(--border)}
+pre code{padding:0;font:var(--type-caption) var(--font-mono);color:var(--text);background:transparent;border:0}
+table{width:100%;margin:0 0 var(--space-m);border-collapse:collapse;font:var(--type-body) var(--font-body)}
+thead th{padding:0 var(--space-s) var(--space-xs) 0;text-align:left;font:var(--type-caption-strong) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--subtle);border-bottom:var(--border-w) solid var(--border)}
+tbody td{padding:var(--space-xs) var(--space-s) var(--space-xs) 0;color:var(--body);vertical-align:top;border-bottom:var(--border-w) solid var(--border)}
+tbody td:first-child{font:var(--type-label) var(--font-body);color:var(--text)}
+.codewrap{position:relative}
+.codewrap .copybtn{position:absolute;top:var(--space-xs);right:var(--space-xs);height:var(--control-h-sm);padding:0 var(--space-s);font:var(--type-control) var(--font-mono);color:var(--subtle);background:var(--raised);border:var(--border-w) solid var(--border-strong);cursor:pointer;opacity:0;transition:opacity var(--dur-fast) var(--ease-out)}
+.codewrap:hover .copybtn,.codewrap .copybtn:focus-visible{opacity:1}
+.codewrap .copybtn:hover{color:var(--text);border-color:var(--accent-ink)}
+.lead{margin:0 0 var(--space-m);font:var(--type-label) var(--font-body);color:var(--text)}
+.lead.plain{white-space:pre-wrap}
+.lead.err{color:var(--err-ink)}
+.lead.clickable{cursor:pointer}
+.lead.clickable:hover{color:var(--accent-ink)}
+.doc .hint{margin:0 0 var(--space-m)}
+
+/* a verb thinking */
+.loader{padding:var(--space-s) 0}
+.breath{display:flex;align-items:center;gap:var(--space-s);margin-bottom:var(--space-m)}
+.breath .pulse{width:var(--icon-sm);height:var(--icon-sm);background:var(--thinking);animation:breathe var(--loop-breathe) var(--ease-in-out) infinite}
+.breath .lbl{font:var(--type-label) var(--font-body);color:var(--text)}
+.breath .elapsed{font:var(--type-caption) var(--font-mono);color:var(--subtle);font-variant-numeric:tabular-nums}
+.runmeta{margin:0 0 var(--space-m);font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.stages{display:flex;align-items:center;gap:var(--space-s);margin-bottom:var(--space-m);font-family:var(--font-mono)}
+.stage{display:flex;align-items:center;gap:var(--space-xs);font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.stage .n{width:var(--icon);height:var(--icon);display:grid;place-items:center;font:var(--type-caption) var(--font-mono);color:var(--subtle);border:var(--border-w) solid var(--border-strong)}
+.stage.done{color:var(--body)}
+.stage.done .n{color:var(--accent-inverse);background:var(--accent);border-color:var(--accent)}
+.stage.active{font:var(--type-caption-strong) var(--font-mono);color:var(--accent-ink)}
+.stage.active .n{color:var(--accent-ink);border-color:var(--accent-ink)}
+.arr{color:var(--subtle)}
+.tip{padding:var(--space-m);font:var(--type-body) var(--font-body);color:var(--subtle);background:var(--inset);border:var(--border-w) solid var(--border)}
+.tip b{display:block;margin-bottom:var(--space-xs);font:var(--type-caption-strong) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--accent-ink)}
+.btn.stopbtn{margin-top:var(--space-m);color:var(--subtle)}
+.btn.stopbtn:hover{color:var(--err-ink);border-color:var(--err)}
+
+/* notices and results */
+.state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-m);padding:var(--space-xl) var(--space-l);text-align:center}
+.state .ico{width:var(--control-h);height:var(--control-h);display:grid;place-items:center;font:var(--type-title) var(--font-mono);border:var(--border-w) solid currentColor}
+.state.notice .ico{color:var(--link-ink);background:var(--link-tint)}
+.state.error .ico{color:var(--err-ink);background:var(--err-tint)}
+.state.empty .ico{color:var(--body);background:var(--hover)}
+.state .st-title{font:var(--type-title) var(--font-display);color:var(--text)}
+.state .st-msg{font:var(--type-body) var(--font-body);color:var(--body);white-space:pre-wrap}
+.state .st-action{margin-top:var(--space-s)}
+.outcome{margin:0;padding:var(--space-m) var(--space-s) var(--space-xs);text-align:center}
+.oc-head{margin-bottom:var(--space-s);font:var(--type-label) var(--font-body);color:var(--text)}
+.oc-ok{display:inline-flex;align-items:center;gap:var(--space-xs);font:var(--type-body) var(--font-body);color:var(--text)}
+.oc-check{display:inline-flex;color:var(--ok-ink)}
+.oc-hint{margin-top:var(--space-xs);font:var(--type-body) var(--font-body);color:var(--subtle)}
+.outcome .oc-icon{width:var(--control-h);height:var(--control-h);display:grid;place-items:center;margin:0 auto var(--space-m);font:var(--type-title) var(--font-mono);color:var(--ok-ink);background:var(--ok-tint);border:var(--border-w) solid currentColor}
+.outcome.error .oc-icon{color:var(--err-ink);background:var(--err-tint)}
+.outcome.notice .oc-icon{color:var(--info-ink);background:var(--info-tint)}
+.outcome h1{margin:0 0 var(--space-s);font:var(--type-title) var(--font-display);color:var(--text)}
+.outcome .oc-msg{margin:0 auto;font:var(--type-body) var(--font-body);color:var(--subtle)}
+.arrange{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-s);margin-top:var(--space-l);padding-top:var(--space-m);border-top:var(--border-w) solid var(--border)}
+.arrange .dd{flex:1;min-width:0}
+.arrange .albl{font:var(--type-caption) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--subtle)}
+
+/* Explain on the canvas */
+.steps{display:flex;flex-direction:column;gap:var(--space-xs)}
+.step{display:flex;gap:var(--space-s);padding:var(--space-s);border:var(--border-w) solid transparent;cursor:pointer;transition:background var(--dur-fast) var(--ease-out),border-color var(--dur-fast) var(--ease-out)}
+.step:hover{background:var(--hover);border-color:var(--border)}
+.step .sn{width:var(--icon);height:var(--icon);flex:none;display:grid;place-items:center;margin-top:var(--space-2xs);font:var(--type-caption) var(--font-mono);color:var(--accent-ink);background:var(--accent-tint)}
+.step .stxt{font:var(--type-body) var(--font-body);color:var(--body)}
+.step .cmpt{display:inline-flex;align-items:center;gap:var(--space-xs);margin-top:var(--space-xs);font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.step .cmpt::before{content:"";width:var(--bullet);height:var(--bullet);background:var(--glow)}
+/* the Tree Lens's lines: where data stops, in the plugin's voice, each one a click that selects what it names (Brief DB). */
+.lens{display:flex;flex-direction:column;gap:var(--space-xs);margin:0 0 var(--space-s);padding-left:var(--space-s);border-left:var(--border-w-strong) solid var(--border-strong)}
+.lens .lens-line{display:block;width:100%;padding:var(--space-xs);background:none;border:var(--border-w) solid var(--border);font:var(--type-body) var(--font-body);color:var(--body);text-align:left;cursor:pointer}
+.lens .lens-line:hover{background:var(--hover)}
+.lens .lens-act{display:block;margin-top:var(--space-2xs);font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.lens .lens-more{margin:0;font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+
+/* Diagnose */
+.chain{margin:0 0 var(--space-l)}
+.members{display:flex;flex-direction:column;gap:var(--space-xs);margin:var(--space-xs) 0 0 var(--space-l);padding-left:var(--space-m);border-left:var(--border-w) dashed var(--border)}
+.fault{padding:var(--space-m);background:var(--surface);border:var(--border-w) solid var(--border);cursor:pointer;transition:background var(--dur-fast) var(--ease-out)}
+.fault.member{padding:var(--space-s) var(--space-m)}
+.fault.error{background:var(--err-tint);border-color:var(--err)}
+.fault.warning{background:var(--warn-tint);border-color:var(--warn)}
+.fault.silent{border-color:var(--subtle)}
+.fhead{display:flex;align-items:center;gap:var(--space-s)}
+.fbody{margin-top:var(--space-xs)}
+.fbody.collapsed{display:none}
+.fdot{width:var(--dot);height:var(--dot);flex:none;background:var(--subtle)}
+.fault.error .fdot{background:var(--err)}
+.fault.warning .fdot{background:var(--warn)}
+.ftitle{min-width:0;font:var(--type-label) var(--font-display);color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rootpill{flex:none;margin-left:auto;padding:0 var(--space-xs);font:var(--type-caption) var(--font-mono);text-transform:uppercase;color:var(--accent-inverse);background:var(--accent)}
+.rtag{flex:none;margin-left:auto;font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.fault:is(.error,.warning) .rtag{color:var(--body)}
+.rtag.own,.fault:is(.error,.warning) .rtag.own{color:var(--err-ink)}
+.chev{flex:none;margin-left:var(--space-xs);color:var(--subtle);transition:transform var(--dur-fast) var(--ease-out)}
+.fault.open .chev{transform:rotate(90deg)}
+.fcause{font:var(--type-body) var(--font-body);color:var(--body)}
+.ffix{margin-top:var(--space-xs);font:var(--type-body) var(--font-body);color:var(--body)}
+.ffix b{margin-right:var(--space-xs);font:var(--type-caption-strong) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--accent-ink)}
+.fault.error .ffix b{color:var(--text)}
+.chainlist{display:flex;flex-direction:column;gap:var(--space-s)}
+.chainrow{position:relative}
+.chainrow.selected{outline:var(--border-w-strong) solid var(--accent-ink);outline-offset:var(--border-w)}
+.straylist{display:flex;flex-direction:column;gap:var(--space-2xs)}
+.strayrow{display:flex;align-items:center;gap:var(--space-s);padding:var(--space-xs) var(--space-m);font:var(--type-body) var(--font-body);color:var(--body);cursor:pointer;transition:background var(--dur-fast) var(--ease-out)}
+.strayrow:hover{background:var(--hover)}
+.sdot{width:var(--dot);height:var(--dot);flex:none;background:var(--subtle)}
+
+/* Simplify and to-script */
+.chooser{display:flex;flex-direction:column;gap:var(--space-s)}
+.modecard{display:flex;flex-direction:column;gap:var(--space-2xs);padding:var(--space-m);text-align:left;font:var(--type-body) var(--font-body);color:var(--body);background:var(--raised);border:var(--border-w) solid var(--border-strong);cursor:pointer}
+.modecard:hover{background:var(--accent-tint);border-color:var(--accent-ink)}
+.mc-name{font:var(--type-label) var(--font-body);color:var(--text)}
+.mc-tag{margin-left:var(--space-s);font:var(--type-caption) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--subtle)}
+.mc-desc{font:var(--type-body) var(--font-body);color:var(--subtle)}
+.preview-note{display:flex;align-items:flex-start;gap:var(--space-s);margin:0 0 var(--space-m);color:var(--subtle)}
+.badge{flex:none;display:inline-flex;align-items:center;gap:var(--space-xs);padding:0 var(--space-xs);font:var(--type-caption) var(--font-mono);letter-spacing:var(--track-badge);background:transparent;border:var(--border-w) solid currentColor;white-space:nowrap}
+.badge .dot{width:var(--bullet);height:var(--bullet);background:currentColor}
+.badge.ok{color:var(--ok-ink)}
+.badge.warn{color:var(--warn-ink)}
+.gotosel{display:inline-flex;align-items:center;gap:var(--space-xs);margin:0 0 var(--space-m);font:var(--type-body) var(--font-body);color:var(--link-ink);cursor:pointer;user-select:none}
+.gotosel:hover{text-decoration:underline}
+.changes{display:flex;flex-direction:column;gap:var(--space-xs);margin:0 0 var(--space-l)}
+.changerow{display:grid;grid-template-columns:var(--icon) var(--tag-col) 1fr auto;gap:var(--space-s);align-items:start;padding:var(--space-xs) var(--space-s);font:var(--type-body) var(--font-body);cursor:pointer}
+.changerow.confirm{background:var(--warn-tint)}
+.changerow.doneitem{grid-template-columns:var(--tag-col) 1fr auto}
+.changerow.doneitem:hover{background:var(--hover)}
+.locate{display:inline-flex;align-self:center;color:var(--subtle);opacity:var(--disabled-opacity);cursor:pointer;user-select:none;transition:opacity var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
+.changerow:hover .locate,.locate:hover{color:var(--link-ink);opacity:1}
+.chgbox{width:var(--icon);height:var(--icon);margin:0;accent-color:var(--accent);cursor:pointer}
+.cls{justify-self:start;padding:0 var(--space-xs);font:var(--type-caption) var(--font-mono);text-transform:uppercase;color:var(--subtle);border:var(--border-w) solid var(--border-strong);white-space:nowrap}
+.cls.remove-dead{color:var(--err-ink);border-color:var(--err)}
+.changerow.confirm .cls{color:var(--body)}
+.ctext{min-width:0;color:var(--text)}
+.confirmtag{margin-left:var(--space-xs);padding:0 var(--space-xs);font:var(--type-caption) var(--font-mono);text-transform:uppercase;color:var(--warn-ink);border:var(--border-w) solid var(--warn);white-space:nowrap}
+.ops{display:flex;flex-wrap:wrap;gap:var(--space-xs);margin-top:var(--space-xs);min-width:0}
+.op{max-width:100%;padding:0 var(--space-xs);font:var(--type-caption) var(--font-mono);background:var(--inset);overflow-wrap:anywhere}
+.op.remove{color:var(--err-ink)}
+.op.add{color:var(--link-ink)}
+.op.rename{color:var(--text)}
+.idbadge{color:var(--subtle)}
+.skips{display:flex;flex-direction:column;gap:var(--space-xs);margin:var(--space-m) 0 var(--space-xs)}
+.skip{display:flex;align-items:flex-start;gap:var(--space-xs);font:var(--type-body) var(--font-body);color:var(--accent-ink)}
+.advice{margin:var(--space-l) 0 var(--space-xs);padding-top:var(--space-m);border-top:var(--border-w) solid var(--border)}
+.advrow{margin:0 0 var(--space-m);padding-left:var(--space-m);border-left:var(--border-w-strong) solid var(--border-strong)}
+.advrow .obs{font:var(--type-body) var(--font-body);color:var(--text)}
+.advrow .sug{margin-top:var(--space-2xs);font:var(--type-body) var(--font-body);color:var(--subtle)}
+.simplify-actions{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-s);margin-top:var(--space-l);padding-top:var(--space-m);border-top:var(--border-w) solid var(--border)}
+.doc .simplify-actions+.hint{margin-top:var(--space-m)}
+.specgroup{margin:0 0 var(--space-m)}
+.spec{display:flex;flex-direction:column;background:var(--inset);border:var(--border-w) solid var(--border)}
+.specrow{display:flex;align-items:baseline;gap:var(--space-m);padding:var(--space-xs) var(--space-m);border-bottom:var(--border-w) solid var(--border)}
+.specrow:last-child{border-bottom:0}
+.specrow .sname{min-width:0;font:var(--type-label) var(--font-body);color:var(--text);overflow-wrap:anywhere}
+.specrow .stype{margin-left:auto;font:var(--type-caption) var(--font-mono);color:var(--body);text-align:right;overflow-wrap:anywhere}
+.specrow .saccess{flex:none;min-width:var(--space-xl);font:var(--type-caption) var(--font-mono);text-transform:uppercase;color:var(--subtle);text-align:right}
+
+/* the Build chat */
+.doc.chatmode{padding:0;overflow:hidden;display:flex}
+.doc.chatmode>.docbody{flex:1;display:flex;min-width:0;min-height:0}
+.doc.chatmode~.foot{display:none}
+.chat{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0}
+.thread{flex:1;display:flex;flex-direction:column;min-width:0;padding:var(--space-l);overflow:auto;background:var(--raised)}
+.msg{display:flex;gap:var(--space-m);max-width:100%;min-width:0;margin-top:var(--space-l)}
+.msg:first-child{margin-top:0}
+.msg.me{align-self:flex-end;flex-direction:row-reverse;max-width:92%}
+.msg.dw{align-self:stretch;flex-direction:column;gap:0}
+.msg.rc{display:block;width:100%}
+.msg.rc+.msg.rc{margin-top:var(--space-xs)}
+/* The label says who is speaking, so it appears when the speaker changes; a run of Dwight's messages carries it once. */
+.msg .from{display:none;align-items:center;gap:var(--space-xs);margin-bottom:var(--space-xs);font:var(--type-caption) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--accent-ink)}
+.msg:first-child .from,.msg.me+.msg.dw .from{display:flex}
+.msg .from .mark{width:var(--mark-sm);height:var(--mark-sm);flex:none}
+.bubble{flex:1 1 auto;min-width:0;max-width:100%;padding:0;font:var(--type-body) var(--font-body);color:var(--body);background:transparent;border:0;overflow-wrap:anywhere}
+.bubble>:last-child{margin-bottom:0}
+.msg.me .bubble{flex:0 1 auto;padding:var(--space-s) var(--space-m);color:var(--text);background:var(--surface);border:var(--border-w) solid var(--border-strong);white-space:pre-wrap}
+.bubble pre{max-width:100%}
+.bubble table{max-width:100%;overflow-x:auto}
+.anch{color:var(--link-ink);text-decoration:underline;text-underline-offset:var(--space-2xs);cursor:pointer;font-variant-numeric:tabular-nums;border:0}
+.anch:hover{background:var(--accent-tint);text-decoration-color:var(--accent-ink)}
+.anch-all{display:inline-block;margin-top:var(--space-s);font:var(--type-caption) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--subtle);text-decoration:none}
+.anch-all:hover{color:var(--accent-ink);background:transparent}
+.buildline,.buildclose{margin:0 0 var(--space-xs)}
+.buildstate,.buildreconnect,.buildnote{color:var(--subtle)}
+.maplist{margin:0 0 var(--space-s);padding-left:0}
+.maplist strong{margin-right:var(--space-xs);font:var(--type-caption-strong) var(--font-mono);color:var(--accent-ink)}
+.mapnote{margin:var(--space-xs) 0 0;color:var(--subtle)}
+
+/* the card that waits: the act, the reason, the buttons, one plain line, and one fold holding everything else (Brief BG). */
+.consent{padding:var(--space-m);background:var(--raised);border:var(--border-w) solid var(--border-strong);box-shadow:var(--shadow-card)}
+.consent .consent-act{margin:0 0 var(--space-s);font:var(--type-label) var(--font-body);color:var(--text)}
+.consent :is(.consent-act,.consent-title) strong{font:inherit}
+.consent .consent-note{margin:0 0 var(--space-s);color:var(--body)}
+.consent .consent-title{margin:0 0 var(--space-s);font:var(--type-label) var(--font-body);color:var(--text)}
+.consent .consent-auto{margin:0 0 var(--space-s);font:var(--type-caption) var(--font-mono);color:var(--ok-ink)}
+.consent .consent-route{margin:0 0 var(--space-s);color:var(--subtle)}
+.consent .consent-why{margin:0 0 var(--space-m);padding-left:var(--space-s);font:var(--type-body) var(--font-body);font-style:italic;color:var(--subtle);border-left:var(--border-w-strong) solid var(--border-strong)}
+.consent .consent-why-label{display:block;margin-bottom:var(--space-2xs);font:var(--type-caption) var(--font-mono);font-style:normal;letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--subtle)}
+.consent .consent-btns{display:flex;flex-wrap:wrap;gap:var(--space-s);margin:0 0 var(--space-s)}
+.consent .consent-line{margin:0 0 var(--space-xs);font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.consent .consent-more{margin:0}
+.consent .consent-more>summary{padding:var(--space-2xs) 0;font:var(--type-caption) var(--font-mono);color:var(--subtle);cursor:pointer;list-style:none}
+.consent .consent-more>summary::before{content:'+ '}
+.consent .consent-more[open]>summary::before{content:'\2212  '}
+.consent .consent-more>summary::-webkit-details-marker{display:none}
+.consent .consent-more[open]>summary{margin-bottom:var(--space-s)}
+.consent .consent-script{margin:0 0 var(--space-s);border:var(--border-w) solid var(--border)}
+.consent .consent-script-summary{padding:var(--space-xs) var(--space-s);font:var(--type-caption) var(--font-mono);color:var(--subtle);cursor:pointer}
+.consent .consent-script[open] .consent-script-summary{border-bottom:var(--border-w) solid var(--border)}
+.consent .consent-source{margin:0;border:0}
+.consent .consent-diff{margin:0 0 var(--space-s);font:var(--type-caption) var(--font-mono);color:var(--text)}
+.consent .consent-names{margin:0 0 var(--space-s);padding:0;list-style:none}
+.consent .consent-names li{margin:0;padding:var(--space-2xs) 0;font:var(--type-body) var(--font-body);color:var(--body)}
+.consent .consent-names li::before{content:none}
+.consent .edit-rows,.consent .edit-more{margin:0 0 var(--space-s)}
+.consent .edit-row{display:flex;align-items:flex-start;gap:var(--space-s);padding:var(--space-2xs) 0;font:var(--type-body) var(--font-body);color:var(--body);cursor:pointer}
+.consent .edit-tick{flex:none;width:var(--icon);height:var(--icon);margin:0;accent-color:var(--accent);cursor:pointer}
+.consent .edit-n{flex:none;font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.consent .edit-text{flex:1;min-width:0}
+.consent .edit-orphan{display:block;margin-top:var(--space-2xs);font:var(--type-caption) var(--font-mono);color:var(--warn-ink)}
+.consent .edit-more summary{padding:var(--space-2xs) 0;font:var(--type-caption) var(--font-mono);color:var(--subtle);cursor:pointer}
+.consent .edit-region{margin:var(--space-xs) 0 var(--space-2xs);font:var(--type-caption) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--subtle)}
+
+/* the card that was answered: one row, the whole card folded inside it */
+.receipt{width:100%;padding:var(--space-2xs) 0 var(--space-2xs) var(--space-s);border-left:var(--border-w-strong) solid var(--border-strong);cursor:pointer}
+.receipt:hover{border-left-color:var(--accent-ink)}
+.receipt .rc-row{display:flex;align-items:baseline;gap:var(--space-xs);font:var(--type-body) var(--font-body);color:var(--text)}
+.receipt .rc-row .ic{width:var(--icon-sm);height:var(--icon-sm);flex:none;align-self:center;color:var(--subtle)}
+.receipt .rc-text{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.receipt .rc-state{flex:none;font:var(--type-caption) var(--font-mono);font-style:normal;color:var(--subtle);white-space:nowrap}
+.receipt .rc-state.ok{color:var(--ok-ink)}
+.receipt .rc-state.warn{color:var(--warn-ink)}
+.receipt .rc-why{padding-left:var(--space-l);font:var(--type-body) var(--font-body);font-style:italic;color:var(--subtle);overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.receipt .rc-why .rc-state{margin-right:var(--space-xs)}
+.receipt.open .rc-why{display:block}
+.receipt.open .rc-text{white-space:normal}
+.receipt .rc-full{display:none;margin:var(--space-s) 0 var(--space-2xs);cursor:auto}
+.receipt.open .rc-full{display:block}
+.receipt .rc-full .consent{box-shadow:none}
+.receipt .rc-full .btn,.receipt .rc-full .consent-btns{display:none}
+.receipt .rc-full>p{margin:0 0 var(--space-s)}
+
+/* the composer and its one line (Brief BI): the text box and Send, then the cost on the left and three icon buttons on the right */
+.composer{display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--space-xs) var(--space-s);padding:var(--space-m) var(--space-l) var(--space-xs);background:var(--bar);border-top:var(--border-w) solid var(--border)}
+.composer textarea{flex:1;display:block;min-width:0;min-height:var(--control-h);max-height:var(--text-max);margin:0;padding:var(--space-xs) var(--space-s);font:var(--type-body) var(--font-body);color:var(--text);background:var(--raised);border:var(--border-w) solid var(--border-strong);resize:none;overflow-y:auto}
+.composer textarea:focus{border-color:var(--accent-ink)}
+.composer textarea:disabled{color:var(--subtle);background:var(--inset);cursor:not-allowed}
+.composer textarea::placeholder{color:var(--subtle)}
+.composer .send{flex:none;width:var(--control-h);height:var(--control-h);display:grid;place-items:center;padding:0;color:var(--accent-inverse);background:var(--accent);border:var(--border-w) solid var(--accent);cursor:pointer}
+.composer .send:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+.composer .stopbtn{flex:none;width:var(--control-h);height:var(--control-h);display:grid;place-items:center;padding:0;color:var(--accent-inverse);background:var(--err);border:var(--border-w) solid var(--err);cursor:pointer}
+.chathdr{display:none;flex:1 0 100%;order:9;align-items:center;gap:var(--space-s);min-width:0;position:relative}
+.chathdr.on{display:flex}
+.chathdr .linecost{flex:1;min-width:0;min-height:var(--control-h-sm);padding:0;text-align:left;font:var(--type-caption) var(--font-mono);color:var(--subtle);background:transparent;border:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.chathdr .linecost:hover{color:var(--text)}
+.chathdr .linecost.live{color:var(--thinking-ink)}
+.chathdr .icons{flex:none;display:flex;align-items:center}
+.chathdr .chipmenu{position:absolute;right:0;bottom:100%;margin-bottom:var(--space-xs);z-index:20;min-width:190px;max-width:100%;max-height:60vh;overflow:auto;padding:var(--space-xs) 0;background:var(--raised);border:var(--border-w) solid var(--border-strong);box-shadow:var(--shadow-card)}
+.chathdr .chipmenu .it{display:block;width:100%;min-height:var(--control-h-sm);padding:0 var(--space-s);text-align:left;font:var(--type-control) var(--font-mono);color:var(--text);background:transparent;border:0;cursor:pointer}
+.chathdr .chipmenu .it:hover{background:var(--accent-tint)}
+.chathdr .chipmenu .it.on{color:var(--accent-ink)}
+/* A group's label is a heading over its options, never another option (Tharun: "it shouldn't look like a list"): the body face in the ink against the options' mono, the options set in under it, and a line between groups. The gate measures this. */
+.chathdr .chipmenu .grp{padding:var(--space-s) var(--space-s) var(--space-xs);font:var(--type-label) var(--font-body);color:var(--text);cursor:default;user-select:none}
+.chathdr .chipmenu .it+.grp{margin-top:var(--space-xs);border-top:var(--border-w) solid var(--border)}
+.chathdr .chipmenu .grp~.it{padding-left:var(--space-l)}
+
+/* attachments, drawn for a later phase */
+.filecard{display:flex;align-items:center;gap:var(--space-s);max-width:100%;margin-top:var(--space-xs);padding:var(--space-s);background:var(--raised);border:var(--border-w) solid var(--border-strong);cursor:pointer}
+.filecard .ic{color:var(--accent-ink)}
+.filecard .fn{font:var(--type-body) var(--font-body);color:var(--text)}
+.filecard .fm{font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.filecard .ftag{margin-left:auto;padding:0 var(--space-xs);font:var(--type-caption) var(--font-mono);color:var(--body);background:var(--inset);border:var(--border-w) solid var(--border)}
+.imgmsg{position:relative;max-width:240px;margin:0 0 var(--space-xs);background:var(--inset);border:var(--border-w) solid var(--border-strong);white-space:normal;cursor:zoom-in}
+.imgmsg:last-child{margin-bottom:0}
+.imgmsg img{display:block;width:100%;height:auto}
+.imgmsg .imeta{padding:var(--space-xs);font:var(--type-caption) var(--font-mono);color:var(--subtle);border-top:var(--border-w) solid var(--border)}
+.imgmsg.gone{cursor:default}
+.imgmsg.gone .imeta{border-top:0}
+.chatheld{display:none;flex:1 0 100%;order:-1;align-items:center;gap:var(--space-s);min-width:0}
+.chatheld.on{display:flex}
+.chatheld img{flex:none;display:block;width:var(--bar-h);height:var(--bar-h);object-fit:cover;background:var(--inset);border:var(--border-w) solid var(--border-strong);cursor:zoom-in}
+.chatheld .words{flex:1;min-width:0}
+.chatheld .line,.chatheld .note{font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.chatheld .note{color:var(--accent-ink)}
+.imgmodal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:99;background:var(--scrim)}
+.imgmodal.on{display:flex}
+.imgmodal .frame{max-width:88vw;max-height:88vh;padding:var(--space-s);background:var(--surface);border:var(--border-w) solid var(--border-strong);box-shadow:var(--shadow)}
+.imgmodal img{display:block;max-width:84vw;max-height:80vh}
+.plan{margin-top:var(--space-s);background:var(--raised);border:var(--border-w) solid var(--border-strong)}
+.plan .pc{display:flex;align-items:center;gap:var(--space-s);padding:var(--space-s);font:var(--type-body) var(--font-body);border-bottom:var(--border-w) solid var(--border)}
+.plan .pc:last-child{border-bottom:0}
+.plan .pk{flex:none;min-width:var(--control-h-sm);height:var(--control-h-sm);display:grid;place-items:center;font:var(--type-caption) var(--font-mono);color:var(--accent-ink);border:var(--border-w) solid var(--border-strong)}
+.plan .pn{flex:1;color:var(--text)}
+.plan .pb{height:var(--control-h-sm);padding:0 var(--space-s);font:var(--type-control) var(--font-mono);color:var(--accent-ink);background:transparent;border:var(--border-w) solid var(--accent-ink);cursor:pointer}
+.plan .pb:hover{background:var(--accent-tint)}
+.drop{display:none;margin:0 var(--space-l) var(--space-s);padding:var(--space-s);text-align:center;font:var(--type-caption) var(--font-mono);color:var(--accent-ink);background:var(--accent-tint);border:var(--border-w) dashed var(--accent-ink)}
+.drop.on{display:block}
+.upbar{height:var(--border-w-strong);margin:0 var(--space-l);background:transparent}
+.upbar i{display:block;width:0;height:100%;background:var(--accent-ink);transition:width var(--dur-fast) var(--ease-out)}
+
+/* ---- SETTINGS, on the system (Brief BJ). Three sizes on the page, from the steps: caption for a section heading, control for an option, body and label for the
+   rest. One height for every box. Label to control xs, control to control m, section to section xl. ---- */
+.form{flex:1;padding:var(--space-l);overflow:auto}
+.form>.section-head:first-child{margin-top:0}
+.field{margin:0 0 var(--space-m)}
+.field>label{display:block;margin:0 0 var(--space-xs);font:var(--type-label) var(--font-body);color:var(--text)}
+.row2{display:flex;flex-wrap:wrap;gap:var(--space-s)}
+.rowgap{margin-top:var(--space-s)}
+.keyrow{display:flex;align-items:center;gap:var(--space-s);min-height:var(--control-h-sm)}
+.keydot{flex:none;width:var(--dot);height:var(--dot);background:var(--warn)}
+.keydot.ok{background:var(--ok)}
+.keyrow .st{flex:1;min-width:0;font:var(--type-body) var(--font-body);color:var(--body)}
+.keyfield{margin-bottom:var(--space-xs)}
+.localbadge{display:none;align-items:center;gap:var(--space-xs);margin:0 0 var(--space-m);padding:var(--space-xs) var(--space-s);font:var(--type-caption) var(--font-mono);color:var(--link-ink);background:var(--link-tint);border:var(--border-w) solid var(--link)}
+.localbadge.show{display:flex}
+/* Brief EN: the hint under the key input, a link to the site's keys page. A button that reads as a link, because the page sends a bare "keys". */
+.settings-keyhelp{padding:0;text-align:left;font:var(--type-body) var(--font-body);color:var(--link-ink);background:transparent;border:0;text-decoration:underline;text-underline-offset:var(--space-2xs);cursor:pointer}
+.settings-keyhelp:hover{color:var(--text)}
+.dd{position:relative}
+/* The one dropdown (Brief BO): the name closed, the name and its sentence open. dwight-dropdown.js places the menu where it has room. */
+.dd-sel{display:flex;align-items:center;text-align:left;cursor:pointer}
+.dd.open .dd-sel{border-color:var(--accent-ink)}
+.ddm{position:fixed;z-index:40;overflow:auto;background:var(--raised);border:var(--border-w) solid var(--border-strong);box-shadow:var(--shadow-card)}
+.ddo{padding:var(--space-xs) var(--space-s);cursor:pointer;border-bottom:var(--border-w) solid var(--border)}
+.ddo:last-child{border-bottom:0}
+.ddo.act{background:var(--accent-tint)}
+.ddo-head{display:flex;align-items:center;justify-content:space-between;gap:var(--space-s);color:var(--accent-ink)}
+.ddo-name{font:var(--type-label) var(--font-body);color:var(--text);white-space:nowrap}
+.ddo.on .ddo-name{color:var(--accent-ink)}
+.ddo-sent{margin-top:var(--space-2xs);font:var(--type-body) var(--font-body);color:var(--body)}
+.ddo-sent::first-letter{text-transform:uppercase}
+/* On or off: a real switch, round (Tharun's pick; the one curve in the system). Its parts clear 3:1 in both themes. */
+.swrow{display:flex;align-items:center;justify-content:space-between;gap:var(--space-m);min-height:var(--control-h)}
+.swrow label{font:var(--type-label) var(--font-body);color:var(--text)}
+.sw{position:relative;flex:none;width:40px;height:var(--control-h-sm);padding:0;background:var(--raised);border:var(--border-w) solid var(--subtle);border-radius:var(--radius-switch);cursor:pointer;transition:background var(--dur-fast) var(--ease-out)}
+.sw i{position:absolute;top:3px;left:3px;width:var(--icon);height:var(--icon);background:var(--subtle);border-radius:var(--radius-switch);transition:left var(--dur-fast) var(--ease-out)}
+.sw[aria-checked="true"]{background:var(--accent);border-color:var(--accent)}
+.sw[aria-checked="true"] i{left:19px;background:var(--accent-inverse)}
+.swsent{margin:var(--space-xs) 0 0}
+/* The rail: icons at rest, the names over the content on hover or keyboard focus so nothing jumps, and pinned open from its foot. */
+.navwrap{flex:1;display:flex;min-height:0}
+.navwrap .form{flex:1;min-width:0;min-height:0}
+.navtitle{margin:0 0 var(--space-m);font:var(--type-title) var(--font-body);color:var(--text)}
+.pane>.hint,.form>.hint{margin:0 0 var(--space-m)}
+.field .hint{margin:var(--space-xs) 0 0}
+.railslot{position:relative;flex:none;width:var(--rail)}
+.railslot.pinned{width:var(--rail-open)}
+.railin{position:absolute;top:0;bottom:0;left:0;z-index:20;display:flex;flex-direction:column;justify-content:space-between;width:var(--rail);padding:var(--space-s) var(--space-xs) var(--space-s) var(--space-s);overflow:hidden;background:var(--bar);border-right:var(--border-w) solid var(--border)}
+.railin:hover,.railin:has(:focus-visible){width:var(--rail-open);box-shadow:var(--shadow-card)}
+.railin:hover{transition:width var(--dur-fast) var(--ease-out) var(--dur-base)}
+.railslot.pinned .railin{width:var(--rail-open);box-shadow:none;transition:none}
+.raillist{display:flex;flex-direction:column;gap:var(--space-2xs)}
+.railitem{flex:none;display:flex;align-items:center;gap:var(--space-s);width:var(--control-h);height:var(--control-h);padding:0 var(--space-s);overflow:hidden;text-align:left;font:var(--type-body) var(--font-body);color:var(--body);background:transparent;border:0;cursor:pointer}
+.railin:hover .railitem,.railin:has(:focus-visible) .railitem,.railslot.pinned .railitem{width:100%}
+.railitem:hover{color:var(--text);background:var(--accent-tint)}
+.railitem.on,.railitem.on:hover{color:var(--accent-inverse);background:var(--accent)}
+.railpin[aria-pressed="true"]{color:var(--accent-ink)}
+.railword{white-space:nowrap}
+.dd-sel .dd-txt{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dd-sel .dd-car{flex:none;margin-left:var(--space-xs);color:var(--subtle)}
+.hintgap{margin-top:var(--space-xs)}
+.recon{display:flex;flex-direction:column;gap:var(--space-xs);margin-top:var(--space-s)}
+.reconrow{display:flex;align-items:center;gap:var(--space-s);font:var(--type-body) var(--font-body);color:var(--body)}
+.reconrow .rdot{flex:none;width:var(--dot);height:var(--dot);background:var(--faint)}
+.reconrow.green .rdot{background:var(--ok)}
+.reconrow.amber .rdot{background:var(--warn)}
+.reconrow.red .rdot{background:var(--err)}
+.reconrow .rtier{margin-left:auto;font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.usage,.sendstable{width:100%;margin:0;border-collapse:collapse;table-layout:fixed;font:var(--type-caption) var(--font-mono);color:var(--body);border:var(--border-w) solid var(--border)}
+.usage th,.sendstable th{padding:var(--space-xs) var(--space-2xs);text-align:right;font:var(--type-caption-strong) var(--font-mono);text-transform:uppercase;color:var(--subtle);background:var(--raised);border-bottom:var(--border-w) solid var(--border-strong)}
+.usage td,.sendstable td{padding:var(--space-xs) var(--space-2xs);text-align:right;font:var(--type-caption) var(--font-mono);color:var(--body);vertical-align:top;border-top:var(--border-w) solid var(--border);border-bottom:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.usage th:first-child,.usage td:first-child{text-align:left;font:var(--type-caption) var(--font-body);color:var(--text)}
+.usage th:first-child{font:var(--type-caption-strong) var(--font-mono);color:var(--subtle)}
+/* The numbers and the cost get the widths their words need, and the name takes the rest, at every width. "partly priced" is what stops a false zero. */
+.usage th:not(:first-child){width:var(--num-col)}
+.usage th:last-child{width:var(--tag-col)}
+.usage td:first-child,.usage td:last-child{white-space:normal;overflow-wrap:anywhere;text-overflow:clip}
+.usage td.empty{text-align:left;color:var(--subtle)}
+.usage .cost-q{white-space:nowrap}
+/* What Dwight sends: one row per verb and tool, generated from the payload contract. The column widths are the words'. */
+.sendstable{margin-top:var(--space-xs)}
+.sendstable th,.sendstable td{text-align:left}
+.sendstable th:first-child{width:42%}
+.sendstable th:last-child{width:22%}
+.sendstable td{white-space:normal;overflow-wrap:anywhere}
+.sendstable td:first-child{color:var(--text)}
+.sendstable tr.group td{font:var(--type-caption-strong) var(--font-mono);color:var(--subtle);background:var(--inset)}
+.sendsnote{margin:var(--space-xs) 0 0}
+
+/* ---- the dock: the chip, and the open window: History, the list of conversations, with the Timeline one icon away (Brief BQ; it opens to 340, Tharun, R10). ---- */
+.dock{position:relative;height:100vh;display:flex;flex-direction:column;background:var(--surface);border:var(--border-w) solid var(--border-strong);user-select:none}
+.dbody{display:none;flex-direction:column;flex:1;min-height:0}
+/* The home page's title bar is the same .titlebar as a conversation's. The back arrow stands where the mark stands, so "Dwight" stays in one place in every view. */
+.dhead .navbtn{display:none}
+body.timeline .dhead .navbtn,body.notes .dhead .navbtn{display:inline-grid}
+body.open.timeline .dhead .mark,body.timeline .dhead .tlbtn,body.open.notes .dhead .mark,body.notes .dhead .nbtn{display:none}
+/* Brief ED: the Notes icon carries the file's count while its pane is closed. */
+.dhead .nbtn{position:relative}
+.nbadge{position:absolute;top:0;right:0;min-width:var(--icon-sm);padding:0 var(--space-2xs);font:var(--type-caption-strong) var(--font-mono);color:var(--accent-inverse);background:var(--accent-ink);text-align:center}
+/* Open, the window is the host's: a border here would stand this page's bar 1px off a conversation's. The gate measures that. */
+body.open .dock{border:0}
+/* Minimised, the same element is the chip: the mark and nothing else. */
+body:not(.open) .dhead{flex:1;justify-content:center;height:auto;padding:0;background:var(--surface);border-bottom:0;cursor:default;transition:background var(--dur-fast) var(--ease-out)}
+body:not(.open) .dhead:hover{background:var(--accent-tint)}
+body:not(.open) .dhead .mark{width:var(--mark-lg);height:var(--mark-lg);flex:none}
+body:not(.open) .dhead .title,body:not(.open) .dhead .iconbtn{display:none}
+/* The chip's state, from the host. It pulses for as long as Dwight is working or a card waits, and under reduced motion the global rule stops the animation and the ring holds still, at full strength. Lavender is the working state; amber means you are needed. Finished is a small square, not a ring. */
+html[data-chip="thinking"] body:not(.open) .dock::after,html[data-chip="waiting"] body:not(.open) .dock::after{content:"";position:absolute;inset:0;pointer-events:none;border-style:solid;animation:chippulse var(--loop-breathe) var(--ease-in-out) infinite}
+html[data-chip="thinking"] body:not(.open) .dock::after{border-color:var(--thinking);border-width:var(--border-w-strong)}
+html[data-chip="waiting"] body:not(.open) .dock::after{border-color:var(--accent-ink);border-width:var(--space-xs)}
+html[data-chip="done"] body:not(.open) .dock::after{content:"";position:absolute;top:var(--space-xs);right:var(--space-xs);width:var(--dot);height:var(--dot);pointer-events:none;background:var(--accent-ink)}
+@keyframes chippulse{0%,100%{opacity:1}50%{opacity:.35}}
+/* The line under the title bar, one height in both views so nothing jumps. It says which view this is in words, not only through a pressed icon. */
+.dline{flex:none;display:flex;align-items:center;gap:var(--space-s);height:var(--control-h);padding:0 var(--space-xs) 0 var(--space-m);border-bottom:var(--border-w) solid var(--border)}
+.dline [hidden]{display:none}
+.dline .newchat{flex:none;color:var(--accent-ink)}
+.dfile{flex:1;min-width:0;font:var(--type-caption) var(--font-mono);color:var(--subtle);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dpane{flex:1;min-height:0;overflow:auto}
+.notetools{display:flex;align-items:center;gap:var(--space-xs);margin-bottom:var(--space-xs)}
+.notetools .notetable{width:112px}
+.noteread{font:var(--type-body) var(--font-body);color:var(--body)}
+.noteread[hidden],.noteedit[hidden],.foot .btn[hidden],.notepin[hidden]{display:none}
+.notepin{margin-top:var(--space-xs)}
+.dset{flex:none;padding:0 var(--space-m);border-bottom:var(--border-w) solid var(--border)}
+.dtimeline,.dnotelist,body.timeline .dlist,body.notes .dlist{display:none}
+body.timeline .dtimeline,body.notes .dnotelist{display:block}
+.dock-empty{padding:var(--space-l);text-align:center;font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+/* A command's row. A failed or stopped run is kept and must never read like one that landed: the icon drops to an outline and the row carries its state as a tag. */
+.rec{display:flex;align-items:center;gap:var(--space-s);width:100%;padding:var(--space-s) var(--space-m);text-align:left;background:transparent;border:0;border-bottom:var(--border-w) solid var(--border);cursor:pointer}
+.rec:hover{background:var(--accent-tint)}
+.rec .ri{width:var(--mark);height:var(--mark);flex:none;display:grid;place-items:center;font:var(--type-caption-strong) var(--font-mono);color:var(--accent-ink);background:var(--accent-tint)}
+.rec.failed .ri,.rec.stopped .ri{color:var(--subtle);background:transparent;border:var(--border-w) dashed var(--border-strong)}
+.rec .rt{display:flex;flex-direction:column;gap:var(--space-2xs);flex:1;min-width:0}
+.rec .r1{display:flex;align-items:baseline;gap:var(--space-s);min-width:0}
+.rec .ra{min-width:0;font:var(--type-label) var(--font-body);color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rec .rw{flex:none;margin-left:auto;font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.rec.failed .ra,.rec.stopped .ra{color:var(--body)}
+.rec .rs,.rec .rfrom{font:var(--type-caption) var(--font-mono);color:var(--subtle);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rec .rstate{flex:none}
+.rec .rlive{flex:none;margin-left:auto;color:var(--text)}
+.hnote,.hconfirm{padding:var(--space-s) var(--space-m);font:var(--type-body) var(--font-body);color:var(--text);background:var(--accent-tint);border-bottom:var(--border-w) solid var(--border)}
+.hbtns{display:flex;gap:var(--space-s);margin-top:var(--space-s)}
+/* The question is held at the top of History, with what it would undo tinted below it. Its words are unbounded, since the sentence names every change of the user's, so they scroll inside it and the buttons stay in reach. */
+.hconfirm{position:sticky;top:0;z-index:3;background:var(--raised);border-bottom:var(--border-w-strong) solid var(--accent-ink)}
+.hctext{max-height:var(--text-max);overflow:auto}
+/* History: one spine, newest at the top. Every row at rest is one line; everything else is inside it, opened in place. */
+.tl{position:relative}
+.tl::before{content:"";position:absolute;z-index:1;left:calc(var(--space-m) + var(--icon) / 2);top:0;bottom:0;width:var(--border-w);background:var(--border-strong);pointer-events:none}
+.mk{position:relative;z-index:2;display:grid;place-items:center;width:var(--icon);height:var(--icon);color:var(--subtle)}
+.mk i{display:block;width:var(--dot);height:var(--dot)}
+.mk.sm i{width:var(--bullet);height:var(--bullet)}
+.mk .ic{background:var(--surface)}
+.mk i.m-standing{background:var(--accent-ink)}
+.mk i.m-undone{background:var(--surface);border:var(--border-w) solid var(--subtle)}
+.mk i.m-gone{height:var(--border-w-strong);background:var(--subtle)}
+.mk i.m-yours{background:var(--border-strong)}
+.m-q{font:var(--type-caption-strong) var(--font-mono);background:var(--surface)}
+.ev{position:relative}
+.ev-head{display:grid;grid-template-columns:var(--icon) var(--icon-sm) minmax(0,1fr) auto auto var(--icon-sm);align-items:center;gap:var(--space-xs);width:100%;height:var(--control-h);padding:0 var(--space-xs) 0 var(--space-m);text-align:left;color:var(--text);background:transparent;border:0;cursor:pointer}
+.ev-head:hover{background:var(--hover)}
+.ev-head .vic,.ev-head .chv{color:var(--subtle)}
+.ev-head .t{min-width:0;font:var(--type-body) var(--font-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev-head .ct,.ev-head .tm,.ev-step .tm{font:var(--type-caption) var(--font-mono);color:var(--subtle);white-space:nowrap}
+.ev-head .ct{margin-left:var(--space-xs)}
+.ev-head .tm,.ev-step .tm{min-width:var(--control-h-sm);text-align:right}
+.ev-head .chv{transition:transform var(--dur-fast) var(--ease-out)}
+.ev.open>.ev-head{height:auto;min-height:var(--control-h);padding-top:var(--space-xs);padding-bottom:var(--space-xs)}
+.ev.open>.ev-head .chv{transform:rotate(90deg)}
+.ev.open>.ev-head .t{font:var(--type-label) var(--font-body);white-space:normal}
+.ev.gone>.ev-head .t,.ev.unknown>.ev-head .t,.ev.takenback>.ev-head .t{color:var(--subtle)}
+/* Undone rows can be redone, so they go duller and are never struck through, which reads as deleted. Tharun asked for this below the floor: the one named exception in tools/ui-measure.js. Full contrast on hover, focus, open and in a walk. */
+.ev.undone>.ev-head .t,.ev.undone>.ev-head .ct,.ev.undone>.ev-head .tm,.ev.undone>.ev-head .vic,.ev.undone>.ev-head .chv,.yo.dull{color:var(--faint)}
+.ev.undone>.ev-head:hover .t,.ev.undone>.ev-head:focus-visible .t,.ev.undone.open>.ev-head .t,.ev.undone.inwalk>.ev-head .t{color:var(--text)}
+.ev.undone>.ev-head:hover :is(.ct,.tm,.vic,.chv),.ev.undone>.ev-head:focus-visible :is(.ct,.tm,.vic,.chv),.ev.undone.open>.ev-head :is(.ct,.tm,.vic,.chv),.ev.undone.inwalk>.ev-head :is(.ct,.tm,.vic,.chv),.yo.dull:hover,.yo.dull.inwalk{color:var(--subtle)}
+.ev-rest{display:flex;align-items:center;gap:var(--space-s);min-height:var(--control-h);padding:0 var(--space-xs) var(--space-2xs) var(--space-spine)}
+.ev-by{flex:1;min-width:0;font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.ev-acts{flex:none;display:flex;margin-left:auto}
+.ev-step{position:relative;display:grid;grid-template-columns:var(--icon) minmax(0,1fr) auto var(--control-h-sm);align-items:start;gap:var(--space-xs);min-height:var(--control-h-sm);padding:var(--space-2xs) var(--space-xs) var(--space-2xs) var(--space-m)}
+.ev-step .mk{margin-top:var(--space-2xs)}
+.ev-step .sl{min-width:0;padding-top:var(--space-2xs);font:var(--type-body) var(--font-body);color:var(--body);overflow-wrap:anywhere}
+.ev-step .tm{padding-top:var(--space-xs)}
+.ev-step.yours .sl{padding-top:var(--space-xs);font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.ev-step.undone .sl,.ev-step.gone .sl,.ev-step.unknown .sl,.ev-step.takenback .sl{color:var(--subtle)}
+.ev-step .sr{display:block;font:var(--type-caption) var(--font-body);color:var(--subtle)}
+.iconbtn.sm{width:var(--control-h-sm);height:var(--control-h-sm)}
+.yo{position:relative;display:flex;align-items:center;min-height:var(--control-h-sm);padding:0 var(--space-m) 0 var(--space-spine);font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.here{position:relative;z-index:2;display:flex;align-items:center;min-height:var(--control-h-sm);padding:0 var(--space-m) 0 var(--space-spine);font:var(--type-caption-strong) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--accent-ink);background:var(--surface)}
+.here::before{content:"";position:absolute;left:var(--space-m);right:var(--space-m);top:50%;height:var(--border-w);background:var(--accent-ink)}
+.here span{position:relative;padding-right:var(--space-s);background:var(--surface)}
+/* What the walk would undo. The row that stays is never tinted. */
+.inwalk{background:var(--accent-tint)}
+/* The first-run tour's last button points here (DwightDock.DrawAttention). The window IS the chip and cannot paint outside itself, so the ring is drawn inside: it breathes three times and stops. Reduced motion holds it steady for the same time. */
+.dock.attn::after{content:"";position:absolute;inset:0;pointer-events:none;border-style:solid;border-color:var(--accent-ink);border-width:0;animation:dockattn var(--loop-attn) var(--ease-in-out) 3 both}
+.dock.attn .dhead{animation:dockattnbg var(--loop-attn) var(--ease-in-out) 3 both}
+@keyframes dockattn{0%,100%{border-width:0}50%{border-width:var(--space-xs)}}
+@keyframes dockattnbg{0%,100%{background:var(--surface)}50%{background:var(--accent-tint)}}
+@media (prefers-reduced-motion: reduce){
+  .dock.attn::after{border-width:var(--space-xs)}
+}
+
+/* ---- Report a problem: .form, .field, .section-head and .hint, and the block Dwight computes. ---- */
+.code.wrap{max-height:var(--text-max);white-space:pre-wrap;overflow-wrap:anywhere;user-select:text;cursor:text}
+
+/* ---- The Walk (Brief DA): the step card that is current, and the bar, a run's companion along the bottom of the canvas. ---- */
+.step.on{background:var(--accent-tint);border-color:var(--accent-ink)}
+.step.haspin,.leadwrap,.outcome.haspin,.fault.haspin{position:relative}
+.outcome.haspin .oc-msg{padding-right:var(--space-xl)}
+.fault.haspin .pincorner{top:auto;bottom:0}
+.pincorner.shown{opacity:1}
+.step.haspin .stxt,.leadwrap .lead{padding-right:var(--space-xl)}
+.pincorner{position:absolute;top:0;right:0;opacity:0}
+.step:hover .pincorner,.step.on .pincorner,.leadwrap:hover .pincorner,.pincorner:focus-visible,.pincorner[disabled]{opacity:1}
+.walknav{display:none;align-items:center;gap:var(--space-xs)}
+.foot.walking .walknav{display:flex}
+.foot.walking .meta{display:none}
+.foot.walking .walkgives{display:none}
+/* Brief DH: where the Walk is, Focus and the dim, on a row of their own above the footer. At the window's 340 the footer's own row has no room for "12 of 12" beside the icons, Chat and Copy, and it stays where a person's hand already is. */
+.walkrow{display:none;align-items:center;gap:var(--space-m);padding:var(--space-xs) var(--space-l);background:var(--bar);border-top:var(--border-w) solid var(--border)}
+.walkrow.on{display:flex}
+.walkrow .swrow{gap:var(--space-s);min-height:var(--control-h-sm)}
+.walkrow .swrow label{font:var(--type-caption) var(--font-body);color:var(--subtle)}
+.walkcount{flex:none;font:var(--type-caption) var(--font-mono);color:var(--subtle);white-space:nowrap}
+.iconbtn[aria-pressed="true"]{color:var(--accent-ink)}
+.iconbtn[hidden]{display:none}
+.walkbar{display:flex;flex-direction:column;gap:var(--space-s);height:100%;padding:var(--space-s) var(--space-m);background:var(--surface);border:var(--border-w) solid var(--border-strong)}
+.walkline{position:relative;display:flex;align-items:baseline;gap:var(--space-m);flex:1;min-height:0}
+.walkline.more::after{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--control-h-sm);background:var(--fade-surface);pointer-events:none}
+.walkstep{flex:none;font:var(--type-caption-strong) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--accent-ink)}
+.walksent{flex:1;min-width:0;align-self:stretch;overflow:auto;font:var(--type-body) var(--font-body);color:var(--body)}
+.walkgone{margin-top:var(--space-2xs);font:var(--type-caption) var(--font-mono);color:var(--warn-ink)}
+.walktime{margin-top:var(--space-2xs);font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.walkstrip{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-s);flex:none}
+.walkdots{display:flex;gap:var(--space-xs)}
+/* Brief EC unit 5b: a chat's way back to the Walk its step asked from. */
+.chatback{flex:none;padding:var(--space-xs) var(--space-l) 0}
+.chatback[hidden]{display:none}
+/* Brief EC unit 3: the bar's switches, as the panel's walk row draws them, and Back as Next's chevron turned. */
+.walkstrip .swrow{gap:var(--space-xs);min-height:var(--control-h-sm)}
+.walkstrip .swrow label{font:var(--type-caption) var(--font-body);color:var(--subtle)}
+.walkstrip .sw[disabled]{opacity:var(--disabled-opacity);cursor:not-allowed}
+.walkbar .ic.turned{transform:rotate(180deg)}
+/* Brief EI: Learn's deck. One card in front and two edges of the stack behind it, the drawing set's sharp corners and hard offset; amber for the stamp and the chrome,
+   lavender left to the thinking state. A wrong answer is shown by the true one beside it, never by red. Every word on it is the plugin's. */
+.deck{position:relative;margin:0 var(--space-m) var(--space-m) 0}
+.deck::before,.deck::after{content:"";position:absolute;inset:0;background:var(--raised);border:var(--border-w) solid var(--border-strong)}
+.deck::before{transform:translate(var(--space-s),var(--space-s))}
+.deck::after{transform:translate(var(--space-xs),var(--space-xs))}
+.deck-card{position:relative;z-index:1;display:flex;flex-direction:column;gap:var(--space-s);padding:var(--space-m);background:var(--raised);border:var(--border-w-strong) solid var(--line)}
+.deck-head{display:flex;align-items:center;gap:var(--space-s);font:var(--type-caption-strong) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--accent-ink)}
+.deck-count{margin-left:auto;color:var(--subtle)}
+.deck-ticks{display:flex;gap:var(--space-2xs);margin-left:auto}
+.deck-tick{width:var(--dot);height:var(--dot);background:var(--raised);border:var(--border-w) solid var(--border-strong)}
+.deck-tick.on{border-color:var(--accent-ink)}
+/* Brief EO unit 3: right is green, partly amber and wrong red, from the verdict tokens; amber stays the chrome's. */
+.deck-tick.right{background:var(--ok);border-color:var(--ok)}
+.deck-tick.partly{background:var(--warn);border-color:var(--warn)}
+.deck-tick.wrong{background:var(--err);border-color:var(--err)}
+.deck-title,.deck-q{font:var(--type-title) var(--font-display);color:var(--text)}
+.deck-gist{margin:0;font:var(--type-body) var(--font-body);color:var(--body)}
+.deck-cost{margin:0;font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+.deck-prompt,.deck-peek,.deck-given,.deck-note{margin:0;font:var(--type-caption) var(--font-body);color:var(--subtle)}
+.deck-opts{display:flex;flex-direction:column;gap:var(--space-xs)}
+.deck-opt{display:flex;align-items:center;gap:var(--space-s);width:100%;min-height:var(--control-h);padding:var(--space-xs) var(--space-s);text-align:left;font:var(--type-body) var(--font-body);color:var(--text);background:var(--surface);border:var(--border-w) solid var(--border-strong);cursor:pointer}
+.deck-opt:hover:not([disabled]){background:var(--accent-tint)}
+.deck-opt[disabled]{cursor:default}
+.deck-opt.true{border:var(--border-w-strong) solid var(--ok)}
+.deck-opt.false{border-style:dashed;border-color:var(--err);color:var(--subtle)}
+.deck-key{flex:none;display:grid;place-items:center;width:var(--control-h-sm);height:var(--control-h-sm);font:var(--type-control) var(--font-mono);color:var(--body);background:var(--raised);border:var(--border-w) solid var(--border-strong)}
+.deck-opt.ticked .deck-key{color:var(--accent-inverse);background:var(--accent);border-color:var(--accent)}
+.deck-opt.true .deck-key{color:var(--ok-ink);background:var(--ok-tint);border-color:var(--ok)}
+.deck-text{flex:1;min-width:0}
+.deck-field input{width:100%;height:var(--control-h);padding:0 var(--space-s);font:var(--type-body) var(--font-mono);color:var(--text);background:var(--surface);border:var(--border-w) solid var(--border-strong)}
+.deck-field input:focus{outline:none;border-color:var(--accent-ink)}
+.deck-field input::placeholder{color:var(--subtle)}
+.deck-line,.deck-answer{font:var(--type-label) var(--font-body);color:var(--text)}
+.deck-stamp{position:absolute;top:var(--space-m);right:var(--space-m);padding:var(--space-2xs) var(--space-s);font:var(--type-label) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--accent-ink);background:var(--raised);border:var(--border-w-strong) solid var(--accent);transform:rotate(-6deg)}
+.deck-stamp.big{position:static;align-self:flex-start;padding:var(--space-xs) var(--space-m);font:var(--type-title) var(--font-display);letter-spacing:var(--track-tight);transform:rotate(-3deg)}
+.deck-turn{display:flex;flex-direction:column;gap:var(--space-2xs);padding:var(--space-s);background:var(--inset);border-left:var(--border-w-strong) solid var(--border-strong)}
+.deck-turn.right{background:var(--ok-tint);border-left-color:var(--ok)}
+.deck-turn.partly{background:var(--warn-tint);border-left-color:var(--warn)}
+.deck-turn.wrong{background:var(--err-tint);border-left-color:var(--err)}
+.deck-stamp.right{color:var(--ok-ink);border-color:var(--ok)}
+.deck-stamp.partly{color:var(--warn-ink);border-color:var(--warn)}
+/* On a verdict's tint the subtle step falls under 4.5:1 (measured: 4.22 to 4.48), so the turn's small words take the body's. */
+.deck-turn .deck-given{color:var(--body)}
+.deck-mark{font:var(--type-caption) var(--font-mono);color:var(--body)}
+.deck-mark.dwight{color:var(--accent-ink)}
+.deck-hint{font:var(--type-caption) var(--font-body);color:var(--body)}
+.deck-foot{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-s);padding-top:var(--space-s);border-top:var(--border-w) solid var(--border)}
+.deck-foot .swrow{gap:var(--space-xs);min-height:var(--control-h-sm)}
+.deck-foot .swrow label{font:var(--type-caption) var(--font-body);color:var(--subtle)}
+.deck .ic.turned{transform:rotate(180deg)}
+.deck-streak,.deck-mhead{font:var(--type-caption-strong) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--accent-ink)}
+.deck-mhead{color:var(--subtle)}
+.deck-miss{display:block;width:100%;padding:var(--space-xs) var(--space-s);text-align:left;font:var(--type-caption) var(--font-body);color:var(--text);background:transparent;border:0;border-left:var(--border-w-strong) solid var(--border-strong);cursor:pointer}
+.deck-miss:hover{background:var(--hover)}
+.deck-doors{display:flex;flex-wrap:wrap;gap:var(--space-xs)}
+/* Brief EO: the why under a turned card, the person's own words, the judge at work (lavender: Dwight is working), the result's reading and its two quiet links. */
+.deck-why{display:flex;flex-direction:column;gap:var(--space-2xs);margin-top:var(--space-xs);padding-top:var(--space-xs);border-top:var(--border-w) solid var(--border)}
+.deck-whyhead{font:var(--type-caption-strong) var(--font-mono);letter-spacing:var(--track-caps);text-transform:uppercase;color:var(--body)}
+.deck-whytext,.deck-judged{font:var(--type-body) var(--font-body);color:var(--text)}
+.deck-by{font:var(--type-caption) var(--font-mono);color:var(--body)}
+.deck-own{display:flex;flex-direction:column;gap:var(--space-xs)}
+.deck-own label{font:var(--type-caption) var(--font-body);color:var(--subtle)}
+.deck-ownrow{display:flex;gap:var(--space-xs)}
+.deck-ownrow input{flex:1;min-width:0;height:var(--control-h);padding:0 var(--space-s);font:var(--type-body) var(--font-body);color:var(--text);background:var(--surface);border:var(--border-w) solid var(--border-strong)}
+.deck-ownrow input:focus{outline:none;border-color:var(--accent-ink)}
+.deck-ownrow input::placeholder{color:var(--subtle)}
+.deck-judging{display:flex;align-items:center;gap:var(--space-s);font:var(--type-caption) var(--font-mono);color:var(--thinking-ink)}
+.deck-judging i{flex:none;width:var(--dot);height:var(--dot);background:var(--thinking)}
+.deck-reading{margin:0;font:var(--type-body) var(--font-body);color:var(--text)}
+.deck-links{display:flex;flex-wrap:wrap;gap:var(--space-m)}
+.deck-link{padding:0;font:var(--type-caption) var(--font-mono);color:var(--subtle);background:transparent;border:0;text-decoration:underline;text-underline-offset:var(--space-2xs);cursor:pointer}
+.deck-link:hover{color:var(--text)}
+/* The page shows the deck in place of the steps, and the deck's own controls in place of the Walk's; "Walk this" leaves the way back above the steps. */
+.docbody.deckon > :not(.deckhost){display:none}
+.app.deckon .walkrow.on,.app.deckon .foot.walking .walknav{display:none}
+.deckback{margin-bottom:var(--space-s)}
+/* On the bar the card sits in the sentence's place, at most 148 points tall: no stack behind it and no frame, the options in a row, and the bar's own switches.
+   A turned card scrolls there as a long sentence does. */
+.walksent .deck{margin:0}
+.walksent .deck::before,.walksent .deck::after{display:none}
+.walksent .deck-card{padding:0;gap:var(--space-xs);background:transparent;border:0}
+.walksent .deck-opts{flex-direction:row;flex-wrap:wrap}
+.walksent .deck-opt{flex:1 1 180px;width:auto}
+.walkdot{display:grid;place-items:center;width:var(--control-h-sm);height:var(--control-h-sm);padding:0;font:var(--type-control) var(--font-mono);color:var(--body);background:var(--raised);border:var(--border-w) solid var(--border-strong);cursor:pointer}
+.walkdot:hover{background:var(--accent-tint)}
+.walkdot.on{color:var(--accent-inverse);background:var(--accent);border-color:var(--accent)}

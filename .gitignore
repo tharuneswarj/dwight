@@ -1,0 +1,53 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+
+# .NET / Visual Studio
+.vs/
+*.user
+*.suo
+*.userprefs
+*.cache
+project.lock.json
+artifacts/
+
+# Rider / JetBrains
+.idea/
+
+# NuGet
+*.nupkg
+*.snupkg
+
+# Rhino / Grasshopper build artifacts
+*.gha
+*.ghlink
+
+# A benchmark corpus of real third-party definitions. Proprietary IP - must NEVER enter git history.
+docs/phases/phase-6-corpus/
+*.gh
+*.ghx
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Brainstorm visual-companion scratch (transient mockups)
+.superpowers/
+
+# Logs / temp
+*.log
+*.tmp
+
+# NOTE: documentation under docs/ is tracked; only the generated and proprietary paths above are ignored.
+
+# Node - the shell CI gates only (nothing here ships in the .gha)
+node_modules/
+
+# Python bytecode. The probes in tools/ are run by Rhino's CPython; syntax-checking one locally
+# (python -m py_compile) drops a __pycache__ beside it - build output, never source.
+__pycache__/
+*.pyc
+
+# Written by tools/stage-public-tree.py into a staged tree; never committed.
+.dwight-public-stage

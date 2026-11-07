@@ -1,0 +1,1125 @@
+{
+ "origin": "Stated by hand and generated with a fixed seed, recorded from no document: a disorganised definition of 40 components with no groups, all piled in one small patch with overlaps and backward wires, default nicknames, and no room left around them. Port names are written from memory of Grasshopper's own.",
+ "canvas": {
+  "components": [
+   {
+    "ref": "c0",
+    "type": "Number Slider",
+    "nick": "Number Slider",
+    "kind": "param",
+    "inputs": [],
+    "outputs": [
+     "Number"
+    ],
+    "x": 463,
+    "y": 238,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0",
+    "constant": "29"
+   },
+   {
+    "ref": "c1",
+    "type": "Panel",
+    "nick": "Panel",
+    "kind": "param",
+    "inputs": [
+     "Input"
+    ],
+    "outputs": [
+     "Output"
+    ],
+    "x": 520,
+    "y": 97,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c2",
+    "type": "Series",
+    "nick": "Series",
+    "kind": "component",
+    "inputs": [
+     "Start (S)",
+     "Step (N)",
+     "Count (C)"
+    ],
+    "outputs": [
+     "Series (S)"
+    ],
+    "x": 189,
+    "y": 243,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c3",
+    "type": "Construct Point",
+    "nick": "Construct Point",
+    "kind": "component",
+    "inputs": [
+     "X coordinate (X)",
+     "Y coordinate (Y)",
+     "Z coordinate (Z)"
+    ],
+    "outputs": [
+     "Point (Pt)"
+    ],
+    "x": 190,
+    "y": 48,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c4",
+    "type": "Circle",
+    "nick": "Circle",
+    "kind": "component",
+    "inputs": [
+     "Plane (P)",
+     "Radius (R)"
+    ],
+    "outputs": [
+     "Circle (C)"
+    ],
+    "x": 457,
+    "y": 155,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c5",
+    "type": "Divide Curve",
+    "nick": "Divide Curve",
+    "kind": "component",
+    "inputs": [
+     "Curve (C)",
+     "Count (N)",
+     "Kinks (K)"
+    ],
+    "outputs": [
+     "Points (P)",
+     "Tangents (T)",
+     "Parameters (t)"
+    ],
+    "x": 145,
+    "y": 46,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c6",
+    "type": "Move",
+    "nick": "Move",
+    "kind": "component",
+    "inputs": [
+     "Geometry (G)",
+     "Motion (T)"
+    ],
+    "outputs": [
+     "Geometry (G)",
+     "Transform (X)"
+    ],
+    "x": 42,
+    "y": 202,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c7",
+    "type": "Loft",
+    "nick": "Loft",
+    "kind": "component",
+    "inputs": [
+     "Curves (C)",
+     "Options (O)"
+    ],
+    "outputs": [
+     "Loft (L)"
+    ],
+    "x": 463,
+    "y": 80,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c8",
+    "type": "Addition",
+    "nick": "Addition",
+    "kind": "component",
+    "inputs": [
+     "Input A (A)",
+     "Input B (B)"
+    ],
+    "outputs": [
+     "Result (R)"
+    ],
+    "x": 15,
+    "y": 32,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c9",
+    "type": "Multiplication",
+    "nick": "Multiplication",
+    "kind": "component",
+    "inputs": [
+     "Input A (A)",
+     "Input B (B)"
+    ],
+    "outputs": [
+     "Result (R)"
+    ],
+    "x": 60,
+    "y": 18,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c10",
+    "type": "Graft Tree",
+    "nick": "Graft Tree",
+    "kind": "component",
+    "inputs": [
+     "Tree (T)"
+    ],
+    "outputs": [
+     "Tree (T)"
+    ],
+    "x": 194,
+    "y": 123,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c11",
+    "type": "Flatten Tree",
+    "nick": "Flatten Tree",
+    "kind": "component",
+    "inputs": [
+     "Tree (T)",
+     "Path (P)"
+    ],
+    "outputs": [
+     "Tree (T)"
+    ],
+    "x": 30,
+    "y": 237,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c12",
+    "type": "Number Slider",
+    "nick": "Number Slider",
+    "kind": "param",
+    "inputs": [],
+    "outputs": [
+     "Number"
+    ],
+    "x": 334,
+    "y": 225,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0",
+    "constant": "38"
+   },
+   {
+    "ref": "c13",
+    "type": "Panel",
+    "nick": "Panel",
+    "kind": "param",
+    "inputs": [
+     "Input"
+    ],
+    "outputs": [
+     "Output"
+    ],
+    "x": 200,
+    "y": 119,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c14",
+    "type": "Series",
+    "nick": "Series",
+    "kind": "component",
+    "inputs": [
+     "Start (S)",
+     "Step (N)",
+     "Count (C)"
+    ],
+    "outputs": [
+     "Series (S)"
+    ],
+    "x": 301,
+    "y": 255,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c15",
+    "type": "Construct Point",
+    "nick": "Construct Point",
+    "kind": "component",
+    "inputs": [
+     "X coordinate (X)",
+     "Y coordinate (Y)",
+     "Z coordinate (Z)"
+    ],
+    "outputs": [
+     "Point (Pt)"
+    ],
+    "x": 4,
+    "y": 43,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c16",
+    "type": "Circle",
+    "nick": "Circle",
+    "kind": "component",
+    "inputs": [
+     "Plane (P)",
+     "Radius (R)"
+    ],
+    "outputs": [
+     "Circle (C)"
+    ],
+    "x": 468,
+    "y": 142,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c17",
+    "type": "Divide Curve",
+    "nick": "Divide Curve",
+    "kind": "component",
+    "inputs": [
+     "Curve (C)",
+     "Count (N)",
+     "Kinks (K)"
+    ],
+    "outputs": [
+     "Points (P)",
+     "Tangents (T)",
+     "Parameters (t)"
+    ],
+    "x": 416,
+    "y": 42,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c18",
+    "type": "Move",
+    "nick": "Move",
+    "kind": "component",
+    "inputs": [
+     "Geometry (G)",
+     "Motion (T)"
+    ],
+    "outputs": [
+     "Geometry (G)",
+     "Transform (X)"
+    ],
+    "x": 260,
+    "y": 161,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c19",
+    "type": "Loft",
+    "nick": "Loft",
+    "kind": "component",
+    "inputs": [
+     "Curves (C)",
+     "Options (O)"
+    ],
+    "outputs": [
+     "Loft (L)"
+    ],
+    "x": 235,
+    "y": 147,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c20",
+    "type": "Addition",
+    "nick": "Addition",
+    "kind": "component",
+    "inputs": [
+     "Input A (A)",
+     "Input B (B)"
+    ],
+    "outputs": [
+     "Result (R)"
+    ],
+    "x": 30,
+    "y": 35,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c21",
+    "type": "Multiplication",
+    "nick": "Multiplication",
+    "kind": "component",
+    "inputs": [
+     "Input A (A)",
+     "Input B (B)"
+    ],
+    "outputs": [
+     "Result (R)"
+    ],
+    "x": 110,
+    "y": 205,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c22",
+    "type": "Graft Tree",
+    "nick": "Graft Tree",
+    "kind": "component",
+    "inputs": [
+     "Tree (T)"
+    ],
+    "outputs": [
+     "Tree (T)"
+    ],
+    "x": 110,
+    "y": 148,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c23",
+    "type": "Flatten Tree",
+    "nick": "Flatten Tree",
+    "kind": "component",
+    "inputs": [
+     "Tree (T)",
+     "Path (P)"
+    ],
+    "outputs": [
+     "Tree (T)"
+    ],
+    "x": 395,
+    "y": 34,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c24",
+    "type": "Number Slider",
+    "nick": "Number Slider",
+    "kind": "param",
+    "inputs": [],
+    "outputs": [
+     "Number"
+    ],
+    "x": 17,
+    "y": 0,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0",
+    "constant": "14"
+   },
+   {
+    "ref": "c25",
+    "type": "Panel",
+    "nick": "Panel",
+    "kind": "param",
+    "inputs": [
+     "Input"
+    ],
+    "outputs": [
+     "Output"
+    ],
+    "x": 214,
+    "y": 26,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c26",
+    "type": "Series",
+    "nick": "Series",
+    "kind": "component",
+    "inputs": [
+     "Start (S)",
+     "Step (N)",
+     "Count (C)"
+    ],
+    "outputs": [
+     "Series (S)"
+    ],
+    "x": 481,
+    "y": 192,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c27",
+    "type": "Construct Point",
+    "nick": "Construct Point",
+    "kind": "component",
+    "inputs": [
+     "X coordinate (X)",
+     "Y coordinate (Y)",
+     "Z coordinate (Z)"
+    ],
+    "outputs": [
+     "Point (Pt)"
+    ],
+    "x": 406,
+    "y": 214,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c28",
+    "type": "Circle",
+    "nick": "Circle",
+    "kind": "component",
+    "inputs": [
+     "Plane (P)",
+     "Radius (R)"
+    ],
+    "outputs": [
+     "Circle (C)"
+    ],
+    "x": 74,
+    "y": 101,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c29",
+    "type": "Divide Curve",
+    "nick": "Divide Curve",
+    "kind": "component",
+    "inputs": [
+     "Curve (C)",
+     "Count (N)",
+     "Kinks (K)"
+    ],
+    "outputs": [
+     "Points (P)",
+     "Tangents (T)",
+     "Parameters (t)"
+    ],
+    "x": 276,
+    "y": 172,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c30",
+    "type": "Move",
+    "nick": "Move",
+    "kind": "component",
+    "inputs": [
+     "Geometry (G)",
+     "Motion (T)"
+    ],
+    "outputs": [
+     "Geometry (G)",
+     "Transform (X)"
+    ],
+    "x": 89,
+    "y": 159,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c31",
+    "type": "Loft",
+    "nick": "Loft",
+    "kind": "component",
+    "inputs": [
+     "Curves (C)",
+     "Options (O)"
+    ],
+    "outputs": [
+     "Loft (L)"
+    ],
+    "x": 340,
+    "y": 7,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c32",
+    "type": "Addition",
+    "nick": "Addition",
+    "kind": "component",
+    "inputs": [
+     "Input A (A)",
+     "Input B (B)"
+    ],
+    "outputs": [
+     "Result (R)"
+    ],
+    "x": 419,
+    "y": 60,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c33",
+    "type": "Multiplication",
+    "nick": "Multiplication",
+    "kind": "component",
+    "inputs": [
+     "Input A (A)",
+     "Input B (B)"
+    ],
+    "outputs": [
+     "Result (R)"
+    ],
+    "x": 137,
+    "y": 126,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c34",
+    "type": "Graft Tree",
+    "nick": "Graft Tree",
+    "kind": "component",
+    "inputs": [
+     "Tree (T)"
+    ],
+    "outputs": [
+     "Tree (T)"
+    ],
+    "x": 103,
+    "y": 5,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c35",
+    "type": "Flatten Tree",
+    "nick": "Flatten Tree",
+    "kind": "component",
+    "inputs": [
+     "Tree (T)",
+     "Path (P)"
+    ],
+    "outputs": [
+     "Tree (T)"
+    ],
+    "x": 61,
+    "y": 238,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c36",
+    "type": "Number Slider",
+    "nick": "Number Slider",
+    "kind": "param",
+    "inputs": [],
+    "outputs": [
+     "Number"
+    ],
+    "x": 498,
+    "y": 90,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0",
+    "constant": "44"
+   },
+   {
+    "ref": "c37",
+    "type": "Panel",
+    "nick": "Panel",
+    "kind": "param",
+    "inputs": [
+     "Input"
+    ],
+    "outputs": [
+     "Output"
+    ],
+    "x": 192,
+    "y": 229,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c38",
+    "type": "Series",
+    "nick": "Series",
+    "kind": "component",
+    "inputs": [
+     "Start (S)",
+     "Step (N)",
+     "Count (C)"
+    ],
+    "outputs": [
+     "Series (S)"
+    ],
+    "x": 195,
+    "y": 67,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   },
+   {
+    "ref": "c39",
+    "type": "Construct Point",
+    "nick": "Construct Point",
+    "kind": "component",
+    "inputs": [
+     "X coordinate (X)",
+     "Y coordinate (Y)",
+     "Z coordinate (Z)"
+    ],
+    "outputs": [
+     "Point (Pt)"
+    ],
+    "x": 429,
+    "y": 196,
+    "w": 130,
+    "h": 60,
+    "region": "Region 0"
+   }
+  ],
+  "wires": [
+   {
+    "from": "c0",
+    "fromParam": "Number",
+    "to": "c1",
+    "toParam": "Input"
+   },
+   {
+    "from": "c1",
+    "fromParam": "Output",
+    "to": "c2",
+    "toParam": "Start (S)"
+   },
+   {
+    "from": "c1",
+    "fromParam": "Output",
+    "to": "c2",
+    "toParam": "Step (N)"
+   },
+   {
+    "from": "c0",
+    "fromParam": "Number",
+    "to": "c3",
+    "toParam": "X coordinate (X)"
+   },
+   {
+    "from": "c0",
+    "fromParam": "Number",
+    "to": "c3",
+    "toParam": "Y coordinate (Y)"
+   },
+   {
+    "from": "c2",
+    "fromParam": "Series (S)",
+    "to": "c4",
+    "toParam": "Plane (P)"
+   },
+   {
+    "from": "c2",
+    "fromParam": "Series (S)",
+    "to": "c4",
+    "toParam": "Radius (R)"
+   },
+   {
+    "from": "c0",
+    "fromParam": "Number",
+    "to": "c5",
+    "toParam": "Curve (C)"
+   },
+   {
+    "from": "c1",
+    "fromParam": "Output",
+    "to": "c5",
+    "toParam": "Count (N)"
+   },
+   {
+    "from": "c1",
+    "fromParam": "Output",
+    "to": "c6",
+    "toParam": "Geometry (G)"
+   },
+   {
+    "from": "c3",
+    "fromParam": "Point (Pt)",
+    "to": "c6",
+    "toParam": "Motion (T)"
+   },
+   {
+    "from": "c6",
+    "fromParam": "Geometry (G)",
+    "to": "c7",
+    "toParam": "Curves (C)"
+   },
+   {
+    "from": "c4",
+    "fromParam": "Circle (C)",
+    "to": "c7",
+    "toParam": "Options (O)"
+   },
+   {
+    "from": "c1",
+    "fromParam": "Output",
+    "to": "c8",
+    "toParam": "Input A (A)"
+   },
+   {
+    "from": "c0",
+    "fromParam": "Number",
+    "to": "c8",
+    "toParam": "Input B (B)"
+   },
+   {
+    "from": "c2",
+    "fromParam": "Series (S)",
+    "to": "c9",
+    "toParam": "Input A (A)"
+   },
+   {
+    "from": "c3",
+    "fromParam": "Point (Pt)",
+    "to": "c9",
+    "toParam": "Input B (B)"
+   },
+   {
+    "from": "c7",
+    "fromParam": "Loft (L)",
+    "to": "c10",
+    "toParam": "Tree (T)"
+   },
+   {
+    "from": "c4",
+    "fromParam": "Circle (C)",
+    "to": "c11",
+    "toParam": "Tree (T)"
+   },
+   {
+    "from": "c0",
+    "fromParam": "Number",
+    "to": "c11",
+    "toParam": "Path (P)"
+   },
+   {
+    "from": "c12",
+    "fromParam": "Number",
+    "to": "c13",
+    "toParam": "Input"
+   },
+   {
+    "from": "c9",
+    "fromParam": "Result (R)",
+    "to": "c14",
+    "toParam": "Start (S)"
+   },
+   {
+    "from": "c5",
+    "fromParam": "Points (P)",
+    "to": "c14",
+    "toParam": "Step (N)"
+   },
+   {
+    "from": "c13",
+    "fromParam": "Output",
+    "to": "c15",
+    "toParam": "X coordinate (X)"
+   },
+   {
+    "from": "c4",
+    "fromParam": "Circle (C)",
+    "to": "c15",
+    "toParam": "Y coordinate (Y)"
+   },
+   {
+    "from": "c12",
+    "fromParam": "Number",
+    "to": "c16",
+    "toParam": "Plane (P)"
+   },
+   {
+    "from": "c2",
+    "fromParam": "Series (S)",
+    "to": "c16",
+    "toParam": "Radius (R)"
+   },
+   {
+    "from": "c2",
+    "fromParam": "Series (S)",
+    "to": "c17",
+    "toParam": "Curve (C)"
+   },
+   {
+    "from": "c2",
+    "fromParam": "Series (S)",
+    "to": "c17",
+    "toParam": "Count (N)"
+   },
+   {
+    "from": "c6",
+    "fromParam": "Geometry (G)",
+    "to": "c18",
+    "toParam": "Geometry (G)"
+   },
+   {
+    "from": "c7",
+    "fromParam": "Loft (L)",
+    "to": "c18",
+    "toParam": "Motion (T)"
+   },
+   {
+    "from": "c0",
+    "fromParam": "Number",
+    "to": "c19",
+    "toParam": "Curves (C)"
+   },
+   {
+    "from": "c11",
+    "fromParam": "Tree (T)",
+    "to": "c19",
+    "toParam": "Options (O)"
+   },
+   {
+    "from": "c11",
+    "fromParam": "Tree (T)",
+    "to": "c20",
+    "toParam": "Input A (A)"
+   },
+   {
+    "from": "c19",
+    "fromParam": "Loft (L)",
+    "to": "c20",
+    "toParam": "Input B (B)"
+   },
+   {
+    "from": "c14",
+    "fromParam": "Series (S)",
+    "to": "c21",
+    "toParam": "Input A (A)"
+   },
+   {
+    "from": "c4",
+    "fromParam": "Circle (C)",
+    "to": "c21",
+    "toParam": "Input B (B)"
+   },
+   {
+    "from": "c18",
+    "fromParam": "Geometry (G)",
+    "to": "c22",
+    "toParam": "Tree (T)"
+   },
+   {
+    "from": "c15",
+    "fromParam": "Point (Pt)",
+    "to": "c23",
+    "toParam": "Tree (T)"
+   },
+   {
+    "from": "c18",
+    "fromParam": "Geometry (G)",
+    "to": "c23",
+    "toParam": "Path (P)"
+   },
+   {
+    "from": "c4",
+    "fromParam": "Circle (C)",
+    "to": "c25",
+    "toParam": "Input"
+   },
+   {
+    "from": "c12",
+    "fromParam": "Number",
+    "to": "c26",
+    "toParam": "Start (S)"
+   },
+   {
+    "from": "c5",
+    "fromParam": "Points (P)",
+    "to": "c26",
+    "toParam": "Step (N)"
+   },
+   {
+    "from": "c20",
+    "fromParam": "Result (R)",
+    "to": "c27",
+    "toParam": "X coordinate (X)"
+   },
+   {
+    "from": "c4",
+    "fromParam": "Circle (C)",
+    "to": "c27",
+    "toParam": "Y coordinate (Y)"
+   },
+   {
+    "from": "c9",
+    "fromParam": "Result (R)",
+    "to": "c28",
+    "toParam": "Plane (P)"
+   },
+   {
+    "from": "c7",
+    "fromParam": "Loft (L)",
+    "to": "c28",
+    "toParam": "Radius (R)"
+   },
+   {
+    "from": "c26",
+    "fromParam": "Series (S)",
+    "to": "c29",
+    "toParam": "Curve (C)"
+   },
+   {
+    "from": "c19",
+    "fromParam": "Loft (L)",
+    "to": "c29",
+    "toParam": "Count (N)"
+   },
+   {
+    "from": "c7",
+    "fromParam": "Loft (L)",
+    "to": "c30",
+    "toParam": "Geometry (G)"
+   },
+   {
+    "from": "c23",
+    "fromParam": "Tree (T)",
+    "to": "c30",
+    "toParam": "Motion (T)"
+   },
+   {
+    "from": "c6",
+    "fromParam": "Geometry (G)",
+    "to": "c31",
+    "toParam": "Curves (C)"
+   },
+   {
+    "from": "c5",
+    "fromParam": "Points (P)",
+    "to": "c31",
+    "toParam": "Options (O)"
+   },
+   {
+    "from": "c12",
+    "fromParam": "Number",
+    "to": "c32",
+    "toParam": "Input A (A)"
+   },
+   {
+    "from": "c24",
+    "fromParam": "Number",
+    "to": "c32",
+    "toParam": "Input B (B)"
+   },
+   {
+    "from": "c30",
+    "fromParam": "Geometry (G)",
+    "to": "c33",
+    "toParam": "Input A (A)"
+   },
+   {
+    "from": "c5",
+    "fromParam": "Points (P)",
+    "to": "c33",
+    "toParam": "Input B (B)"
+   },
+   {
+    "from": "c26",
+    "fromParam": "Series (S)",
+    "to": "c34",
+    "toParam": "Tree (T)"
+   },
+   {
+    "from": "c3",
+    "fromParam": "Point (Pt)",
+    "to": "c35",
+    "toParam": "Tree (T)"
+   },
+   {
+    "from": "c6",
+    "fromParam": "Geometry (G)",
+    "to": "c35",
+    "toParam": "Path (P)"
+   },
+   {
+    "from": "c6",
+    "fromParam": "Geometry (G)",
+    "to": "c37",
+    "toParam": "Input"
+   },
+   {
+    "from": "c2",
+    "fromParam": "Series (S)",
+    "to": "c38",
+    "toParam": "Start (S)"
+   },
+   {
+    "from": "c32",
+    "fromParam": "Result (R)",
+    "to": "c38",
+    "toParam": "Step (N)"
+   },
+   {
+    "from": "c16",
+    "fromParam": "Circle (C)",
+    "to": "c39",
+    "toParam": "X coordinate (X)"
+   },
+   {
+    "from": "c15",
+    "fromParam": "Point (Pt)",
+    "to": "c39",
+    "toParam": "Y coordinate (Y)"
+   }
+  ]
+ },
+ "canned": {}
+}

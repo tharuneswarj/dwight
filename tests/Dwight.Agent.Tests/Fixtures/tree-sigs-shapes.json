@@ -1,0 +1,753 @@
+{
+ "note": "Written by the product's own get_tree_signature (AgentTools.Invoke by reflection on a fresh AgentScope after get_overview and get_region reads), on a scratch document built through the bridge with real wires, ninth build Release 0B35C7CDD85CFBC0 (Dwight.gha 4,344,832 bytes, 1 Nov 10:40:19), read 2026-11-01 12:22 IST by Rhino 2. Numbers and type names only; the document is Series 0..9 and Series 0..8 (slider count), Partition List size 3, Graft Tree, Dispatch with a True pattern (List A gets all ten, List B gets none), Cull Pattern with a True pattern and with a False pattern, Panels on the outputs. Shapes: one list (1 path, 10 items); mixed lengths (4 paths 3,3,3,1); equal lists (3 paths 3,3,3); a graft (10 paths of 1 item); an empty wire (Dispatch List B and Cull Pattern False, 0 items on a wire); Dispatch List A fully used. An unwired output is not a wire and the tool cannot be asked about it (see tree-sigs-tools4.json).",
+ "cases": [
+  {
+   "wire": "Number Slider (size3).size3 -> Partition List (Part_mixed).S",
+   "args": {
+    "from": {
+     "node": 1,
+     "param": "size3"
+    },
+    "to": {
+     "node": 8,
+     "param": "S"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 1,
+     "items": [
+      1
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "GH_NumberSlider",
+    "source_nick": "size3",
+    "output": "Number Slider",
+    "live_DataCount": 1,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     1
+    ],
+    "first_item_type": "GH_Number"
+   },
+   "target_type": "Partition List"
+  },
+  {
+   "wire": "Number Slider (size3).size3 -> Partition List (Part_equal).S",
+   "args": {
+    "from": {
+     "node": 1,
+     "param": "size3"
+    },
+    "to": {
+     "node": 9,
+     "param": "S"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 1,
+     "items": [
+      1
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "GH_NumberSlider",
+    "source_nick": "size3",
+    "output": "Number Slider",
+    "live_DataCount": 1,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     1
+    ],
+    "first_item_type": "GH_Number"
+   },
+   "target_type": "Partition List"
+  },
+  {
+   "wire": "Number Slider (count9).count9 -> Series (S9).C",
+   "args": {
+    "from": {
+     "node": 2,
+     "param": "count9"
+    },
+    "to": {
+     "node": 6,
+     "param": "C"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 1,
+     "items": [
+      1
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "GH_NumberSlider",
+    "source_nick": "count9",
+    "output": "Number Slider",
+    "live_DataCount": 1,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     1
+    ],
+    "first_item_type": "GH_Number"
+   },
+   "target_type": "Series"
+  },
+  {
+   "wire": "Boolean Toggle (tog).tog -> Dispatch (Disp).P",
+   "args": {
+    "from": {
+     "node": 3,
+     "param": "tog"
+    },
+    "to": {
+     "node": 11,
+     "param": "P"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 1,
+     "items": [
+      1
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "GH_BooleanToggle",
+    "source_nick": "tog",
+    "output": "Boolean Toggle",
+    "live_DataCount": 1,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     1
+    ],
+    "first_item_type": "GH_Boolean"
+   },
+   "target_type": "Dispatch"
+  },
+  {
+   "wire": "Boolean Toggle (tog).tog -> Cull Pattern (Cull).P",
+   "args": {
+    "from": {
+     "node": 3,
+     "param": "tog"
+    },
+    "to": {
+     "node": 12,
+     "param": "P"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 1,
+     "items": [
+      1
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "GH_BooleanToggle",
+    "source_nick": "tog",
+    "output": "Boolean Toggle",
+    "live_DataCount": 1,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     1
+    ],
+    "first_item_type": "GH_Boolean"
+   },
+   "target_type": "Cull Pattern"
+  },
+  {
+   "wire": "Boolean Toggle (tog_false).tog_false -> Cull Pattern (Cull_all).P",
+   "args": {
+    "from": {
+     "node": 4,
+     "param": "tog_false"
+    },
+    "to": {
+     "node": 13,
+     "param": "P"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 1,
+     "items": [
+      1
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "GH_BooleanToggle",
+    "source_nick": "tog_false",
+    "output": "Boolean Toggle",
+    "live_DataCount": 1,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     1
+    ],
+    "first_item_type": "GH_Boolean"
+   },
+   "target_type": "Cull Pattern"
+  },
+  {
+   "wire": "Series (S10).S -> Panel (P_one_list).P_one_list",
+   "args": {
+    "from": {
+     "node": 5,
+     "param": "S"
+    },
+    "to": {
+     "node": 7,
+     "param": "P_one_list"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 2,
+     "items": [
+      10
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "Component_Series",
+    "source_nick": "S10",
+    "output": "Series",
+    "live_DataCount": 10,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     10
+    ],
+    "first_item_type": "GH_Number"
+   },
+   "target_type": "Panel"
+  },
+  {
+   "wire": "Series (S10).S -> Partition List (Part_mixed).L",
+   "args": {
+    "from": {
+     "node": 5,
+     "param": "S"
+    },
+    "to": {
+     "node": 8,
+     "param": "L"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 2,
+     "items": [
+      10
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "Component_Series",
+    "source_nick": "S10",
+    "output": "Series",
+    "live_DataCount": 10,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     10
+    ],
+    "first_item_type": "GH_Number"
+   },
+   "target_type": "Partition List"
+  },
+  {
+   "wire": "Series (S10).S -> Graft Tree (Graft).T",
+   "args": {
+    "from": {
+     "node": 5,
+     "param": "S"
+    },
+    "to": {
+     "node": 10,
+     "param": "T"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 2,
+     "items": [
+      10
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "Component_Series",
+    "source_nick": "S10",
+    "output": "Series",
+    "live_DataCount": 10,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     10
+    ],
+    "first_item_type": "GH_Number"
+   },
+   "target_type": "Graft Tree"
+  },
+  {
+   "wire": "Series (S10).S -> Dispatch (Disp).L",
+   "args": {
+    "from": {
+     "node": 5,
+     "param": "S"
+    },
+    "to": {
+     "node": 11,
+     "param": "L"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 2,
+     "items": [
+      10
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "Component_Series",
+    "source_nick": "S10",
+    "output": "Series",
+    "live_DataCount": 10,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     10
+    ],
+    "first_item_type": "GH_Number"
+   },
+   "target_type": "Dispatch"
+  },
+  {
+   "wire": "Series (S10).S -> Cull Pattern (Cull).L",
+   "args": {
+    "from": {
+     "node": 5,
+     "param": "S"
+    },
+    "to": {
+     "node": 12,
+     "param": "L"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 2,
+     "items": [
+      10
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "Component_Series",
+    "source_nick": "S10",
+    "output": "Series",
+    "live_DataCount": 10,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     10
+    ],
+    "first_item_type": "GH_Number"
+   },
+   "target_type": "Cull Pattern"
+  },
+  {
+   "wire": "Series (S10).S -> Cull Pattern (Cull_all).L",
+   "args": {
+    "from": {
+     "node": 5,
+     "param": "S"
+    },
+    "to": {
+     "node": 13,
+     "param": "L"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 2,
+     "items": [
+      10
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "Component_Series",
+    "source_nick": "S10",
+    "output": "Series",
+    "live_DataCount": 10,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     10
+    ],
+    "first_item_type": "GH_Number"
+   },
+   "target_type": "Cull Pattern"
+  },
+  {
+   "wire": "Series (S9).S -> Partition List (Part_equal).L",
+   "args": {
+    "from": {
+     "node": 6,
+     "param": "S"
+    },
+    "to": {
+     "node": 9,
+     "param": "L"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 2,
+     "items": [
+      9
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "Component_Series",
+    "source_nick": "S9",
+    "output": "Series",
+    "live_DataCount": 9,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     9
+    ],
+    "first_item_type": "GH_Number"
+   },
+   "target_type": "Partition List"
+  },
+  {
+   "wire": "Partition List (Part_mixed).C -> Panel (P_mixed).P_mixed",
+   "args": {
+    "from": {
+     "node": 8,
+     "param": "C"
+    },
+    "to": {
+     "node": 14,
+     "param": "P_mixed"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 4,
+     "depth": 3,
+     "items": [
+      3,
+      3,
+      3,
+      1
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "Component_PartitionList",
+    "source_nick": "Part_mixed",
+    "output": "Chunks",
+    "live_DataCount": 10,
+    "live_PathCount": 4,
+    "live_items_per_path": [
+     3,
+     3,
+     3,
+     1
+    ],
+    "first_item_type": "GH_Number"
+   },
+   "target_type": "Panel"
+  },
+  {
+   "wire": "Partition List (Part_equal).C -> Panel (P_equal).P_equal",
+   "args": {
+    "from": {
+     "node": 9,
+     "param": "C"
+    },
+    "to": {
+     "node": 15,
+     "param": "P_equal"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 3,
+     "depth": 3,
+     "items": [
+      3,
+      3,
+      3
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "Component_PartitionList",
+    "source_nick": "Part_equal",
+    "output": "Chunks",
+    "live_DataCount": 9,
+    "live_PathCount": 3,
+    "live_items_per_path": [
+     3,
+     3,
+     3
+    ],
+    "first_item_type": "GH_Number"
+   },
+   "target_type": "Panel"
+  },
+  {
+   "wire": "Graft Tree (Graft).T -> Panel (P_graft).P_graft",
+   "args": {
+    "from": {
+     "node": 10,
+     "param": "T"
+    },
+    "to": {
+     "node": 16,
+     "param": "P_graft"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 10,
+     "depth": 3,
+     "items": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "GH_GraftTreeComponent",
+    "source_nick": "Graft",
+    "output": "Tree",
+    "live_DataCount": 10,
+    "live_PathCount": 10,
+    "live_items_per_path": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "first_item_type": "GH_Number"
+   },
+   "target_type": "Panel"
+  },
+  {
+   "wire": "Dispatch (Disp).A -> Panel (P_dispA).P_dispA",
+   "args": {
+    "from": {
+     "node": 11,
+     "param": "A"
+    },
+    "to": {
+     "node": 17,
+     "param": "P_dispA"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 2,
+     "items": [
+      10
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "Component_Dispatch",
+    "source_nick": "Disp",
+    "output": "List A",
+    "live_DataCount": 10,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     10
+    ],
+    "first_item_type": "GH_Number"
+   },
+   "target_type": "Panel"
+  },
+  {
+   "wire": "Dispatch (Disp).B -> Panel (P_dispB).P_dispB",
+   "args": {
+    "from": {
+     "node": 11,
+     "param": "B"
+    },
+    "to": {
+     "node": 18,
+     "param": "P_dispB"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 2,
+     "items": [
+      0
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "Component_Dispatch",
+    "source_nick": "Disp",
+    "output": "List B",
+    "live_DataCount": 0,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     0
+    ],
+    "first_item_type": null
+   },
+   "target_type": "Panel"
+  },
+  {
+   "wire": "Cull Pattern (Cull).L -> Panel (P_cull).P_cull",
+   "args": {
+    "from": {
+     "node": 12,
+     "param": "L"
+    },
+    "to": {
+     "node": 19,
+     "param": "P_cull"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 2,
+     "items": [
+      10
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "Component_CullPattern",
+    "source_nick": "Cull",
+    "output": "List",
+    "live_DataCount": 10,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     10
+    ],
+    "first_item_type": "GH_Number"
+   },
+   "target_type": "Panel"
+  },
+  {
+   "wire": "Cull Pattern (Cull_all).L -> Panel (P_cull_all).P_cull_all",
+   "args": {
+    "from": {
+     "node": 13,
+     "param": "L"
+    },
+    "to": {
+     "node": 20,
+     "param": "P_cull_all"
+    }
+   },
+   "tool_reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 2,
+     "items": [
+      0
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   },
+   "live": {
+    "source_object_type": "Component_CullPattern",
+    "source_nick": "Cull_all",
+    "output": "List",
+    "live_DataCount": 0,
+    "live_PathCount": 1,
+    "live_items_per_path": [
+     0
+    ],
+    "first_item_type": null
+   },
+   "target_type": "Panel"
+  }
+ ]
+}

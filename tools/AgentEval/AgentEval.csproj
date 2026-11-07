@@ -1,0 +1,164 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Lane A (Brief BY): the real agent loop from a console, with no Rhino. The product's GH-free sources are LINK-COMPILED, never copied,
+       the same list the headless tests link plus the real adapters, the credential store and the catalogue. See README.md. -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <NoWarn>NETSDK1138;CS0649</NoWarn>
+    <RootNamespace>Dwight.AgentEval</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <DefineConstants>$(DefineConstants.Replace('DEBUG;',''))</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Harness\*.cs" />
+    <Compile Include="..\..\Dwight\Agent\AgentFrontDoor.cs" Link="linked\Agent\AgentFrontDoor.cs" />
+    <Compile Include="..\..\Dwight\Agent\ScreenAsk.cs" Link="linked\Agent\ScreenAsk.cs" />
+    <Compile Include="..\..\Dwight\Agent\AgentHostTools.cs" Link="linked\Agent\AgentHostTools.cs" />
+    <Compile Include="..\..\Dwight\Agent\AgentIds.cs" Link="linked\Agent\AgentIds.cs" />
+    <Compile Include="..\..\Dwight\Agent\AgentLoopCore.cs" Link="linked\Agent\AgentLoopCore.cs" />
+    <Compile Include="..\..\Dwight\Agent\AgentToolCatalog.cs" Link="linked\Agent\AgentToolCatalog.cs" />
+    <Compile Include="..\..\Dwight\Agent\AgentToolCore.cs" Link="linked\Agent\AgentToolCore.cs" />
+    <Compile Include="..\..\Dwight\Agent\AgentTurnDriver.cs" Link="linked\Agent\AgentTurnDriver.cs" />
+    <Compile Include="..\..\Dwight\Agent\AgentTypes.cs" Link="linked\Agent\AgentTypes.cs" />
+    <Compile Include="..\..\Dwight\Agent\ApprovalMode.cs" Link="linked\Agent\ApprovalMode.cs" />
+    <Compile Include="..\..\Dwight\Agent\ApprovedScripts.cs" Link="linked\Agent\ApprovedScripts.cs" />
+    <Compile Include="..\..\Dwight\Agent\ApprovedTurnFact.cs" Link="linked\Agent\ApprovedTurnFact.cs" />
+    <Compile Include="..\..\Dwight\Agent\AsLeftRecord.cs" Link="linked\Agent\AsLeftRecord.cs" />
+    <Compile Include="..\..\Dwight\Agent\BoxOverlap.cs" Link="linked\Agent\BoxOverlap.cs" />
+    <Compile Include="..\..\Dwight\Agent\BuildLedger.cs" Link="linked\Agent\BuildLedger.cs" />
+    <Compile Include="..\..\Dwight\Agent\BuildOutcomeFact.cs" Link="linked\Agent\BuildOutcomeFact.cs" />
+    <Compile Include="..\..\Dwight\Agent\BuildPlacedFacts.cs" Link="linked\Agent\BuildPlacedFacts.cs" />
+    <Compile Include="..\..\Dwight\Agent\BuildProgress.cs" Link="linked\Agent\BuildProgress.cs" />
+    <Compile Include="..\..\Dwight\Agent\BuildScope.cs" Link="linked\Agent\BuildScope.cs" />
+    <Compile Include="..\..\Dwight\Agent\BuildScript.cs" Link="linked\Agent\BuildScript.cs" />
+    <Compile Include="..\..\Dwight\Agent\BuildSpec.cs" Link="linked\Agent\BuildSpec.cs" />
+    <Compile Include="..\..\Dwight\Agent\BuildSpecSchema.cs" Link="linked\Agent\BuildSpecSchema.cs" />
+    <Compile Include="..\..\Dwight\Agent\BuildState.cs" Link="linked\Agent\BuildState.cs" />
+    <Compile Include="..\..\Dwight\Agent\BuildStyle.cs" Link="linked\Agent\BuildStyle.cs" />
+    <Compile Include="..\..\Dwight\Agent\BuildUndoGuard.cs" Link="linked\Agent\BuildUndoGuard.cs" />
+    <Compile Include="..\..\Dwight\Agent\BuildVerdict.cs" Link="linked\Agent\BuildVerdict.cs" />
+    <Compile Include="..\..\Dwight\Agent\CanvasChangeFact.cs" Link="linked\Agent\CanvasChangeFact.cs" />
+    <Compile Include="..\..\Dwight\Agent\CanvasFacts.cs" Link="linked\Agent\CanvasFacts.cs" />
+    <Compile Include="..\..\Dwight\Agent\CardReceipt.cs" Link="linked\Agent\CardReceipt.cs" />
+    <Compile Include="..\..\Dwight\Agent\ChatAnchors.cs" Link="linked\Agent\ChatAnchors.cs" />
+    <Compile Include="..\..\Dwight\Agent\ChatAnswerBudget.cs" Link="linked\Agent\ChatAnswerBudget.cs" />
+    <Compile Include="..\..\Dwight\Agent\ChatChrome.cs" Link="linked\Agent\ChatChrome.cs" />
+    <Compile Include="..\..\Dwight\Agent\ChatHeader.cs" Link="linked\Agent\ChatHeader.cs" />
+    <Compile Include="..\..\Dwight\Agent\ChatToTranscript.cs" Link="linked\Agent\ChatToTranscript.cs" />
+    <Compile Include="..\..\Dwight\Agent\ComponentStamp.cs" Link="linked\Agent\ComponentStamp.cs" />
+    <Compile Include="..\..\Dwight\Agent\ConsentCard.cs" Link="linked\Agent\ConsentCard.cs" />
+    <Compile Include="..\..\Dwight\Agent\ConsentTokens.cs" Link="linked\Agent\ConsentTokens.cs" />
+    <Compile Include="..\..\Dwight\Agent\EditAttempts.cs" Link="linked\Agent\EditAttempts.cs" />
+    <Compile Include="..\..\Dwight\Agent\EditOpsAsk.cs" Link="linked\Agent\EditOpsAsk.cs" />
+    <Compile Include="..\..\Dwight\Agent\EditPortIndex.cs" Link="linked\Agent\EditPortIndex.cs" />
+    <Compile Include="..\..\Dwight\Agent\EditScriptAsk.cs" Link="linked\Agent\EditScriptAsk.cs" />
+    <Compile Include="..\..\Dwight\Agent\FullControl.cs" Link="linked\Agent\FullControl.cs" />
+    <Compile Include="..\..\Dwight\Agent\FullPathDrill.cs" Link="linked\Agent\FullPathDrill.cs" />
+    <Compile Include="..\..\Dwight\Agent\GeometryArgs.cs" Link="linked\Agent\GeometryArgs.cs" />
+    <Compile Include="..\..\Dwight\Agent\GeometryFacts.cs" Link="linked\Agent\GeometryFacts.cs" />
+    <Compile Include="..\..\Dwight\Agent\GeometryReport.cs" Link="linked\Agent\GeometryReport.cs" />
+    <Compile Include="..\..\Dwight\Agent\HandoffSeed.cs" Link="linked\Agent\HandoffSeed.cs" />
+    <Compile Include="..\..\Dwight\Agent\LocalBadge.cs" Link="linked\Agent\LocalBadge.cs" />
+    <Compile Include="..\..\Dwight\Agent\PanelDisplay.cs" Link="linked\Agent\PanelDisplay.cs" />
+    <Compile Include="..\..\Dwight\Agent\QualifiedNames.cs" Link="linked\Agent\QualifiedNames.cs" />
+    <Compile Include="..\..\Dwight\Agent\RankCap.cs" Link="linked\Agent\RankCap.cs" />
+    <Compile Include="..\..\Dwight\Agent\RebuildBoundary.cs" Link="linked\Agent\RebuildBoundary.cs" />
+    <Compile Include="..\..\Dwight\Agent\RebuildPreview.cs" Link="linked\Agent\RebuildPreview.cs" />
+    <Compile Include="..\..\Dwight\Agent\RegionTidy.cs" Link="linked\Agent\RegionTidy.cs" />
+    <Compile Include="..\..\Dwight\Agent\RegionSpacing.cs" Link="linked\Agent\RegionSpacing.cs" />
+    <Compile Include="..\..\Dwight\Agent\Landing.cs" Link="linked\Agent\Landing.cs" />
+    <Compile Include="..\..\Dwight\Agent\RestorableLoss.cs" Link="linked\Agent\RestorableLoss.cs" />
+    <Compile Include="..\..\Dwight\Agent\RevertMeasure.cs" Link="linked\Agent\RevertMeasure.cs" />
+    <Compile Include="..\..\Dwight\Agent\RunScriptApproval.cs" Link="linked\Agent\RunScriptApproval.cs" />
+    <Compile Include="..\..\Dwight\Agent\ScaffoldAddress.cs" Link="linked\Agent\ScaffoldAddress.cs" />
+    <Compile Include="..\..\Dwight\Agent\ScaffoldMapPayload.cs" Link="linked\Agent\ScaffoldMapPayload.cs" />
+    <Compile Include="..\..\Dwight\Agent\ScaffoldMapRecord.cs" Link="linked\Agent\ScaffoldMapRecord.cs" />
+    <Compile Include="..\..\Dwight\Agent\ScaffoldPlan.cs" Link="linked\Agent\ScaffoldPlan.cs" />
+    <Compile Include="..\..\Dwight\Agent\Sch.cs" Link="linked\Agent\Sch.cs" />
+    <Compile Include="..\..\Dwight\Agent\ScriptBuildVerdict.cs" Link="linked\Agent\ScriptBuildVerdict.cs" />
+    <Compile Include="..\..\Dwight\Agent\ScriptEditReport.cs" Link="linked\Agent\ScriptEditReport.cs" />
+    <Compile Include="..\..\Dwight\Agent\ScriptEditRestore.cs" Link="linked\Agent\ScriptEditRestore.cs" />
+    <Compile Include="..\..\Dwight\Agent\ScriptEditVerdict.cs" Link="linked\Agent\ScriptEditVerdict.cs" />
+    <Compile Include="..\..\Dwight\Agent\ScriptStreams.cs" Link="linked\Agent\ScriptStreams.cs" />
+    <Compile Include="..\..\Dwight\Agent\ScriptSummary.cs" Link="linked\Agent\ScriptSummary.cs" />
+    <Compile Include="..\..\Dwight\Agent\SessionFacts.cs" Link="linked\Agent\SessionFacts.cs" />
+    <Compile Include="..\..\Dwight\Agent\SetValueAsk.cs" Link="linked\Agent\SetValueAsk.cs" />
+    <Compile Include="..\..\Dwight\Agent\SetValueCore.cs" Link="linked\Agent\SetValueCore.cs" />
+    <Compile Include="..\..\Dwight\Agent\SolveCheckReport.cs" Link="linked\Agent\SolveCheckReport.cs" />
+    <Compile Include="..\..\Dwight\Agent\SolveTiming.cs" Link="linked\Agent\SolveTiming.cs" />
+    <Compile Include="..\..\Dwight\Agent\SourceBound.cs" Link="linked\Agent\SourceBound.cs" />
+    <Compile Include="..\..\Dwight\Agent\SpotAsk.cs" Link="linked\Agent\SpotAsk.cs" />
+    <Compile Include="..\..\Dwight\Agent\SpotClickGuard.cs" Link="linked\Agent\SpotClickGuard.cs" />
+    <Compile Include="..\..\Dwight\Agent\SpotMint.cs" Link="linked\Agent\SpotMint.cs" />
+    <Compile Include="..\..\Dwight\Agent\StepProgress.cs" Link="linked\Agent\StepProgress.cs" />
+    <Compile Include="..\..\Dwight\Agent\TurnShape.cs" Link="linked\Agent\TurnShape.cs" />
+    <Compile Include="..\..\Dwight\Agent\VerbScope.cs" Link="linked\Agent\VerbScope.cs" />
+    <Compile Include="..\..\Dwight\Agent\WebSearch.cs" Link="linked\Agent\WebSearch.cs" />
+    <Compile Include="..\..\Dwight\Components\ComponentMatchCore.cs" Link="linked\Components\ComponentMatchCore.cs" />
+    <Compile Include="..\..\Dwight\Credentials\CredentialStore.cs" Link="linked\Credentials\CredentialStore.cs" />
+    <Compile Include="..\..\Dwight\Data\BehaviourFingerprintCore.cs" Link="linked\Data\BehaviourFingerprintCore.cs" />
+    <Compile Include="..\..\Dwight\Data\PayloadContract.cs" Link="linked\Data\PayloadContract.cs" />
+    <Compile Include="..\..\Dwight\Data\PluginName.cs" Link="linked\Data\PluginName.cs" />
+    <Compile Include="..\..\Dwight\Data\ScriptSourceReflect.cs" Link="linked\Data\ScriptSourceReflect.cs" />
+    <Compile Include="..\..\Dwight\Data\SolveTimeBucket.cs" Link="linked\Data\SolveTimeBucket.cs" />
+    <Compile Include="..\..\Dwight\Data\SourceDiff.cs" Link="linked\Data\SourceDiff.cs" />
+    <Compile Include="..\..\Dwight\Data\SourceToken.cs" Link="linked\Data\SourceToken.cs" />
+    <Compile Include="..\..\Dwight\DwightConfig.cs" Link="linked\DwightConfig.cs" />
+    <Compile Include="..\..\Dwight\DwightVerbs.cs" Link="linked\DwightVerbs.cs" />
+    <Compile Include="..\..\Dwight\Feedback\ProblemReport.cs" Link="linked\Feedback\ProblemReport.cs" />
+    <Compile Include="..\..\Dwight\Llm\AgentEligibility.cs" Link="linked\Llm\AgentEligibility.cs" />
+    <Compile Include="..\..\Dwight\Llm\AnthropicProvider.cs" Link="linked\Llm\AnthropicProvider.cs" />
+    <Compile Include="..\..\Dwight\Llm\AnthropicReplyStream.cs" Link="linked\Llm\AnthropicReplyStream.cs" />
+    <Compile Include="..\..\Dwight\Llm\StructuredOutput.cs" Link="linked\Llm\StructuredOutput.cs" />
+    <Compile Include="..\..\Dwight\Llm\AnthropicRequestBody.cs" Link="linked\Llm\AnthropicRequestBody.cs" />
+    <Compile Include="..\..\Dwight\Llm\GoogleProvider.cs" Link="linked\Llm\GoogleProvider.cs" />
+    <Compile Include="..\..\Dwight\Llm\ILlmProvider.cs" Link="linked\Llm\ILlmProvider.cs" />
+    <Compile Include="..\..\Dwight\Llm\LlmProviders.cs" Link="linked\Llm\LlmProviders.cs" />
+    <Compile Include="..\..\Dwight\Llm\LlmSchemaCheck.cs" Link="linked\Llm\LlmSchemaCheck.cs" />
+    <Compile Include="..\..\Dwight\Llm\LlmTrace.cs" Link="linked\Llm\LlmTrace.cs" />
+    <Compile Include="..\..\Dwight\Llm\LlmTypes.cs" Link="linked\Llm\LlmTypes.cs" />
+    <Compile Include="..\..\Dwight\Llm\OpenAIProvider.cs" Link="linked\Llm\OpenAIProvider.cs" />
+    <Compile Include="..\..\Dwight\Llm\OpenAIResponses.cs" Link="linked\Llm\OpenAIResponses.cs" />
+    <Compile Include="..\..\Dwight\Llm\ProviderLimit.cs" Link="linked\Llm\ProviderLimit.cs" />
+    <Compile Include="..\..\Dwight\Llm\SseReader.cs" Link="linked\Llm\SseReader.cs" />
+    <Compile Include="..\..\Dwight\Llm\StreamCapture.cs" Link="linked\Llm\StreamCapture.cs" />
+    <Compile Include="..\..\Dwight\Llm\ThinkingBudget.cs" Link="linked\Llm\ThinkingBudget.cs" />
+    <Compile Include="..\..\Dwight\Llm\ThinkingWire.cs" Link="linked\Llm\ThinkingWire.cs" />
+    <Compile Include="..\..\Dwight\Models\CatalogueSeed.cs" Link="linked\Models\CatalogueSeed.cs" />
+    <Compile Include="..\..\Dwight\Models\ModelCatalogue.cs" Link="linked\Models\ModelCatalogue.cs" />
+    <Compile Include="..\..\Dwight\Models\ModelInfo.cs" Link="linked\Models\ModelInfo.cs" />
+    <Compile Include="..\..\Dwight\Models\ModelPick.cs" Link="linked\Models\ModelPick.cs" />
+    <Compile Include="..\..\Dwight\Models\ModelResolver.cs" Link="linked\Models\ModelResolver.cs" />
+    <Compile Include="..\..\Dwight\Prompts\Prompts.cs" Link="linked\Prompts\Prompts.cs" />
+    <Compile Include="..\..\Dwight\Session\ChatBudget.cs" Link="linked\Session\ChatBudget.cs" />
+    <Compile Include="..\..\Dwight\Session\ChatTranscript.cs" Link="linked\Session\ChatTranscript.cs" />
+    <Compile Include="..\..\Dwight\Session\ChatImage.cs" Link="linked\Session\ChatImage.cs" />
+    <Compile Include="..\..\Dwight\Session\HistoryCore.cs" Link="linked\Session\HistoryCore.cs" />
+    <Compile Include="..\..\Dwight\Session\SessionStoreCore.cs" Link="linked\Session\SessionStoreCore.cs" />
+    <Compile Include="..\..\Dwight\Session\DwightNotes.cs" Link="linked\Session\DwightNotes.cs" />
+    <Compile Include="..\..\Dwight\Session\NoteMarkdown.cs" Link="linked\Session\NoteMarkdown.cs" />
+    <Compile Include="..\..\Dwight\Session\Spend.cs" Link="linked\Session\Spend.cs" />
+    <Compile Include="..\..\Dwight\Simplify\CSharpSignature.cs" Link="linked\Simplify\CSharpSignature.cs" />
+    <Compile Include="..\..\Dwight\Simplify\CompileRepair.cs" Link="linked\Simplify\CompileRepair.cs" />
+    <Compile Include="..\..\Dwight\Simplify\DeltaPredictor.cs" Link="linked\Simplify\DeltaPredictor.cs" />
+    <Compile Include="..\..\Dwight\Simplify\ScriptMarshFlags.cs" Link="linked\Simplify\ScriptMarshFlags.cs" />
+    <Compile Include="..\..\Dwight\Simplify\ScriptTypeMap.cs" Link="linked\Simplify\ScriptTypeMap.cs" />
+    <Compile Include="..\..\Dwight\Simplify\SimplifyPlan.cs" Link="linked\Simplify\SimplifyPlan.cs" />
+    <Compile Include="..\..\Dwight\Simplify\UsingNormalizer.cs" Link="linked\Simplify\UsingNormalizer.cs" />
+    <Compile Include="..\..\Dwight\UI\FirstRunCore.cs" Link="linked\UI\FirstRunCore.cs" />
+    <EmbeddedResource Include="..\..\Dwight\Resources\models.json" LogicalName="Dwight.Models.json" />
+    <None Include="fixtures\*.json" CopyToOutputDirectory="PreserveNewest" Link="fixtures\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>

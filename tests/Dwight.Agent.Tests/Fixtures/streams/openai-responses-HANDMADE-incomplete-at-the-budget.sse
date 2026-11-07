@@ -1,0 +1,20 @@
+: HAND-MADE. Typed from the documented Responses streaming shape, NOT captured from a live reply. It witnesses that the reader reads the documentation, and a live capture must join it (Brief BV).
+: Sources read 2026-10-31: developers.openai.com/api/docs/guides/ streaming-responses, function-calling, reasoning, migrate-to-responses; the event, item and usage types in openai-python src/openai/types/responses/.
+event: response.created
+data: {"type":"response.created","response":{"id":"resp_1","object":"response","status":"in_progress","output":[],"usage":null},"sequence_number":0}
+
+event: response.output_item.added
+data: {"type":"response.output_item.added","output_index":0,"item":{"id":"rs_9","type":"reasoning","summary":[],"encrypted_content":null,"status":"completed"},"sequence_number":1}
+
+event: response.output_item.done
+data: {"type":"response.output_item.done","output_index":0,"item":{"id":"rs_9","type":"reasoning","summary":[],"encrypted_content":"ENC","status":"completed"},"sequence_number":2}
+
+event: response.output_item.added
+data: {"type":"response.output_item.added","output_index":1,"item":{"id":"fc_9","type":"function_call","call_id":"call_9","name":"build_region","arguments":"","status":"in_progress"},"sequence_number":3}
+
+event: response.function_call_arguments.delta
+data: {"type":"response.function_call_arguments.delta","item_id":"fc_9","output_index":1,"delta":"{\"region\":\"A1\"","sequence_number":4}
+
+event: response.incomplete
+data: {"type":"response.incomplete","response":{"id":"resp_1","object":"response","status":"incomplete","output":[{"id":"rs_9","type":"reasoning","summary":[],"encrypted_content":"ENC","status":"completed"}],"usage":{"input_tokens":500,"output_tokens":4000,"output_tokens_details":{"reasoning_tokens":4000},"total_tokens":4500},"incomplete_details":{"reason":"max_output_tokens"}},"sequence_number":5}
+

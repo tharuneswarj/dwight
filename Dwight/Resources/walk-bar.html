@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<!-- WP-2.2: strict CSP - fonts inlined below, no external network (see panel-shell for the rationale). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; font-src data:; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<style>/*__DWIGHT_FONTS__*/</style>
+<style>/*__DWIGHT_TOKENS__*/</style>
+<style>/*__DWIGHT_COMPONENTS__*/</style>
+<style>
+  html,body{height:100%;overflow:hidden}
+</style></head>
+<body>
+<!--__DWIGHT_ICONS__-->
+  <!-- Brief DA: the Walk's bar, a run's companion, visible only while a Walk is live. It holds no value of its own: the host draws it from WalkState, and every control and key goes back to the host. -->
+  <div class="walkbar" id="walkbar">
+    <div class="walkline">
+      <span class="walkstep" id="walkstep"></span>
+      <div class="walksent" id="walksent"><div id="walkwords"></div></div>
+    </div>
+    <!-- Brief EC unit 3 (Tharun's sitting): the panel's icons, the panel's switches, and the X, which is Focus off and never the end of the Walk; Leave is the panel's. -->
+    <div class="walkstrip">
+      <span class="walkdots" id="walkdots"></span>
+      <button class="iconbtn" id="walkback" title="Back: Left arrow" aria-label="Back" onclick="dwightSend('back')"><svg class="ic turned" aria-hidden="true"><use href="#ic-chev"/></svg></button>
+      <button class="iconbtn" id="walknext" title="Next: Right arrow" aria-label="Next" onclick="dwightSend('next')"><svg class="ic" aria-hidden="true"><use href="#ic-chev"/></svg></button>
+      <button class="iconbtn" id="walkplay" title="Play: step on by itself. Any key or click pauses it." aria-label="Play" aria-pressed="false" onclick="dwightSend('play')"><svg class="ic" aria-hidden="true"><use id="walkplay-ic" href="#ic-play"/></svg></button>
+      <button class="iconbtn" id="walkask" title="Ask the chat about this step" aria-label="Ask the chat about this step" onclick="dwightSend('ask')"><svg class="ic" aria-hidden="true"><use href="#ic-chat"/></svg></button>
+      <span class="spacer"></span>
+      <div class="swrow"><label for="walkfocus">Focus</label><button class="sw" id="walkfocus" role="switch" aria-label="Focus" aria-checked="true" title="Focus off: back to the panel, on the same step" onclick="dwightSend('focus')"><i></i></button></div>
+      <div class="swrow"><label for="walkdim">Dim</label><button class="sw" id="walkdim" role="switch" aria-label="Dim canvas" aria-checked="true" title="Dim the rest of the canvas" onclick="dwightSend('dim:'+(this.getAttribute('aria-checked')==='true'?'off':'on'))"><i></i></button></div>
+      <div class="swrow"><label for="walklens">Lens</label><button class="sw" id="walklens" role="switch" aria-label="Every wire" aria-checked="false" title="Every wire: the Lens on all of them" disabled onclick="dwightSend('everywire')"><i></i></button></div>
+      <button class="iconbtn" id="walkclose" title="Back to the panel: Esc" aria-label="Back to the panel" onclick="dwightSend('close')"><svg class="ic" aria-hidden="true"><use href="#ic-close"/></svg></button>
+    </div>
+  </div>
+<script>
+/*__DWIGHT_LINKS__*/
+/*__DWIGHT_DECK__*/
+  function dwightSend(c){ try{ if(window.chrome&&window.chrome.webview){window.chrome.webview.postMessage(c);return;} }catch(e){} try{document.title='dwight:'+c+':'+Date.now();}catch(e){} }
+  function dwightSetTheme(t){ document.body.classList.toggle('dark', t==='dark'); }
+  // The height the page asks for: its own, with the whole sentence, however tall the window is now. The host holds it within its limits, and past them the sentence scrolls here.
+  // The sentence is measured by its words, not its box: the box is stretched to the window, so its scrollHeight could never ask for less and one long step would hold the bar tall.
+  // The words sit in a block of their own, and the block's height is read, which is its line boxes. Never a Range's rectangle: that hugs the glyphs and is short by each line's
+  // leading, 3 to 4 px on two lines, which left the second line under the fade at the height the bar asked for (Brief FN, measured at 1, 1.25 and 1.5).
+  function _walkNeed(){ var h=function(id){ return document.getElementById(id).getBoundingClientRect().height; }; return Math.ceil(h('walkbar')-h('walksent')+h('walkwords')-0.01); }
+  function _walkAsk(){ dwightSend('h:'+_walkNeed()); _walkCut(); }
+  // Past its tallest the sentence scrolls. While words remain below the edge, the edge fades into the bar, so a cut is never mistaken for the end of the sentence.
+  function _walkCut(){ var s=document.getElementById('walksent'); s.parentNode.classList.toggle('more', s.scrollHeight-s.scrollTop-s.clientHeight>1); }
+  // The sentence is the panel's own snippet, already through the Markdown pipeline (ADR-088); everything else is set as text.
+  function dwightWalkStep(json){ var d=JSON.parse(json);
+    document.getElementById('walkstep').textContent=d.label;
+    var s=document.getElementById('walkwords'); s.innerHTML=d.html||''; document.getElementById('walksent').scrollTop=0;
+    if(d.gone){ var g=document.createElement('div'); g.className='walkgone'; g.textContent=d.gone; s.appendChild(g); }
+    if(d.time){ var t=document.createElement('div'); t.className='walktime'; t.textContent=d.time; s.appendChild(t); }
+    // Brief EI: a Learn card in the sentence's place, drawn by the panel's own renderer from the plugin's view; the bar has its own switches.
+    DwightDeck.render(d.deck?s:document.createElement('div'),d.deck||null,{switches:false,bar:true});
+    var dots=document.getElementById('walkdots'); dots.textContent='';
+    for(var i=0;i<d.n;i++){ (function(i){ var b=document.createElement('button'); b.className='walkdot'+(i===d.i?' on':''); b.textContent=String(i+1); b.title='Step '+(i+1); b.setAttribute('aria-label','Step '+(i+1)); if(i===d.i) b.setAttribute('aria-current','step'); b.onclick=function(){ dwightSend('goto:'+i); }; dots.appendChild(b); })(i); }
+    document.getElementById('walkback').disabled=d.i<=0;
+    document.getElementById('walknext').disabled=d.i>=d.n-1;
+    var p=document.getElementById('walkplay'), word=d.playing?'Pause':'Play'; document.getElementById('walkplay-ic').setAttribute('href',d.playing?'#ic-pause':'#ic-play');
+    p.setAttribute('aria-label',word); p.title=d.playing?'Pause: any key or click also pauses it.':'Play: step on by itself. Any key or click pauses it.';
+    p.setAttribute('aria-pressed',d.playing?'true':'false'); p.disabled=d.n<2||d.canplay===false;
+    // Brief DJ: the Lens's one control, in the state the host says. A key is a shortcut, never the only door. With no lens the field is absent, and the switch is off and cannot be moved.
+    var w=document.getElementById('walklens'); w.disabled=typeof d.everywire!=='boolean'; w.setAttribute('aria-checked',d.everywire===true?'true':'false');
+    if(typeof d.focus==='boolean'||typeof d.dim==='boolean') dwightWalkSwitches(d.focus!==false,d.dim!==false);
+    _walkAsk(); }
+  // Brief EC unit 3: the bar's Focus and Dim, from the same facts the panel's switches read.
+  function dwightWalkSwitches(focus,dim){ document.getElementById('walkfocus').setAttribute('aria-checked',focus?'true':'false'); document.getElementById('walkdim').setAttribute('aria-checked',dim?'true':'false'); }
+  // Brief DD: any key or click pauses a Walk that is playing, except on Play itself, whose own click is the answer. The host ignores it when nothing is playing.
+  function _onPlay(el){ var p=document.getElementById('walkplay'); return !!el&&(el===p||p.contains(el)); }
+  document.addEventListener('mousedown',function(e){ if(!_onPlay(e.target)) dwightSend('input'); });
+  document.addEventListener('keydown',function(e){ if(e.ctrlKey||e.altKey||e.shiftKey||e.metaKey){ dwightSend('input'); return; }
+    if(DwightDeck.shown()&&e.key!=='ArrowRight'&&e.key!=='ArrowLeft'&&DwightDeck.key(e)){ e.preventDefault(); return; }   // Brief EI: 1 to 4 and Enter on a card; the arrows stay the host's
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='Escape'){ e.preventDefault(); dwightSend('key:'+e.key); return; }
+    if(!(_onPlay(e.target)&&(e.key===' '||e.key==='Enter'))) dwightSend('input'); });
+  window.addEventListener('resize',_walkAsk);
+  document.getElementById('walksent').addEventListener('scroll',_walkCut);
+</script></body></html>

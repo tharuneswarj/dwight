@@ -1,0 +1,103 @@
+: REDUCED from a live capture, 31 October 2026 (GPT-6.1 Sol, a read answer: text). Every event is real and in its real order. Only the whole-response echo on the lifecycle events is cut to its reply fields, and each encrypted_content is replaced.
+event: response.created
+data: {"type":"response.created","response":{"id":"resp_00648174eebc8204016ae5d0a2b28087d28e37f6f367cdd78a","object":"response","created_at":1793446050,"status":"in_progress","completed_at":null,"error":null,"incomplete_details":null,"max_output_tokens":17200,"model":"gpt-6.1-sol","output":[],"parallel_tool_calls":true,"reasoning":{"context":"all_turns","effort":"medium","mode":"standard","summary":null},"store":false,"tool_choice":"auto","usage":null},"sequence_number":0}
+
+event: response.in_progress
+data: {"type":"response.in_progress","response":{"id":"resp_00648174eebc8204016ae5d0a2b28087d28e37f6f367cdd78a","object":"response","created_at":1793446050,"status":"in_progress","completed_at":null,"error":null,"incomplete_details":null,"max_output_tokens":17200,"model":"gpt-6.1-sol","output":[],"parallel_tool_calls":true,"reasoning":{"context":"all_turns","effort":"medium","mode":"standard","summary":null},"store":false,"tool_choice":"auto","usage":null},"sequence_number":1}
+
+event: response.output_item.added
+data: {"type":"response.output_item.added","item":{"id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","type":"message","status":"in_progress","content":[],"phase":"final_answer","role":"assistant"},"output_index":0,"sequence_number":2}
+
+event: response.content_part.added
+data: {"type":"response.content_part.added","content_index":0,"item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","output_index":0,"part":{"type":"output_text","annotations":[],"logprobs":[],"text":""},"sequence_number":3}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":"The","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"z4jdJ9U4QzDq3","output_index":0,"sequence_number":4}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" canvas","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"iPtVnLFiq","output_index":0,"sequence_number":5}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" contains","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"fJq78Rz","output_index":0,"sequence_number":6}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" one","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"Z2toBSVQMvfk","output_index":0,"sequence_number":7}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" Series","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"Ia2GIbaWf","output_index":0,"sequence_number":8}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" component","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"A8TWHy","output_index":0,"sequence_number":9}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":",","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"SvX45Gav1HcYosb","output_index":0,"sequence_number":10}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" three","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"fouTOCFaEj","output_index":0,"sequence_number":11}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" Number","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"UY7IqZ5Ns","output_index":0,"sequence_number":12}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" parameters","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"9rHWw","output_index":0,"sequence_number":13}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":",","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"7WAm5JdMFJBBTBz","output_index":0,"sequence_number":14}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" and","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"yXXrzrjrm9rT","output_index":0,"sequence_number":15}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" two","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"B9QDfzjPTZwx","output_index":0,"sequence_number":16}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" Number","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"gH30oLWX1","output_index":0,"sequence_number":17}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" Sl","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"93ltgATNFA7R3","output_index":0,"sequence_number":18}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":"iders","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"xSDRy5p3AwK","output_index":0,"sequence_number":19}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":",","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"5n13EYO7rZcJVa2","output_index":0,"sequence_number":20}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" connected","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"BUfbvE","output_index":0,"sequence_number":21}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" by","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"k2HS6UdrG7Py6","output_index":0,"sequence_number":22}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" three","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"REhTVDGRZW","output_index":0,"sequence_number":23}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" wires","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"eCgXPPnaBO","output_index":0,"sequence_number":24}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" across","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"qYL05gPpE","output_index":0,"sequence_number":25}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" three","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"nkQPUuXWq9","output_index":0,"sequence_number":26}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" separate","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"aTEYPR3","output_index":0,"sequence_number":27}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":" regions","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"uYb27jgt","output_index":0,"sequence_number":28}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","content_index":0,"delta":".","item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"obfuscation":"sXH44GSZyHlM5cj","output_index":0,"sequence_number":29}
+
+event: response.output_text.done
+data: {"type":"response.output_text.done","content_index":0,"item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","logprobs":[],"output_index":0,"sequence_number":30,"text":"The canvas contains one Series component, three Number parameters, and two Number Sliders, connected by three wires across three separate regions."}
+
+event: response.content_part.done
+data: {"type":"response.content_part.done","content_index":0,"item_id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","output_index":0,"part":{"type":"output_text","annotations":[],"logprobs":[],"text":"The canvas contains one Series component, three Number parameters, and two Number Sliders, connected by three wires across three separate regions."},"sequence_number":31}
+
+event: response.output_item.done
+data: {"type":"response.output_item.done","item":{"id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","type":"message","status":"completed","content":[{"type":"output_text","annotations":[],"logprobs":[],"text":"The canvas contains one Series component, three Number parameters, and two Number Sliders, connected by three wires across three separate regions."}],"phase":"final_answer","role":"assistant"},"output_index":0,"sequence_number":32}
+
+event: response.completed
+data: {"type":"response.completed","response":{"id":"resp_00648174eebc8204016ae5d0a2b28087d28e37f6f367cdd78a","object":"response","created_at":1793446050,"status":"completed","completed_at":1793446052,"error":null,"incomplete_details":null,"max_output_tokens":17200,"model":"gpt-6.1-sol","output":[{"id":"msg_00648174eebc8204016ae5d0a3d3b087d28bff9932452632a8","type":"message","status":"completed","content":[{"type":"output_text","annotations":[],"logprobs":[],"text":"The canvas contains one Series component, three Number parameters, and two Number Sliders, connected by three wires across three separate regions."}],"phase":"final_answer","role":"assistant"}],"parallel_tool_calls":true,"reasoning":{"context":"all_turns","effort":"medium","mode":"standard","summary":null},"store":false,"tool_choice":"auto","usage":{"input_tokens":9332,"input_tokens_details":{"cache_write_tokens":336,"cached_tokens":8993},"output_tokens":30,"output_tokens_details":{"reasoning_tokens":0},"total_tokens":9362}},"sequence_number":33}
+

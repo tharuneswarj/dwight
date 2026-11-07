@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Headless unit tests for the behaviour fingerprint (WP-1.8). The safety-critical token/splice/hash
+       logic is extracted GH-free into BehaviourFingerprintCore.cs and LINK-COMPILED in (no reference to
+       Dwight.gha / Grasshopper), the same pattern as the Layout/Segment test cores. The GH-coupled reader
+       (BehaviourFingerprint.Of(GH_Document)) is NOT compiled here - only the pure core it delegates to.
+       Run: dotnet test tests/Dwight.Data.Tests -->
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <NoWarn>NETSDK1138</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="xunit" Version="2.6.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\Dwight\Data\BehaviourFingerprintCore.cs" Link="data\BehaviourFingerprintCore.cs" />
+    <Compile Include="..\..\Dwight\Data\GeometryDigest.cs" Link="data\GeometryDigest.cs" />
+    <!-- #779: the bounded, normalised digest of a script component's SOURCE. GH-free precisely because the
+         normalisation is the load-bearing half - a CRLF round-trip must not read as a behaviour change - and
+         because the empty-versus-unreadable distinction decides which way a rebuild's claim fails. -->
+    <Compile Include="..\..\Dwight\Data\SourceToken.cs" Link="data\SourceToken.cs" />
+    <!-- #779: the reader's own decisions - is this a script component, and did the read succeed - GH-free
+         so they can be driven against stand-in types. Extracted after the first version of these tests was
+         seen to stay GREEN with the guard reverted: it asserted a function beside the reader (#612). -->
+    <Compile Include="..\..\Dwight\Data\ScriptSourceReflect.cs" Link="data\ScriptSourceReflect.cs" />
+    <!-- Phase-9 U20: the diff a user reads before approving an edit to their script. It ORIENTS - the
+         complete source is the consent surface and sits below it - so what is tested is whether it finds
+         the change where the change is, and whether its counts describe the whole diff or only what fitted. -->
+    <Compile Include="..\..\Dwight\Data\SourceDiff.cs" Link="data\SourceDiff.cs" />
+    <!-- Whether an output holds anything: at least one NON-NULL item, for U20's equivalence check and U19's emptiness
+         oracle. It counted items until an output of nulls was found to read as "carrying data". -->
+    <Compile Include="..\..\Dwight\Data\OutputItems.cs" Link="data\OutputItems.cs" />
+    <!-- RR17: the GH-free halves of #36 (can Dwight SHOW the model what this component does?) and #37 (a failure
+         structured for a retry, which the Phase-8 refine loop consumes). -->
+    <Compile Include="..\..\Dwight\Data\ComponentOpacity.cs" Link="data\ComponentOpacity.cs" />
+    <!-- RR18: the per-item digest DECISION (unwrap, then digest by type-class). GH-free precisely so the two laws
+         that broke in opposite directions - RR6's false positive and RR18's false negative - are tested together. -->
+    <Compile Include="..\..\Dwight\Data\ItemDigest.cs" Link="data\ItemDigest.cs" />
+    <Compile Include="..\..\Dwight\Data\RefineFeedback.cs" Link="data\RefineFeedback.cs" />
+    <!-- Phase-8 WP-0 (#95): the mismatch classifier, graduated from the eval into a GH-free core so it can render
+         the production output-diff feedback (class + value-free counts). Buckets only; never decides pass/fail. -->
+    <Compile Include="..\..\Dwight\Data\MismatchClassifier.cs" Link="data\MismatchClassifier.cs" />
+    <!-- Phase-8 WP-0 Stage C (#101): the overfit measurement's LABEL-CRITICAL pure cores (the deterministic
+         perturbation sequence + the second-state scoring). GH-free; the #99 label decision rests on the scoring. -->
+    <Compile Include="..\..\Dwight\Eval\SecondState.cs" Link="eval\SecondState.cs" />
+  </ItemGroup>
+
+</Project>

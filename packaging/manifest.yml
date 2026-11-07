@@ -1,0 +1,31 @@
+---
+# Yak package manifest for Dwight. packaging/build-yak.ps1 assembles the distribution folder and dry-runs
+# `yak build` locally; publishing to the Rhino package server is a manual release step, never CI.
+# The `version` is stamped from Dwight/Dwight.csproj by the script, so keep the two in sync.
+# The `icon` is packaging/icon.png (the Dwight mark at 64 x 64), copied beside this file by the script.
+name: Dwight
+version: 0.1.0
+authors:
+  - Tharun Eswar
+# The description is Tharun's text of 5 November 2026 (a short line, then a paragraph; the blank line is a
+# paragraph break in a folded block). PublicCopyTests pins both sentences; change them together.
+description: >
+  AI inside the Grasshopper canvas. Explain, diagnose, reorganise, simplify or build any
+  selection. Your own API key, or fully local with Ollama.
+
+  Select some components, press Ctrl+Shift+Right-click, pick a tool. The model does the
+  judgement. The plugin handles everything exact in C#, like component ids, positions,
+  group boundaries and wiring, and checks every change it makes. Open source.
+  Windows, Rhino 8.24+. Docs at dwight.tha.run.
+url: "https://github.com/tharuneswarj/dwight"
+icon: icon.png
+license: Apache-2.0
+keywords:
+  - grasshopper
+  - rhino
+  - llm
+  - explain
+  - diagnose
+  - reorganise
+  - simplify
+  - build

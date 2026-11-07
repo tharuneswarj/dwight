@@ -1,0 +1,127 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<!-- WP-2.2: strict CSP - fonts inlined below, no external network (see panel-shell for the rationale). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; font-src data:; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<style>/*__DWIGHT_FONTS__*/</style>
+<style>/*__DWIGHT_TOKENS__*/</style>
+<style>/*__DWIGHT_COMPONENTS__*/</style>
+<style>
+  html,body{height:100%;overflow:hidden}
+</style></head>
+<body>
+<!--__DWIGHT_ICONS__-->
+  <div class="app">
+    <div class="titlebar" id="bar">
+      <!--__DWIGHT_MARK__-->
+      <span class="title"><span class="who">Dwight</span><span class="sep">·</span><span class="act">Note</span></span>
+      <button class="iconbtn" title="Close" onclick="dwightSend('close')"><svg class="ic" aria-hidden="true"><use href="#ic-close"/></svg></button>
+    </div>
+    <div class="form">
+      <h2 class="section-head" id="head">Note</h2>
+      <div class="noteread" id="read" hidden></div>
+      <div class="field noteedit" id="edit">
+        <div class="notetools" id="tools">
+          <button class="iconbtn" id="tool-bold" title="Bold (Ctrl+B)" aria-label="Bold" onclick="noteWrap('**')"><svg class="ic" aria-hidden="true"><use href="#ic-bold"/></svg></button>
+          <button class="iconbtn" id="tool-code" title="Inline code" aria-label="Inline code" onclick="noteWrap('`')"><svg class="ic" aria-hidden="true"><use href="#ic-code"/></svg></button>
+          <button class="iconbtn" id="tool-list" title="Bullet list" aria-label="Bullet list" onclick="noteBullets()"><svg class="ic" aria-hidden="true"><use href="#ic-list"/></svg></button>
+          <button class="iconbtn" id="tool-numbers" title="Numbered list" aria-label="Numbered list" onclick="noteNumbers()"><svg class="ic" aria-hidden="true"><use href="#ic-numbers"/></svg></button>
+          <div class="dd notetable" id="tool-table"></div>
+        </div>
+        <textarea id="text" rows="7" maxlength="4000" placeholder="What should you, or Dwight, remember about this?"></textarea>
+        <div class="hint" id="count"></div>
+      </div>
+      <div class="hint" id="stale" style="display:none"></div>
+      <!-- Brief ED: a note is pinned to its component or free where it stands, by the person's choice, in the read view. The words are the host's. -->
+      <div class="swrow notepin" id="pinrow" hidden><label id="pinword"></label><button class="sw" id="notepin" role="switch" aria-labelledby="pinword" aria-checked="false"><i></i></button></div>
+      <div class="hint" id="about"></div>
+    </div>
+    <div class="foot"><span class="meta" id="status"></span><span class="spacer"></span>
+      <button class="btn" id="askbtn" style="display:none" onclick="dwightSend('ask')">Ask Dwight about this</button>
+      <button class="btn" id="delbtn" style="display:none" onclick="dwightSend('delete')">Delete</button>
+      <button class="btn" id="editbtn" hidden onclick="noteEditing(true)">Edit</button>
+      <button class="btn primary" id="savebtn" onclick="saveNote()">Save</button></div>
+  </div>
+<script>
+  function dwightSend(c){ try{ if(window.chrome&&window.chrome.webview){window.chrome.webview.postMessage(c);return;} }catch(e){} try{document.title='dwight:'+c+':'+Date.now();}catch(e){} }
+  // The text goes only over the in-process bridge, never the document.title fallback, so it cannot leak into a window title.
+  function post(c){ try{ if(window.chrome&&window.chrome.webview){ window.chrome.webview.postMessage(c); return true; } }catch(e){} return false; }
+  function noteText(){ var t=document.getElementById('text'); return ((t&&t.value)||'').trim(); }
+  function saveNote(){ if(!post('save:'+noteText())) dwightSetStatus('Could not save on this engine.'); }
+  function countNote(){ var n=noteText().length; document.getElementById('count').textContent = n+' of 4000'; }
+  document.addEventListener('input', countNote);
+  // Brief DO: the tools write the note's own Markdown subset where the caret is, and the person can see and change every mark. The same text draws on the canvas and renders in the read view.
+  function _sel(){ var t=document.getElementById('text'); return { t:t, a:t.selectionStart, b:t.selectionEnd, v:t.value }; }
+  function _put(t,v,a,b){ t.value=v; t.setSelectionRange(a,b); t.focus(); countNote(); }
+  // Around the selection, or around nothing with the caret between the marks. Pressed again on what it wrapped, it takes them off.
+  function noteWrap(mark){ var s=_sel(), m=mark.length;
+    if(s.v.slice(s.a-m,s.a)===mark&&s.v.slice(s.b,s.b+m)===mark){ _put(s.t,s.v.slice(0,s.a-m)+s.v.slice(s.a,s.b)+s.v.slice(s.b+m),s.a-m,s.b-m); return; }
+    _put(s.t,s.v.slice(0,s.a)+mark+s.v.slice(s.a,s.b)+mark+s.v.slice(s.b),s.a+m,s.b+m); }
+  // Brief ED: a list line's marker. A bullet is -, * or +, a number is digits and . or ), each with a space after it, and what comes before it is the line's indent.
+  var LIST_MARK=/^([ \t]*)(?:[-*+]|(\d+)([.)]))[ \t]+/;
+  // A mark on every line the selection touches, or off them all when they all have it. Each kind turns the other's lines into its own, and numbers count from 1.
+  // A blank line between items stays blank, and a single line is marked even when empty, because it is the item about to be typed.
+  function _noteList(numbered){ var s=_sel(), start=s.a>0?s.v.lastIndexOf('\n',s.a-1)+1:0, end=s.v.indexOf('\n',s.b); if(end<0) end=s.v.length;
+    var lines=s.v.slice(start,end).split('\n'), one=lines.length===1, want=numbered?'n':'b';
+    var kind=function(l){ var m=LIST_MARK.exec(l); return m?(m[2]?'n':'b'):''; };
+    var marked=lines.filter(function(l){ return one||l.trim(); });
+    var all=marked.length>0&&marked.every(function(l){ return kind(l)===want; }), n=0;
+    var out=lines.map(function(l){
+      if(!one&&!l.trim()) return l;
+      var m=LIST_MARK.exec(l), indent=m?m[1]:/^[ \t]*/.exec(l)[0], body=l.slice(m?m[0].length:indent.length);
+      if(all) return indent+body;
+      n++; return indent+(numbered?n+'. ':'- ')+body; }).join('\n');
+    _put(s.t,s.v.slice(0,start)+out+s.v.slice(end),start+out.length,start+out.length); }
+  function noteBullets(){ _noteList(false); }
+  function noteNumbers(){ _noteList(true); }
+  // Enter in a list line continues the list, with the next number and the same indent; Enter on an item with nothing in it ends the list. True when it took the key.
+  // The caret inside a marker, or a line that is no list's, is the textarea's own new line, and so is Shift+Enter anywhere.
+  function noteEnter(){ var s=_sel(), start=s.a>0?s.v.lastIndexOf('\n',s.a-1)+1:0, end=s.v.indexOf('\n',s.a); if(end<0) end=s.v.length;
+    var line=s.v.slice(start,end), m=LIST_MARK.exec(line);
+    if(!m||s.a<start+m[0].length) return false;
+    if(s.a===s.b&&!line.slice(m[0].length).trim()){ _put(s.t,s.v.slice(0,start)+s.v.slice(end),start,start); return true; }
+    var lead='\n'+m[1]+(m[2]?(parseInt(m[2],10)+1)+m[3]:'-')+' ', rest=s.v.slice(s.b);
+    if(m[2]) rest=_renumber(rest,m[1],parseInt(m[2],10)+2);
+    _put(s.t,s.v.slice(0,s.a)+lead+rest,s.a+lead.length,s.a+lead.length); return true; }
+  // The items after a new one move up by one, so the marks read in order as the card's numbers do.
+  function _renumber(rest,indent,from){ var lines=rest.split('\n');
+    for(var i=1;i<lines.length;i++){ var m=LIST_MARK.exec(lines[i]); if(!m||!m[2]||m[1]!==indent) break; lines[i]=indent+(from++)+m[3]+' '+lines[i].slice(m[0].length); }
+    return lines.join('\n'); }
+  // A table on lines of its own, with its first heading selected to be typed over.
+  function noteTable(n){ var s=_sel(), cols=[], rule=[], cells=[]; for(var i=0;i<n;i++){ cols.push('Heading'); rule.push('---'); cells.push(' '); }
+    var before=s.v.slice(0,s.a), lead=before.length===0?'':(/\n\n$/.test(before)?'':(/\n$/.test(before)?'\n':'\n\n'));
+    var table='| '+cols.join(' | ')+' |\n| '+rule.join(' | ')+' |\n| '+cells.join(' | ')+' |\n';
+    var at=s.a+lead.length+2; _put(s.t,before+lead+table+s.v.slice(s.b),at,at+7); }
+  // A choice of how many columns, and back to its name once it has been made.
+  function _noteTableMenu(){ ddMake(document.getElementById('tool-table'),{ label:'Insert a table', value:'', options:[{value:'',name:'Table'},{value:'2',name:'2 columns'},{value:'3',name:'3 columns'},{value:'4',name:'4 columns'}], onPick:function(v){ if(v) noteTable(parseInt(v,10)); _noteTableMenu(); } }); }
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&!e.altKey&&(e.key==='b'||e.key==='B')&&e.target===document.getElementById('text')){ e.preventDefault(); noteWrap('**'); } });
+  document.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey&&!e.ctrlKey&&!e.altKey&&!e.metaKey&&!e.isComposing&&e.target===document.getElementById('text')&&noteEnter()) e.preventDefault(); });
+  // The switch asks; the host moves it, and says in its own words where the note now is.
+  document.getElementById('notepin').addEventListener('click',function(){ dwightSend('pin:'+(this.getAttribute('aria-checked')==='true'?'off':'on')); });
+  var PIN=null;
+  function _notePin(p){ PIN=p||null; var row=document.getElementById('pinrow'); row.hidden=!p||!document.getElementById('edit').hidden; if(!p) return;
+    document.getElementById('notepin').setAttribute('aria-checked',p.on?'true':'false');
+    document.getElementById('pinword').textContent=p.label||'';
+    var s=document.getElementById('stale'); s.textContent=p.stale||''; s.style.display=p.stale?'':'none'; }
+  function dwightNotePin(json){ var p; try{ p=JSON.parse(json); }catch(e){ return; } _notePin(p); }
+  // An existing note opens as it reads, with the plugin's rendering of its whole text. Edit is the marks.
+  // Brief ED: the pin switch is the read view's. It acts at once and Save does not cover it, so it is not offered beside text that is waiting to be saved.
+  function noteEditing(on){ document.getElementById('read').hidden=on; document.getElementById('edit').hidden=!on; document.getElementById('editbtn').hidden=on; document.getElementById('savebtn').hidden=!on; document.getElementById('pinrow').hidden=on||!PIN; if(on){ try{ document.getElementById('text').focus(); }catch(e){} } }
+  function dwightNoteInit(json){ var d=JSON.parse(json); _noteTableMenu();
+    document.getElementById('read').innerHTML = d.html||'';
+    noteEditing(!d.html);
+    document.getElementById('head').textContent = d.head||'Note';
+    document.getElementById('text').value = d.text||'';
+    document.getElementById('about').textContent = d.about||'';
+    var s=document.getElementById('stale'); s.textContent = d.stale||''; s.style.display = d.stale ? '' : 'none';
+    _notePin(d.pin||null);
+    document.getElementById('delbtn').style.display = d.canDelete ? '' : 'none';
+    document.getElementById('askbtn').style.display = d.canAsk ? '' : 'none';
+    document.body.classList.toggle('dark', d.applied==='dark'); countNote();
+    try{ document.getElementById('text').focus(); }catch(e){} }
+  function dwightSetTheme(t){ document.body.classList.toggle('dark', t==='dark'); }
+  function dwightSetStatus(text){ document.getElementById('status').textContent = text||''; }
+</script>
+<script>
+/*__DWIGHT_DROPDOWN__*/
+/*__DWIGHT_LINKS__*/
+</script></body></html>

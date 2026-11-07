@@ -1,0 +1,28 @@
+: HAND-MADE. Typed from the documented Chat Completions streaming shape, a text reply and TWO parallel calls (index 0 and 1, interleaved), NOT captured from a live account.
+: Shape per OpenAI's API reference, platform.openai.com/docs/api-reference/chat-streaming (chat.completion.chunk;
+: choices[].delta.tool_calls[] = {index, id, type, function{name, arguments}}; finish_reason "tool_calls") and the
+: function-calling guide, platform.openai.com/docs/guides/function-calling. The author could not fetch the reference
+: page (HTTP 403), so the fragment pattern (id and name on the first fragment, arguments pieces after, keyed by index)
+: was cross-checked against the accumulation code in vLLM's OpenAI client-with-tools example. Replace with a live capture.
+data: {"id":"chatcmpl-HANDMADE","object":"chat.completion.chunk","created":1792600000,"model":"gpt-handmade","choices":[{"index":0,"delta":{"role":"assistant","content":"I will read the overview"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-HANDMADE","object":"chat.completion.chunk","created":1792600000,"model":"gpt-handmade","choices":[{"index":0,"delta":{"content":" and one region."},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-HANDMADE","object":"chat.completion.chunk","created":1792600000,"model":"gpt-handmade","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"id":"call_handmade_a","type":"function","function":{"name":"get_overview","arguments":""}}]},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-HANDMADE","object":"chat.completion.chunk","created":1792600000,"model":"gpt-handmade","choices":[{"index":0,"delta":{"tool_calls":[{"index":1,"id":"call_handmade_b","type":"function","function":{"name":"get_region","arguments":""}}]},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-HANDMADE","object":"chat.completion.chunk","created":1792600000,"model":"gpt-handmade","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"function":{"arguments":"{"}}]},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-HANDMADE","object":"chat.completion.chunk","created":1792600000,"model":"gpt-handmade","choices":[{"index":0,"delta":{"tool_calls":[{"index":1,"function":{"arguments":"{\"id\":"}}]},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-HANDMADE","object":"chat.completion.chunk","created":1792600000,"model":"gpt-handmade","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"function":{"arguments":"}"}}]},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-HANDMADE","object":"chat.completion.chunk","created":1792600000,"model":"gpt-handmade","choices":[{"index":0,"delta":{"tool_calls":[{"index":1,"function":{"arguments":" 3}"}}]},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-HANDMADE","object":"chat.completion.chunk","created":1792600000,"model":"gpt-handmade","choices":[{"index":0,"delta":{},"finish_reason":"tool_calls"}]}
+
+data: {"id":"chatcmpl-HANDMADE","object":"chat.completion.chunk","created":1792600000,"model":"gpt-handmade","choices":[],"usage":{"prompt_tokens":900,"completion_tokens":31,"total_tokens":931}}
+
+data: [DONE]
+

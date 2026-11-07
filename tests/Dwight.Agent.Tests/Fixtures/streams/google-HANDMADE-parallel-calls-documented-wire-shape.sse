@@ -1,0 +1,6 @@
+: HAND-MADE. Two parallel functionCall parts in one event, the second with an explicit id and the first without, NOT captured live.
+: Shape per the API reference, ai.google.dev/api/generate-content: Part.functionCall {id (optional), name, args (object)}.
+: A call with no args (a tool that takes none) omits `args`; the reader reads that as the tool's own empty arguments.
+: Replace with a live capture at the sitting.
+data: {"candidates":[{"content":{"parts":[{"functionCall":{"name":"get_overview"}},{"functionCall":{"id":"call-b","name":"get_component","args":{"id":3}}}],"role":"model"},"finishReason":"STOP","index":0}],"usageMetadata":{"promptTokenCount":810,"candidatesTokenCount":24,"totalTokenCount":834},"modelVersion":"gemini-handmade"}
+

@@ -1,0 +1,4 @@
+# Captured reply streams are byte-exact test fixtures: git must never normalise their line endings.
+*.sse -text
+# The pre-web-search request body, byte for byte (Brief V): the setting off must reproduce it exactly.
+tests/Dwight.Agent.Tests/Fixtures/golden/* -text

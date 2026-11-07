@@ -1,0 +1,13 @@
+<Project>
+
+  <!-- WP-2.4: central security pins applied to EVERY project (plugin + test projects). The GhJSON/JSON chain
+       and Microsoft.NET.Test.Sdk both drag in ancient 4.3.0 framework-shim packages that carry High
+       advisories (GHSA-7jgj-8wvc-jh57, GHSA-cmhx-cq75-c4mj); on net7 these unify to the patched runtime
+       implementation, but the vulnerable-package scan (and the CI gate, WP-5.2) flags the referenced version,
+       so we pin the patched shims directly. Harmless facades on net7; they clear the scan. -->
+  <ItemGroup>
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,41 @@
+: HAND-MADE. Typed from Anthropic's documented web search error and pause shapes, NOT captured from a live account.
+: Shape per platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool ("Errors": a web_search_tool_result whose
+: content is a single object {type: web_search_tool_result_error, error_code}, inside a 200 response) and
+: platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools ("pause_turn": the API can pause a long search turn and
+: return stop_reason pause_turn, and the paused message is sent back unchanged). The error code used is one the page lists
+: (too_many_requests). The streaming page shows result blocks arriving whole in a content_block_start.
+: What this cannot witness: the live wire, or how often a real turn pauses.
+
+event: message_start
+data: {"type":"message_start","message":{"model":"claude-sonnet-5","id":"msg_HANDMADE_pause","type":"message","role":"assistant","content":[],"stop_reason":null,"usage":{"input_tokens":812,"output_tokens":2}}}
+
+event: content_block_start
+data: {"type":"content_block_start","index":0,"content_block":{"type":"server_tool_use","id":"srvtoolu_HANDMADE_one","name":"web_search"}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"query\":\"sydney nsw pavilion dimensions\"}"}}
+
+event: content_block_stop
+data: {"type":"content_block_stop","index":0}
+
+event: content_block_start
+data: {"type":"content_block_start","index":1,"content_block":{"type":"web_search_tool_result","tool_use_id":"srvtoolu_HANDMADE_one","content":{"type":"web_search_tool_result_error","error_code":"too_many_requests"}}}
+
+event: content_block_stop
+data: {"type":"content_block_stop","index":1}
+
+event: content_block_start
+data: {"type":"content_block_start","index":2,"content_block":{"type":"server_tool_use","id":"srvtoolu_HANDMADE_two","name":"web_search"}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":2,"delta":{"type":"input_json_delta","partial_json":"{\"query\":\"nsw pavilion plan\"}"}}
+
+event: content_block_stop
+data: {"type":"content_block_stop","index":2}
+
+event: message_delta
+data: {"type":"message_delta","delta":{"stop_reason":"pause_turn","stop_sequence":null},"usage":{"input_tokens":812,"output_tokens":64,"server_tool_use":{"web_search_requests":1}}}
+
+event: message_stop
+data: {"type":"message_stop"}
+

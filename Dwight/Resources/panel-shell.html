@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- WP-2.2: strict CSP - no external network at all (fonts are inlined below as data URIs). Inline
+     style/script are the shell's own first-party chrome; model output is HTML-escaped and set via
+     innerHTML (non-executing). connect-src 'none' forbids any fetch/XHR/WebSocket exfiltration. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; font-src data:; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<style>/*__DWIGHT_FONTS__*/</style>
+<style>/*__DWIGHT_TOKENS__*/</style>
+<style>/*__DWIGHT_COMPONENTS__*/</style>
+<style>
+  html,body{height:100%;overflow:hidden;user-select:none}
+</style>
+</head>
+<body>
+<!--__DWIGHT_ICONS__-->
+  <div class="app">
+    <div class="titlebar" id="bar">
+      <button class="iconbtn navbtn" title="History" aria-label="History" onclick="dwightSend('nav:home')"><svg class="ic" aria-hidden="true"><use href="#ic-menu"/></svg></button>
+      <span class="title"><span class="who">Dwight</span><span class="sep">·</span><span class="act" id="action">Dwight</span></span>
+      <button class="iconbtn" id="walk-focus-title" title="Focus" aria-label="Focus" aria-pressed="false" hidden onclick="dwightSend('walk:focus')"><svg class="ic" aria-hidden="true"><use href="#ic-focus"/></svg></button>
+      <button class="iconbtn" title="Show on canvas" aria-label="Show on canvas" onclick="dwightSend('goto')"><svg class="ic" aria-hidden="true"><use href="#ic-goto"/></svg></button>
+      <button class="iconbtn" title="Minimise" aria-label="Minimise" onclick="dwightSend('minimise')"><svg class="ic" aria-hidden="true"><use href="#ic-minimise"/></svg></button>
+    </div>
+    <template id="dwmark"><!--__DWIGHT_MARK__--></template>
+    <div class="doc"><div id="body" class="docbody"><div class="loader"><div class="breath"><span class="pulse"></span><span class="lbl">Thinking…</span></div></div></div></div>
+    <div class="walkrow" id="walkrow">
+      <span class="walkcount" id="walk-count"></span>
+      <span class="spacer"></span>
+      <div class="swrow"><label for="walk-focus">Focus</label><button class="sw" id="walk-focus" role="switch" aria-label="Focus" aria-checked="false" title="Focus: the full canvas, the bar and a Rhino viewport" onclick="dwightSend('walk:focus')"><i></i></button></div>
+      <div class="swrow"><label for="walk-dim">Dim canvas</label><button class="sw" id="walk-dim" role="switch" aria-label="Dim canvas" aria-checked="true" title="Dim the rest of the canvas on each step" onclick="dwightSend('walk:dim:'+(this.getAttribute('aria-checked')==='true'?'off':'on'))"><i></i></button></div>
+    </div>
+    <div class="foot">
+      <span class="walknav" id="walknav">
+        <button class="iconbtn" id="walk-back" title="Back" aria-label="Back" onclick="dwightSend('walk:back')"><svg class="ic" aria-hidden="true"><use href="#ic-up"/></svg></button>
+        <button class="iconbtn" id="walk-next" title="Next" aria-label="Next" onclick="dwightSend('walk:next')"><svg class="ic" aria-hidden="true"><use href="#ic-down"/></svg></button>
+        <button class="iconbtn" id="walk-play" title="Play: step on by itself. Any key or click pauses it." aria-label="Play" aria-pressed="false" onclick="dwightSend('walk:play')"><svg class="ic" aria-hidden="true"><use id="walk-play-ic" href="#ic-play"/></svg></button>
+        <button class="iconbtn" id="walk-ask" title="Ask" aria-label="Ask" onclick="dwightSend('walk:ask')"><svg class="ic" aria-hidden="true"><use href="#ic-chat"/></svg></button>
+        <button class="iconbtn" id="walk-leave" title="Leave" aria-label="Leave" onclick="dwightSend('walk:leave')"><svg class="ic" aria-hidden="true"><use href="#ic-close"/></svg></button>
+      </span>
+      <button class="iconbtn" id="lens-every" title="Every wire" aria-label="Every wire" aria-pressed="false" style="display:none" onclick="dwightSend('lens:all')"><svg class="ic" aria-hidden="true"><use href="#ic-wires"/></svg></button>
+      <span class="meta" id="status"></span>
+      <span class="spacer"></span>
+      <button class="btn primary" id="diagthis" style="display:none" onclick="dwightDiagThis()">Diagnose this</button>
+      <button class="btn walkgives" id="askbtn" onclick="dwightSend('askdwight')">Chat</button>
+      <button class="btn" id="copybtn" onclick="dwightSend('copy')">Copy</button>
+    </div>
+  </div>
+<script>
+/*__DWIGHT_DROPDOWN__*/
+/*__DWIGHT_LINKS__*/
+/*__DWIGHT_DECK__*/
+</script>
+<script>
+  var _GLYPHS={check:'check',cross:'close',chev:'chev',locate:'goto',ban:'ban'};
+  function _ic(n,cls){ return '<svg class="ic'+(cls?' '+cls:'')+'" aria-hidden="true"><use href="#ic-'+_GLYPHS[n]+'"/></svg>'; }
+  function esc(s){return (s==null?'':String(s)).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  // JS -> C# bridge (works across engines)
+  function dwightSend(cmd){
+    try{ if(window.chrome&&window.chrome.webview&&window.chrome.webview.postMessage){window.chrome.webview.postMessage(cmd);return;} }catch(e){}
+    try{ if(window.external&&window.external.notify){window.external.notify(cmd);return;} }catch(e){}
+    try{ document.title='dwight:'+cmd+':'+Date.now(); }catch(e){}
+  }
+  document.addEventListener('keydown',function(e){ if(e.key!=='Escape') return;
+    var m=document.getElementById('imgmodal'); if(m&&m.classList.contains('on')){ m.classList.remove('on'); return; }  // ESC closes an open image first
+    dwightSend('minimise'); });
+  (function(){ // pinned right: no free move. Resize via the top + left + bottom edges (frameless = no OS border)
+    var EDGE=7, active=null;
+    function edgesAt(e){ var m=''; if(e.clientY<=EDGE)m+='t'; else if(e.clientY>=innerHeight-EDGE)m+='b'; if(e.clientX<=EDGE)m+='l'; return m; }
+    function cursorFor(m){ if(m==='tl')return'nwse-resize'; if(m==='bl')return'nesw-resize'; if(m==='l')return'ew-resize'; if(m==='t'||m==='b')return'ns-resize'; return''; }
+    document.addEventListener('mousemove',function(e){ if(active){ dwightSend('rmove:'+e.screenX+':'+e.screenY); return; } document.body.style.cursor=cursorFor(edgesAt(e))||''; }, true);
+    document.addEventListener('mousedown',function(e){ if(e.button!==0||e.target.closest('.iconbtn'))return; var m=edgesAt(e); if(!m)return; active=m; e.preventDefault(); e.stopPropagation(); dwightSend('rdown:'+m+':'+e.screenX+':'+e.screenY); }, true);
+    window.addEventListener('mouseup',function(){ if(active){ active=null; document.body.style.cursor=''; dwightSend('rup'); } }, true);
+  })();
+  // C# -> JS API
+  function dwightSetAction(name){ document.getElementById('action').textContent=name; }
+  function dwightSetBody(html){ _clearThink(); var b=document.getElementById('body'); b.innerHTML=html; document.querySelector('.doc').scrollTop=0; dwightDecorateCode(); }
+  function dwightPlain(text,isError){ _clearThink(); var b=document.getElementById('body'); b.innerHTML=''; var p=document.createElement('p'); p.className='lead plain'+(isError?' err':''); p.textContent=text; b.appendChild(p); }
+  var GH_TIPS=["Press F3 to open Find - Dwight's group names are searchable.","Double-click the canvas to search for a component by name.","Hold Alt while dragging a wire to disconnect it.","Right-click a slider to set its range and precision.","Use a Data Dam to pause a heavy solution while you wire.","Ctrl+Alt+click a component to find it on the canvas."];
+  var _verbT=null,_tipT=null,_elapT=null;
+  function _clearThink(){ if(_verbT){clearTimeout(_verbT);_verbT=null;} if(_tipT){clearInterval(_tipT);_tipT=null;} if(_elapT){clearInterval(_elapT);_elapT=null;} try{document.querySelector('.doc').classList.remove('chatmode');}catch(e){} try{var db=document.getElementById('diagthis'); if(db)db.style.display='none';}catch(e){} }
+  // The status label is honest and static (set by C# to the real phase); it does NOT loop. If the wait
+  // runs long, it escalates ONCE to "Almost there…". A live elapsed counter, the provider/model line, and
+  // a Stop button keep the user in control of a long-running task. The Grasshopper tip rotates (clearly a tip).
+  function dwightThinking(label,stages){
+    _clearThink();
+    var s = stages ? ('<div class="stages" id="stages">'+
+        '<span class="stage active" data-i="0"><span class="n">1</span>Reading</span><span class="arr">&rarr;</span>'+
+        '<span class="stage" data-i="1"><span class="n">2</span>Planning</span><span class="arr">&rarr;</span>'+
+        '<span class="stage" data-i="2"><span class="n">3</span>Applying</span></div>') : '';
+    document.getElementById('body').innerHTML='<div class="loader">'+
+        '<div class="breath"><span class="pulse"></span><span class="lbl" id="thinklbl">'+esc(label||'Thinking…')+'</span><span class="elapsed" id="elapsed"></span></div>'+
+        '<div class="runmeta" id="runmeta"></div>'+s+
+        '<div class="tip"><b>Grasshopper tip</b><span id="tiptext">'+esc(GH_TIPS[0])+'</span></div>'+
+        '<button class="btn stopbtn" onclick="dwightSend(\'stop\')">Stop</button></div>';
+    var ti=0; _tipT=setInterval(function(){ var t=document.getElementById('tiptext'); if(!t){_clearThink();return;} ti=(ti+1)%GH_TIPS.length; t.textContent=GH_TIPS[ti]; },4200);
+    var t0=Date.now(); _elapT=setInterval(function(){ var el=document.getElementById('elapsed'); if(!el)return; var n=Math.floor((Date.now()-t0)/1000); el.textContent=n>0?(' · '+n+'s'):''; },1000);
+    if(!stages){ _verbT=setTimeout(function(){ var l=document.getElementById('thinklbl'); if(l) l.textContent='Almost there…'; },12000); }
+  }
+  function dwightRunMeta(text){ var r=document.getElementById('runmeta'); if(r) r.textContent=text||''; }
+  function dwightSetStage(active){
+    var nodes=document.querySelectorAll('#stages .stage'); if(!nodes.length)return;
+    nodes.forEach(function(el){ var i=+el.getAttribute('data-i'); el.classList.remove('done','active');
+      var n=el.querySelector('.n');
+      if(i<active){el.classList.add('done'); n.innerHTML=_ic('check','sm');}
+      else { n.textContent=String(i+1); if(i===active)el.classList.add('active'); } });
+  }
+  // WP-1: the arrangement switcher, appended below a Reorganise result. Flipping a mode posts back and the
+  // action re-runs the nested layout only (no re-segment, no LLM), so switching is instant and free. Four modes
+  // (RR2) with a one-line tooltip each.
+  var ARR_MODES=[
+    ['compact','Compact','Dense, balanced packing - the general-purpose read.'],
+    ['hchain','Chain','One left-to-right row - reads like a sentence.'],
+    ['vertical','Vertical','One top-to-bottom column - the vertical read.'],
+    ['grid','Grid','Columns by flow stage - maximum air, the poster read.']];
+  function dwightArrange(active){ try{
+    var b=document.getElementById('body'); if(!b)return;
+    var old=document.getElementById('arrange'); if(old)old.remove();
+    var wrap=document.createElement('div'); wrap.className='arrange'; wrap.id='arrange';
+    var lab=document.createElement('span'); lab.className='albl'; lab.textContent='Arrangement'; var dd=document.createElement('div'); dd.className='dd'; dd.id='arrange-dd'; wrap.appendChild(lab); wrap.appendChild(dd); b.appendChild(wrap);
+    ddMake(dd,{ label:'Arrangement', value:active, options:ARR_MODES.map(function(m){ return { value:m[0], name:m[1], sentence:m[2] }; }), onPick:function(v){ dwightSend('arrange:'+v); } });
+  }catch(e){} }
+  // RR2 item 8: render a Reorganise/flip outcome as three lines with hierarchy - headline, the earned "verified"
+  // line, then the muted Ctrl-Z line - instead of one run-on paragraph. Falls back to plain text if unsplit.
+  function dwightOutcome(text){ _clearThink(); var b=document.getElementById('body'); b.innerHTML='';
+    var t=(text==null?'':String(text));
+    // split on the two sentence joins the apply summaries use: " ... (verified); one Ctrl-Z ..."
+    var verIdx=t.indexOf('(verified)'); var head=t, verified='', hint='';
+    if(verIdx>=0){ var end=t.indexOf('.',0); head=(end>0&&end<verIdx)?t.slice(0,end+1):t.slice(0,verIdx).replace(/[;\s]+$/,'');
+      var rest=t.slice(head.length); var semi=rest.indexOf(';');
+      if(semi>=0){ verified=rest.slice(0,semi).replace(/^[\s.]+/,''); hint=rest.slice(semi+1).replace(/^[\s]+/,''); }
+      else verified=rest.replace(/^[\s.]+/,''); }
+    var h='<div class="outcome"><div class="oc-head">'+esc(head.trim())+'</div>';
+    if(verified) h+='<div class="oc-ok"><span class="oc-check">'+_ic('check')+'</span>'+esc(verified.trim())+'</div>';
+    if(hint) h+='<div class="oc-hint">'+esc(hint.trim())+'</div>';
+    h+='</div>'; b.innerHTML=h; }
+  function dwightShowState(kind,title,msg,actionLabel,actionCmd,actionLabel2,actionCmd2){
+    _clearThink();
+    var ico = kind==='error'?'!':(kind==='notice'?'i':'·');
+    var btn = actionLabel ? '<button class="btn primary st-action" onclick="dwightSend(\'action:'+actionCmd+'\')">'+esc(actionLabel)+'</button>' : '';
+    // WP-3: an optional SECOND action (e.g. the Reorganise boundary opt-in's "No, just arrange") - a plain button beside the primary
+    var btn2 = actionLabel2 ? '<button class="btn st-action" onclick="dwightSend(\'action:'+actionCmd2+'\')">'+esc(actionLabel2)+'</button>' : '';
+    document.getElementById('body').innerHTML='<div class="state '+esc(kind)+'"><div class="ico">'+ico+'</div><div class="st-title">'+esc(title)+'</div><div class="st-msg">'+esc(msg)+'</div>'+btn+btn2+'</div>';
+  }
+  function _pinGlyph(arg,title,cls){ return '<button class="iconbtn sm pincorner'+cls+'" title="'+esc(title)+'" aria-label="'+esc(title)+'" onclick="event.stopPropagation();dwightSend(\'pin:'+esc(arg)+'\');this.disabled=true;this.title=\'Pinned\';this.setAttribute(\'aria-label\',\'Pinned\')"><svg class="ic" aria-hidden="true"><use href="#ic-notepin"/></svg></button>'; }
+  // Brief DO: a result's one offer, on the card the result is. It stays in view, because a finished result has nothing else to do, and the token is the plugin's.
+  function dwightPinOffer(token,title){ var card=document.querySelector('#body .outcome, #body .fault.root'); if(!card)return; var old=card.querySelector('.pincorner'); if(old)old.remove();
+    card.classList.add('haspin'); card.insertAdjacentHTML('beforeend',_pinGlyph(token,title,' shown')); }
+  function dwightSteps(json){ _clearThink(); var d; try{ d=JSON.parse(json); }catch(e){ d={steps:[]}; } var st=d.steps||[];
+    var pin=function(arg){ return _pinGlyph(arg,'Pin as a note',''); };
+    var h=(d.summary?'<div class="leadwrap"><p class="lead clickable" onclick="dwightSend(\'overview\')" title="Show the whole selection on the canvas">'+esc(d.summary)+'</p>'+pin('summary')+'</div>':'')+
+      '<p class="hint">Click the summary for the whole selection, or a step to light its components and the data on their wires. Every wire, in the footer, or T on the canvas, shows them for the whole selection.</p><div class="steps">';
+    st.forEach(function(s,i){ h+='<div class="step haspin" onclick="dwightSend(\'step:'+i+'\')"><span class="sn">'+(i+1)+'</span>'+
+      '<div><div class="stxt">'+(s.text||'')+'</div><span class="cmpt">'+((s.ids&&s.ids.length)||0)+((s.ids&&s.ids.length)===1?' component':' components')+'</span></div>'+pin('step:'+i)+'</div>'; });
+    h+='</div>'; document.getElementById('body').innerHTML=h; }
+  // Brief DA: the step the Walk is on, from the host, which holds it. While a Walk is live the footer carries its four controls (Tharun's sketch: the same spot for every Next, while the highlight moves down the list), with the status giving way to them, and the arrows go to the host, so the keys keep working after a click.
+  var _walkLive=false;
+  // What goes under a card's sentence goes in the column the sentence is in, under its count. The card's last child is its corner pin, which holds nothing but its glyph (the eleventh gate, Tharun).
+  function _cardBody(card){ return card.querySelector('.stxt').parentNode; }
+  function _walkShown(on){ document.querySelector('.foot').classList.toggle('walking',on); document.getElementById('walkrow').classList.toggle('on',on); document.getElementById('walk-focus-title').hidden=!on; }
+  // Brief DH: a finished Explain has arrived: its controls are here, no card is current, and the canvas has not moved. Next is step 1, and there is nothing yet to go back to or ask about.
+  function dwightWalkArrived(n){ _walkLive=true; _walkShown(true);
+    document.getElementById('walk-back').disabled=true; document.getElementById('walk-next').disabled=false; document.getElementById('walk-ask').disabled=true; document.getElementById('walk-play').disabled=n<2;
+    document.getElementById('walk-count').textContent=n+(n===1?' step':' steps'); }
+  function dwightWalkSwitches(focus,dim){ document.getElementById('walk-focus').setAttribute('aria-checked',focus?'true':'false'); document.getElementById('walk-dim').setAttribute('aria-checked',dim?'true':'false');
+    document.getElementById('walk-focus-title').setAttribute('aria-pressed',focus?'true':'false');
+    var df=document.getElementById('deck-focus'), dd=document.getElementById('deck-dim'); if(df) df.setAttribute('aria-checked',focus?'true':'false'); if(dd) dd.setAttribute('aria-checked',dim?'true':'false'); }
+  function dwightStepCurrent(i,panelIsWalk,gone){ _walkLive=i>=0; var cards=document.querySelectorAll('.steps .step');
+    _walkShown(_walkLive);
+    document.getElementById('walk-back').disabled=i<=0; document.getElementById('walk-next').disabled=i>=cards.length-1; document.getElementById('walk-ask').disabled=i<0;
+    document.getElementById('walk-play').disabled=cards.length<2;
+    document.getElementById('walk-count').textContent=i>=0?(i+1)+' of '+cards.length:'';
+    [].forEach.call(document.querySelectorAll('.steps .walkgone'),function(e){ e.remove(); });
+    for(var k=0;k<cards.length;k++){ cards[k].classList.toggle('on',k===i); if(k!==i) continue;
+      // Where the bar cannot be placed, nothing else says it.
+      if(panelIsWalk&&gone){ var g=document.createElement('div'); g.className='walkgone'; g.textContent=gone; _cardBody(cards[k]).appendChild(g); }
+      if(cards[k].scrollIntoView) cards[k].scrollIntoView({block:'nearest'}); } }
+  document.addEventListener('keydown',function(e){ if(_deckOn||!_walkLive||e.ctrlKey||e.altKey||e.shiftKey||e.metaKey) return;
+    if(e.key==='ArrowLeft'||e.key==='ArrowRight'||e.key==='ArrowUp'||e.key==='ArrowDown'){ e.preventDefault(); dwightSend('walkkey:'+e.key); } });
+  // Brief DD: Play is Pause while it plays, and while it plays any key or click pauses it, except on Play itself, whose own click is the answer.
+  var _walkPlaying=false;
+  function dwightWalkPlaying(on,can){ _walkPlaying=!!on; var p=document.getElementById('walk-play'), word=on?'Pause':'Play'; if(can===false) p.disabled=true;
+    document.getElementById('walk-play-ic').setAttribute('href',on?'#ic-pause':'#ic-play'); p.setAttribute('aria-label',word); p.setAttribute('aria-pressed',on?'true':'false');
+    p.title=on?'Pause: any key or click also pauses it.':'Play: step on by itself. Any key or click pauses it.'; }
+  function _onWalkPlay(el){ var p=document.getElementById('walk-play'); return !!el&&(el===p||p.contains(el)); }
+  document.addEventListener('mousedown',function(e){ if(_walkPlaying&&!_onWalkPlay(e.target)) dwightSend('walk:input'); });
+  document.addEventListener('keydown',function(e){ if(!_walkPlaying) return;
+    if(_onWalkPlay(e.target)&&(e.key===' '||e.key==='Enter')) return;
+    if(!e.ctrlKey&&!e.altKey&&!e.shiftKey&&!e.metaKey&&(e.key==='ArrowLeft'||e.key==='ArrowRight'||e.key==='ArrowUp'||e.key==='ArrowDown')) return;   // the arrows are the host's keys, which pause too
+    dwightSend('walk:input'); });
+  // The step's line of times, under the current card, as the text the bar shows. The sentence stays first.
+  function dwightWalkLine(line){ [].forEach.call(document.querySelectorAll('.steps .walktime'),function(e){ e.remove(); });
+    var at=document.querySelector('.steps .step.on'); if(!line||!at)return;
+    var t=document.createElement('div'); t.className='walktime'; t.textContent=line; _cardBody(at).appendChild(t); }
+  // Brief DD: the selection's total and its slowest, under the summary, every word already written.
+  function dwightWalkTotal(line){ var old=document.getElementById('walktotal'); if(old&&old.parentNode)old.parentNode.removeChild(old);
+    var lead=document.querySelector('#body .lead'); if(!line||!lead)return;
+    var p=document.createElement('p'); p.id='walktotal'; p.className='hint'; p.textContent=line; lead.parentNode.insertBefore(p,lead.nextSibling); }
+  // Brief EI: a Learn run is a deck of cards, drawn over the steps it was made from (DwightDeck, shared with the Focus bar). Every word arrives written by the plugin; the
+  // page holds no answer. An empty view takes the deck away and the steps show again; the Focus and Dim switches in the card's footer say what the panel's own say.
+  var _deckOn=false;
+  function _swOn(id){ var b=document.getElementById(id); return !!b&&b.getAttribute('aria-checked')==='true'; }
+  function dwightDeck(json){ var v=null; try{ v=json?JSON.parse(json):null; }catch(e){ v=null; }
+    var body=document.getElementById('body'), host=document.getElementById('deck');
+    _deckOn=!!v; document.querySelector('.app').classList.toggle('deckon',_deckOn); body.classList.toggle('deckon',_deckOn);
+    if(!v){ if(host&&host.parentNode) host.parentNode.removeChild(host); DwightDeck.render(document.createElement('div'),null); return; }
+    if(!host){ host=document.createElement('div'); host.id='deck'; host.className='deckhost'; body.insertBefore(host,body.firstChild); }
+    DwightDeck.render(host,v,{switches:true,focus:_swOn('walk-focus'),dim:_swOn('walk-dim')}); document.querySelector('.doc').scrollTop=0; }
+  // Brief EI: "Walk this" leaves the way back to the deck above the steps; an empty label takes it away.
+  function dwightDeckBack(label){ var old=document.getElementById('deckback'); if(old&&old.parentNode) old.parentNode.removeChild(old);
+    if(!label) return; var body=document.getElementById('body'); var b=document.createElement('button'); b.id='deckback'; b.className='btn sm deckback'; b.textContent=label;
+    b.onclick=function(){ dwightSend('deck:quiz'); }; body.insertBefore(b,body.firstChild); }
+  document.addEventListener('keydown',function(e){ if(_deckOn&&DwightDeck.key(e)) e.preventDefault(); });
+  // Brief DB: where data stops, and the cap's sentence, under the step they are about. Every word arrives written; a click selects what its line names.
+  function dwightLens(json){ var d; try{ d=JSON.parse(json); }catch(e){ d={}; }
+    // Brief DJ: the Lens's one control sits in the footer while a lens is live, Walk or no Walk, in the state the host says. A key is a shortcut, never the only door.
+    var every=document.getElementById('lens-every'), lensLive=typeof d.everywire==='boolean'; every.style.display=lensLive?'':'none'; every.classList.toggle('pressed',d.everywire===true); every.setAttribute('aria-pressed',d.everywire===true?'true':'false');
+    var old=document.getElementById('lens'); if(old&&old.parentNode)old.parentNode.removeChild(old);
+    var steps=document.querySelector('.steps'); if(!steps)return;
+    var lines=d.lines||[]; if(!lines.length&&!d.note)return;
+    var h='';
+    lines.forEach(function(l,i){ h+= l.action
+      ? '<button class="lens-line" onclick="dwightSend(\'lens:'+i+'\')">'+esc(l.text)+'<span class="lens-act">'+esc(l.action)+'</span></button>'
+      : '<p class="lens-more">'+esc(l.text)+'</p>'; });
+    if(d.note)h+='<p class="lens-more">'+esc(d.note)+'</p>';
+    var el=document.createElement('div'); el.id='lens'; el.className='lens'; el.innerHTML=h;
+    var at=d.step>=0?steps.querySelectorAll('.step')[d.step]:null;
+    if(at)at.parentNode.insertBefore(el,at.nextSibling); else steps.parentNode.insertBefore(el,steps);
+  }
+  // A collapsible fault row. Roots open by default, downstream rows collapsed; every row toggles + glows.
+  function faultCard(x, isRoot){
+    var cls=x.cls||'error';
+    var pill = isRoot ? '<span class="rootpill">root cause</span>'
+             : (x.role==='intrinsic' ? '<span class="rtag own">own error</span>' : '<span class="rtag">downstream</span>');
+    var fix = x.fix ? '<div class="ffix"><b>Fix</b> '+x.fix+'</div>' : '';   // cause/fix are pre-rendered Markdown HTML
+    var cause = x.cause ? '<div class="fcause">'+x.cause+'</div>' : '';
+    var body = '<div class="fbody'+(isRoot?'':' collapsed')+'">'+cause+fix+'</div>';
+    var head = '<div class="fhead"><span class="fdot"></span><span class="ftitle">'+esc(x.title)+'</span>'+pill+_ic('chev','sm chev')+'</div>';
+    return '<div class="fault '+(isRoot?'root ':'member ')+esc(cls)+(isRoot?' open':'')+'" onclick="dwightFault(this,\''+x.guid+'\')">'+head+body+'</div>';
+  }
+  function dwightFault(el, guid){ try{ var b=el.querySelector('.fbody'); if(b)b.classList.toggle('collapsed'); el.classList.toggle('open'); }catch(e){} dwightSend('glow:'+guid); }
+  function strayHtml(stray){ if(!stray||!stray.length)return '';
+    var h='<h2>Not wired in</h2><p class="hint">Isolated components - may be intentional, not counted as faults.</p><div class="straylist">';
+    stray.forEach(function(s){ h+='<div class="strayrow" onclick="dwightSend(\'glow:'+s.guid+'\')"><span class="sdot"></span>'+esc(s.title)+'</div>'; });
+    return h+'</div>'; }
+  function dwightFaults(json){ _clearThink(); var d; try{ d=JSON.parse(json); }catch(e){ d={chains:[]}; }
+    var h = d.lead ? '<p class="lead">'+esc(d.lead)+'</p>' : '';
+    (d.chains||[]).forEach(function(c){
+      h+='<div class="chain">'+faultCard(c.root,true);
+      if(c.members&&c.members.length){ h+='<div class="members">'; c.members.forEach(function(m){ h+=faultCard(m,false); }); h+='</div>'; }
+      h+='</div>';
+    });
+    h+=strayHtml(d.stray);
+    document.getElementById('body').innerHTML=h; }
+  // Whole-canvas chain-picker: a clean selectable list (no model call yet). Selecting a chain highlights
+  // it and enables the footer "Diagnose this"; clicking that runs the normal Diagnose flow for that chain.
+  var _selChain=-1;
+  function dwightChains(json){ _clearThink(); var d; try{ d=JSON.parse(json); }catch(e){ d={chains:[]}; } _selChain=-1;
+    var h = d.lead ? '<p class="lead">'+esc(d.lead)+'</p>' : '';
+    h+='<div class="chainlist">';
+    (d.chains||[]).forEach(function(c,i){
+      h+='<div class="fault chainrow '+esc(c.cls||'error')+'" id="chainrow'+i+'" onclick="selectChain('+i+')">'+
+           '<div class="fhead"><span class="fdot"></span><span class="ftitle">'+esc(c.rootTitle)+'</span>'+
+             '<span class="rtag">'+esc(c.count)+' in chain</span></div></div>';
+    });
+    h+='</div>'+strayHtml(d.stray);
+    document.getElementById('body').innerHTML=h;
+    var db=document.getElementById('diagthis'); if(db){ db.style.display='inline-block'; db.disabled=true; } }
+  function selectChain(i){ _selChain=i;
+    try{ var rows=document.querySelectorAll('.chainrow'); rows.forEach(function(r){ r.classList.remove('selected'); }); var el=document.getElementById('chainrow'+i); if(el)el.classList.add('selected'); }catch(e){}
+    var db=document.getElementById('diagthis'); if(db)db.disabled=false;
+    dwightSend('dchainsel:'+i); }
+  function dwightDiagThis(){ if(_selChain>=0) dwightSend('dchain:'+_selChain); }
+  // WP-2: the Simplify mode chooser - a card per LIVE mode, and only those.
+  function dwightSimplifyChooser(json){ _clearThink(); var modes; try{ modes=JSON.parse(json); }catch(e){ modes=[]; }
+    var h='<p class="lead">What would you like to improve?</p><p class="hint">Previewed - nothing changes until you accept.</p><div class="chooser">';
+    // #883: a mode that is not live is not offered at all - no "soon" badge (a future claim) on a card that would
+    // still post simplify:<id> when clicked. An affordance asserts its target exists (#321).
+    modes.filter(function(m){ return m.live!==false; }).forEach(function(m){
+      h+='<button class="modecard" onclick="dwightSend(\'simplify:'+m.id+'\')">'+
+         '<span class="mc-name">'+esc(m.name)+(m.experimental?'<span class="mc-tag">experimental</span>':'')+'</span>'+
+         '<span class="mc-desc">'+esc(m.desc)+'</span></button>'; });
+    h+='</div>'; document.getElementById('body').innerHTML=h; }
+  // WP-2 Stage 6: the better-logic preview - a CHECKBOX per classified change (selective accept). Each row carries
+  // the change's op summary (remove/add/name) + a CONFIRM flag; confirm-flagged changes default UNticked. "Apply
+  // selected" posts the ticked change indices; each ticked subset is re-validated and rides both verification
+  // layers (one Ctrl-Z). Dismiss live; nothing changes until you apply.
+  // Stage 7: the read-only "Dwight also noticed" section - insights the model surfaces but never auto-applies.
+  function _adviceHtml(advice){ if(!advice||!advice.length) return '';
+    var h='<div class="advice"><h2>Dwight also noticed</h2>';
+    advice.forEach(function(a){ h+='<div class="advrow"><div class="obs">'+esc(a.observation||'')+'</div>'+
+      (a.suggestion?'<div class="sug">'+esc(a.suggestion)+'</div>':'')+'</div>'; });
+    return h+'</div>'; }
+  function dwightSimplifyPreview(json){ _clearThink(); var d; try{ d=JSON.parse(json); }catch(e){ d={}; }
+    var ch=d.changes||[], adv=d.advice||[];
+    var h='<p class="lead">'+esc(d.title||'Better logic')+'.</p>';
+    if(!d.canApply){ h+='<p>The selection is already clean - nothing to change.</p>'+_adviceHtml(adv)+
+      '<div class="simplify-actions"><button class="btn" onclick="dwightSend(\'dismiss\')">Dismiss</button></div>';
+      document.getElementById('body').innerHTML=h; return; }
+    h+='<p class="preview-note"><span class="badge warn"><span class="dot"></span>preview</span> Tick the changes to apply - nothing changes until you do.</p>';
+    h+='<div class="gotosel" onclick="dwightSend(\'gotosel\')" title="Frame the whole selection">'+_ic('locate','sm')+'Take me to the selection on canvas</div>';
+    h+='<div class="changes">';
+    ch.forEach(function(c){
+      var ops='';
+      (c.removes||[]).forEach(function(r){ ops+='<span class="op remove">remove '+esc(r.type)+' <span class="idbadge">('+r.id+')</span></span>'; });
+      (c.adds||[]).forEach(function(a){ ops+='<span class="op add">add '+esc(a.type)+(a.nick?' ('+esc(a.nick)+')':'')+'</span>'; });
+      (c.renames||[]).forEach(function(r){ ops+='<span class="op rename">name '+esc(r.type)+' <span class="idbadge">('+r.id+')</span> → “'+esc(r.nick)+'”</span>'; });
+      h+='<label class="changerow'+(c.confirm?' confirm':'')+'"><input type="checkbox" class="chgbox" value="'+c.i+'"'+(c.confirm?'':' checked')+'/>'+
+         '<span class="cls '+esc(c.cls)+'">'+esc(c.cls)+'</span>'+
+         '<span class="ctext">'+esc(c.text)+(c.confirm?'<span class="confirmtag">confirm</span>':'')+(ops?'<span class="ops">'+ops+'</span>':'')+'</span>'+
+         '<span class="locate" title="Find on canvas" onclick="event.preventDefault();event.stopPropagation();dwightSend(\'locate:'+c.i+'\')">'+_ic('locate','sm')+'</span></label>';
+    });
+    h+='</div>'+_adviceHtml(adv);
+    h+='<div class="simplify-actions"><button class="btn primary" onclick="dwightApplySelected(this)">Apply selected</button>'+
+       '<button class="btn" onclick="dwightSend(\'dismiss\')">Dismiss</button></div>';
+    document.getElementById('body').innerHTML=h; }
+  function dwightApplySelected(btn){ var xs=[]; document.querySelectorAll('.chgbox').forEach(function(b){ if(b.checked) xs.push(b.value); });
+    if(xs.length) btn.disabled=true; dwightSend('simplifyapply:'+xs.join(',')); }
+  // WP-4: the to-script preview. This is a CONSENT surface, not a code dump - to-script is the first Dwight output
+  // that EXECUTES on the user's machine, so the COMPLETE source is shown (never truncated, never collapsed) and the
+  // framing says plainly that this code will run in their definition. Both accept choices verify the script beside
+  // their components first; the choice only decides what happens once it has proven itself.
+  function dwightToScriptPreview(json){ _clearThink(); var d; try{ d=JSON.parse(json); }catch(e){ d={}; }
+    var ins=d.inputs||[], outs=d.outputs||[];
+    // WP-0 #91/#102: the refine loop already ran off-canvas, so the preview carries its VERDICT. Default to the
+    // SAFE reading: only an explicit true is "verified", so a missing field never fakes a verified claim.
+    var verified = d.verified===true;
+    var allowReplace = d.allowReplace===true;
+    var draft = !verified;
+    var h='<p class="lead">One '+esc(d.language||'script')+' component in place of '+d.replaces+' component'+(d.replaces===1?'':'s')+'.</p>';
+    if(d.summary) h+='<p class="hint">'+esc(d.summary)+'</p>';
+    if(draft){
+      // WP-0 #91/ADR-096: built + ran, but Dwight could NOT confirm it reproduces the components (or couldn't
+      // check). Amber, honest, and it can only be ADDED as a draft - never a Replace. The full source still shows.
+      h+='<p class="preview-note"><span class="badge warn"><span class="dot"></span>unverified draft</span> Dwight built and ran this, but couldn\'t confirm it does the same thing as your components.</p>';
+      if(d.diagnosis) h+='<p class="hint"><b>'+esc(d.diagnosis)+'</b></p>';
+      h+='<p class="hint">It\'s real, working code you may want to finish by hand - so Dwight can add it <b>alongside</b> your components, never replacing them. Read it before you accept; nothing changes until you do.</p>';
+    } else {
+      h+='<p class="preview-note"><span class="badge ok"><span class="dot"></span>verified</span> This code will run inside your definition - read it before you accept. Nothing changes until you do.</p>';
+      // RR20 #51 + WP-0 #91: an EARNED claim - the loop already built this, ran it beside the components, and every
+      // output matched. Accepting re-checks (choose-then-verify) before anything lands.
+      h+='<p class="hint">Dwight already built this, ran it beside your components, and every output matched exactly. Accepting re-checks against your components before anything lands.</p>';
+      if(!allowReplace && d.diagnosis) h+='<p class="hint"><b>'+esc(d.diagnosis)+'</b></p>';
+    }
+    h+='<div class="gotosel" onclick="dwightSend(\'gotosel\')" title="Frame the whole selection">'+_ic('locate','sm')+'Take me to the selection on canvas</div>';
+    function spec(title, ps){ if(!ps.length) return '';
+      var s='<div class="specgroup"><h2>'+title+'</h2><div class="spec">';
+      ps.forEach(function(p){ s+='<div class="specrow"><span class="sname">'+esc(p.name)+'</span>'+
+        '<span class="stype">'+esc(p.type)+'</span><span class="saccess">'+esc(p.access)+'</span></div>'; });
+      return s+'</div></div>'; }
+    h+=spec('Inputs', ins)+spec('Outputs', outs);
+    h+='<h2>Source</h2><pre><code>'+esc(d.source||'')+'</code></pre>';
+    // #102/#103b: Replace is offered ONLY on a verified, single-source selection. A draft or a multi-source input
+    // gets Add-alongside only (an unverified or partially-wired script must never delete working components).
+    h+='<div class="simplify-actions">';
+    if(allowReplace) h+='<button class="btn primary" onclick="dwightToScriptGo(this,\'replace\')">Verify &amp; replace</button>';
+    h+='<button class="btn'+(allowReplace?'':' primary')+'" onclick="dwightToScriptGo(this,\'alongside\')">'+(draft?'Add as draft':'Add alongside')+'</button>';
+    h+='<button class="btn" onclick="dwightSend(\'dismiss\')">Dismiss</button></div>';
+    if(!draft) h+='<p class="hint">'+(allowReplace?'Either way, ':'')+'Dwight solves the script beside your components first and compares every output. If they differ, nothing is replaced.</p>';
+    // RR20 #50: the consent surface states what was SENT, not only what will RUN. To write this script the model
+    // was given your script sources and the constant values on the selection's boundary - say so plainly.
+    h+='<p class="hint">To write this, Dwight sent the selection\'s structure, the source of any script components in it, and the constant values on its boundary. Geometry is never uploaded. With a local model, nothing leaves your machine.</p>';
+    document.getElementById('body').innerHTML=h; }
+  function dwightToScriptGo(btn, choice){ try{ document.querySelectorAll('.simplify-actions .btn').forEach(function(b){ b.disabled=true; }); }catch(e){}
+    dwightSend('toscript:'+choice); }
+  // Stage 7: the applied/reverted outcome + the advice (a revert still teaches). kind: ok | notice | error.
+  function dwightSimplifyOutcome(kind, title, message, statusText, adviceJson, retryLabel){ _clearThink();
+    var adv=[]; try{ adv=JSON.parse(adviceJson||'[]'); }catch(e){}
+    var icon = kind==='error' ? _ic('cross') : kind==='notice' ? 'i' : _ic('check');
+    var h='<div class="outcome '+esc(kind)+'"><div class="oc-icon">'+icon+'</div>';
+    if(title) h+='<h1>'+esc(title)+'</h1>';
+    h+='<p class="oc-msg">'+esc(message||'')+'</p></div>';
+    // #92: a revert can OFFER a corrected proposal - a fresh, re-billed generation with the value-free diagnosis
+    // fed back, landing as a new preview. Never an auto-apply; the user chooses to spend again.
+    if(retryLabel) h+='<div class="simplify-actions"><button class="btn primary" onclick="dwightSend(\'retry\')">'+esc(retryLabel)+'</button>'+
+      '<button class="btn" onclick="dwightSend(\'dismiss\')">Dismiss</button></div>';
+    h+=_adviceHtml(adv);
+    document.getElementById('body').innerHTML=h;
+    if(statusText) dwightSetStatus(statusText, kind==='error'); }
+  // RR8 #17/#19/#21: the applied state as an ITEMIZED read-only "done" list - what actually changed, each item
+  // click-to-locate; the honest summary; skips with reason; the advisory; Undo / Re-apply controls.
+  function dwightSimplifyApplied(json){ _clearThink(); var d; try{ d=JSON.parse(json); }catch(e){ d={}; }
+    var ch=d.changes||[], sk=d.skipped||[], adv=d.advice||[];
+    // RR20 #85: a DRAFT is honestly marked - a warning glyph, not the earned green check, and a banner that says
+    // Dwight could not confirm it. A verified apply keeps the check.
+    var draft=!!d.draft;
+    var h='<div class="outcome '+(draft?'notice':'ok')+'"><div class="oc-icon">'+(draft?'!':_ic('check'))+'</div><p class="oc-msg">'+esc(d.summary||'Simplified.')+'</p></div>';
+    if(draft) h+='<p class="preview-note"><span class="badge warn"><span class="dot"></span>unverified draft</span> Dwight couldn\'t confirm this reproduces your components. Inspect it before you use it - your components are untouched.</p>';
+    if(d.inPlace===false) h+='<p class="preview-note"><span class="badge warn"><span class="dot"></span>undone</span> This change is no longer on the canvas - Re-apply to restore it.</p>';
+    if(ch.length&&d.inPlace!==false) h+='<div class="gotosel" onclick="dwightSend(\'gotosel\')" title="Frame the whole selection">'+_ic('locate','sm')+'Take me to the selection on canvas</div>';
+    if(ch.length){ h+='<div class="changes">';
+      ch.forEach(function(c){
+        var ops='';
+        (c.ops||[]).forEach(function(o){
+          if(o.k==='remove') ops+='<span class="op remove">removed '+esc(o.type)+' <span class="idbadge">('+o.id+')</span></span>';
+          else if(o.k==='add') ops+='<span class="op add">added '+esc(o.type)+(o.nick?' ('+esc(o.nick)+')':'')+'</span>';
+          else if(o.k==='rename') ops+='<span class="op rename">named '+esc(o.type)+' <span class="idbadge">('+o.id+')</span> → “'+esc(o.to)+'”</span>';
+        });
+        h+='<div class="changerow doneitem" onclick="dwightSend(\'locate:'+c.i+'\')" title="Click to find on canvas">'+
+           '<span class="cls '+esc(c.cls)+'">'+esc(c.cls)+'</span>'+
+           '<span class="ctext">'+esc(c.text)+(ops?'<span class="ops">'+ops+'</span>':'')+'</span>'+
+           '<span class="locate">'+_ic('locate','sm')+'</span></div>';
+      });
+      h+='</div>'; }
+    if(sk.length){ h+='<div class="skips">'; sk.forEach(function(s){ h+='<div class="skip">'+_ic('ban','sm')+'<span>'+esc(s)+'</span></div>'; }); h+='</div>'; }
+    // RR19 #42: to-script reuses this same applied view, and for to-script the ARTEFACT IS THE CHANGE - a receipt
+    // that hid the code would be a receipt for nothing. Same surface, one extra block; no new UI language.
+    if(d.source) h+='<h2>The script</h2><pre><code>'+esc(d.source)+'</code></pre>';
+    h+=_adviceHtml(adv);
+    h+='<div class="simplify-actions"><button class="btn" onclick="dwightSend(\'undo\')">Undo</button>'+
+       (d.inPlace===false?'<button class="btn primary" onclick="dwightSend(\'action:restore-arrangement\')">Re-apply</button>':'')+
+       '<button class="btn" onclick="dwightSend(\'dismiss\')">Dismiss</button></div>';
+    document.getElementById('body').innerHTML=h;
+    dwightSetStatus(d.verified||'verified by re-solve', false); }
+  function _dwMark(){ try{ return document.getElementById('dwmark').innerHTML.trim(); }catch(e){ return ''; } }   // the bar has no mark in a conversation, so the chat's label takes it from here
+  function msgBubble(who, html, echo, img){
+    // 'report' (Phase 9): a plugin-authored account of something Dwight did on the user's approval - shown as
+    // Dwight, recorded so the model reads it next turn. Never model text, never user text.
+    if((who==='dw'||who==='report') && /^\s*<div class="receipt/.test(html)) return '<div class="msg rc">'+html+'</div>';
+    if(who==='dw'||who==='report') return '<div class="msg dw"><span class="from">'+_dwMark()+'Dwight</span><div class="bubble">'+html+'</div></div>';
+    return '<div class="msg me"'+(echo?' data-echo="1"':'')+'><div class="bubble">'+_chatImgHtml(img)+html+'</div></div>'; }
+  // Brief EC unit 5b: a chat opened from a Walk's step has the way back to that Walk, which waits on its step. The words are the host's.
+  var _walkBack='';
+  function dwightChatWalkBack(label){ _walkBack=label||''; var b=document.getElementById('chatback'); if(!b) return; b.hidden=!_walkBack; document.getElementById('chatback-lbl').textContent=_walkBack; }
+  function dwightChat(json){ _clearThink(); var msgs; try{ msgs=JSON.parse(json); }catch(e){ msgs=[]; }
+    var t='', prev=null; msgs.forEach(function(m){ if(!_echoAfterReceipt(m, prev)) t+=msgBubble(m.who, m.html, m.echo, m.img); prev=m; });
+    document.getElementById('body').innerHTML =
+      '<div class="chat"><div class="chatback" id="chatback"'+(_walkBack?'':' hidden')+'><button class="btn sm" onclick="dwightSend(\'nav:walk\')"><svg class="ic" aria-hidden="true"><use href="#ic-back"/></svg><span id="chatback-lbl">'+esc(_walkBack)+'</span></button></div>'+
+      '<div class="thread" id="thread">'+t+'</div>'+
+      '<div class="drop" id="drop">drop a PNG or JPEG here</div><div class="upbar" id="upbar"><i></i></div>'+
+      '<div class="composer">'+
+      '<div class="chatheld" id="chatheld"></div>'+
+      '<button class="iconbtn attach" id="chatattach" title="Attach an image: PNG or JPEG, or paste one with Ctrl+V" aria-label="Attach an image" onclick="dwightChatAttach()">'+
+      '<svg class="ic" aria-hidden="true"><use href="#ic-attach"/></svg></button>'+
+      '<textarea id="ci" rows="1" placeholder="Reply, or describe what to build…" '+
+      'onkeydown="dwightComposerKey(event)" oninput="dwightComposerGrow()"></textarea>'+
+      '<button class="stopbtn" id="chatstop" style="display:none" title="Stop this turn" onclick="dwightStop()">'+
+      '<svg class="ic" aria-hidden="true"><use href="#ic-stop"/></svg></button>'+
+      '<button class="send" title="Send" onclick="dwightComposerSend()">'+
+      '<svg class="ic" aria-hidden="true"><use href="#ic-send"/></svg></button>'+
+      '<div class="chathdr" id="chathdr"></div></div>'+
+      '<div class="imgmodal" id="imgmodal" onclick="this.classList.remove(\'on\')"><div class="frame"><img id="imgmodal-img" alt=""/></div></div></div>';
+    try{document.querySelector('.doc').classList.add('chatmode');}catch(e){}
+    dwightDecorateCode();   // R2: a reopened thread's code blocks get their copy button too
+    try{ _hdrDraw(); }catch(e){}   // Brief BD: the controls row is part of the composer, so it is drawn again from what the host last sent
+    try{ _heldDraw(); _chatImgWant(); }catch(e){}   // Brief DX: so is the image waiting to go, and the thread's images ask for their bytes
+    // chat mode has its own composer; the footer Chat/Copy actions are not needed (copy is per-message)
+    try{ var ab=document.getElementById('askbtn'); if(ab)ab.style.display='none'; var cb=document.getElementById('copybtn'); if(cb)cb.style.display='none'; }catch(e){} }
+  // WP-3 (#259a): ADR-089's kill switch, on the chat. A multi-step billed loop is where Stop matters
+  // most, and it was the one surface without it. The composer is disabled while a turn runs, so the
+  // control the user reaches for is Stop rather than a second message the busy gate would refuse.
+  // Called from the composer's Stop button. A NAMED, ARGUMENT-FREE function on purpose: the attribute
+  // then contains no quote characters, so the markup cannot be broken by anything that mangles an escape
+  // - which is exactly how this line shipped as a parse error and took every verb's render with it.
+  function dwightStop(){ dwightSend('stop'); }
+
+  // Brief AO, moved by Brief BD: THE CHAT'S CONTROLS. dwightChatHeader(json) stores what the host sent: the model, the approval mode, Full control and
+  // the cost so far. They are drawn in the row under the text box (#chathdr, inside the composer) as a glyph and a short label each. The row is
+  // built by dwightChat, which can run after the host's header, so the document is kept and drawn again whenever the composer is rebuilt. A click
+  // is sent to the host (dwightSend('hdr:...')), which validates it, writes it on the thread and sends the header again. Text is set with
+  // textContent, never as markup; the glyphs are fixed shell markup.
+  var _hdr=null, _hdrOpen=null, _live='';
+  function _hdrEl(tag,cls,text,title){ var e=document.createElement(tag); if(cls)e.className=cls; if(text!=null)e.textContent=text; if(title)e.title=title; return e; }
+  function _hdrIcon(id,cls,icon,title,onclick){
+    var b=_hdrEl('button','iconbtn'+(cls?' '+cls:''),null,title); b.id=id; b.setAttribute('aria-label',title);
+    var ns='http://www.w3.org/2000/svg', v=document.createElementNS(ns,'svg'), u=document.createElementNS(ns,'use'); v.setAttribute('class','ic'); v.setAttribute('aria-hidden','true'); u.setAttribute('href','#ic-'+icon); v.appendChild(u); b.appendChild(v);
+    b.onclick=onclick; return b;
+  }
+  function dwightChatHeader(json){
+    var s; try{ s=JSON.parse(json); }catch(e){ return; }
+    _hdr=s; _hdrDraw();
+  }
+  function _hdrDraw(){
+    var s=_hdr; if(!s) return;
+    var bar=document.getElementById('chathdr'); if(!bar) return;
+    bar.innerHTML='';
+    var cost=_hdrEl('button','linecost',null,s.cost.title||s.cost.text); cost.id='hdr-cost'; cost.setAttribute('aria-label',s.cost.title||s.cost.text);
+    cost.appendChild(_hdrEl('span','lbl',s.cost.text)); cost.onclick=function(){ dwightSend('hdr:usage'); };
+    bar.appendChild(cost);
+    var icons=_hdrEl('span','icons');
+    icons.appendChild(_hdrIcon('hdr-model','','model',s.model.title,function(){ dwightHdrMenu('model'); }));
+    icons.appendChild(_hdrIcon('hdr-approval','',s.approval.mode,s.approval.title,function(){ dwightHdrMenu('approval'); }));
+    icons.appendChild(_hdrIcon('hdr-full',s.full.on?'on':'','full',s.full.tip,function(){ dwightSend('hdr:full:'+(s.full.on?'off':'on')); }));
+    bar.appendChild(icons);
+    _hdrOpen=null; bar.classList.add('on'); _hdrCost();
+  }
+  // The line's left: the cost at rest, the live step while a turn runs. The host's text, always.
+  function _hdrCost(){
+    var c=document.getElementById('hdr-cost'); if(!c||!_hdr) return;
+    c.querySelector('.lbl').textContent=_live||_hdr.cost.text; c.classList.toggle('live',!!_live);
+  }
+  function dwightHdrMenu(which){
+    var bar=document.getElementById('chathdr'); if(!bar||!_hdr) return;
+    var old=bar.querySelector('.chipmenu'); if(old) old.remove();
+    if(_hdrOpen===which){ _hdrOpen=null; return; }
+    _hdrOpen=which; var menu=_hdrEl('div','chipmenu'); menu.id='hdr-menu';
+    var list=(which==='model'?_hdr.model.choices:_hdr.approval.choices), grp=null;
+    for(var i=0;i<list.length;i++){ (function(c){
+      if(c.group && c.group!==grp){ grp=c.group; var g=_hdrEl('div','grp',c.group==='posture'?'Profile':'Models that run the chat'); g.setAttribute('role','heading'); g.setAttribute('aria-level','3'); menu.appendChild(g); }
+      var b=_hdrEl('button','it'+(c.on?' on':''),c.label,c.title); b.onclick=function(){ _hdrOpen=null; dwightSend('hdr:'+which+':'+c.id); }; menu.appendChild(b);
+    })(list[i]); }
+    bar.appendChild(menu);
+  }
+
+  // Lane D: THE COMPOSER, multi-line. Enter sends; Shift+Enter breaks the line, as every chat surface does.
+  // These replaced logic that was written INLINE, inside a string inside a string, as escaped-quote
+  // attributes - the exact shape #275 shipped as a parse error that killed all five verbs. Named functions
+  // with no quoted arguments mean the attributes that call them contain no quote characters to mangle, which
+  // is the remedy the Stop button above already uses.
+  function dwightComposerKey(e){
+    // An Enter while an IME is composing COMMITS a candidate; it is not the end of the message.
+    if(!e || e.key!=='Enter' || e.shiftKey || e.isComposing) return;   // Shift+Enter falls through to a newline
+    e.preventDefault();                                                 // this Enter is the send, not a newline
+    dwightComposerSend(); }
+  // The text posted is the text the user sees in their own bubble and the text the model reads: all three
+  // come from this one string (#153). It must also be the text TYPED: leading BLANK lines and trailing
+  // whitespace go, and nothing else - never the first line's indent. A whole-string trim() took that indent
+  // and left every later line's, so a pasted block changed its RELATIVE indentation, which in Python is the
+  // program. ^\s*\n stops at the last blank line because an indent is followed by text, not a newline.
+  function dwightComposerSend(){
+    var el=document.getElementById('ci'); if(!el) return;
+    var v=el.value.replace(/^\s*\n/, '').replace(/\s+$/, '');
+    if(!v.trim() && !_held) return;   // whitespace only and no image: nothing to send
+    dwightSend('chat:'+v); el.value=''; dwightComposerGrow(); }
+
+  // Brief DX: AN IMAGE THE PERSON ATTACHES, by the paper-clip, Ctrl+V or a file dropped on the composer. The host reads it, downscales it and holds it, so all this does is carry what the
+  // person did and draw what the host says. A chip stays until the host clears it, which it does only when the turn has been accepted: a refused send keeps the chip and the words.
+  var _held=null, _chatImgMax=20971520;   // ChatImage.MaxFileBytes, so a huge file is refused before it is read. A test holds the two together.
+  function _chatImgHtml(img){ if(!img||!img.sha) return ''; return '<div class="imgmsg" data-img="'+esc(img.sha)+'" onclick="_dwImgOpen(this)"><div class="imeta">'+esc(img.meta||'')+'</div></div>'; }
+  function _dwImgOpen(el){ var i=el.querySelector('img'); if(i) _dwImgModal(i.src); }
+  // One way for a reopened thread and a live message alike: each image in the thread asks once for its bytes, and the host reads them from the file the provider is sent.
+  function _chatImgWant(){ var seen={}, els=document.querySelectorAll('.imgmsg[data-img]:not([data-asked])'); for(var i=0;i<els.length;i++){ var sha=els[i].getAttribute('data-img'); els[i].setAttribute('data-asked','1'); if(!seen[sha]){ seen[sha]=1; dwightSend('chatimg:want:'+sha); } } }
+  function dwightChatImageBytes(sha, dataUrl, goneText){ var els=document.querySelectorAll('.imgmsg[data-img]');
+    for(var i=0;i<els.length;i++){ var el=els[i]; if(el.getAttribute('data-img')!==sha) continue;
+      if(dataUrl){ if(!el.querySelector('img')){ var im=document.createElement('img'); im.alt=''; im.src=dataUrl; el.insertBefore(im, el.firstChild); } }
+      else { el.classList.add('gone'); el.querySelector('.imeta').textContent=goneText||''; } } }
+  function dwightChatHeld(json){ try{ _held=json?JSON.parse(json):null; }catch(e){ _held=null; } _heldDraw(); }
+  function _heldDraw(){ var el=document.getElementById('chatheld'); if(!el) return; el.innerHTML=''; el.classList.toggle('on',!!_held); if(!_held) return;
+    var im=document.createElement('img'); im.alt=''; im.src=_held.src; im.title='Open this image'; im.onclick=function(){ _dwImgModal(_held.src); }; el.appendChild(im);
+    var words=_hdrEl('div','words'); words.appendChild(_hdrEl('div','line',_held.line)); if(_held.note) words.appendChild(_hdrEl('div','note',_held.note)); el.appendChild(words);
+    el.appendChild(_hdrIcon('chatheld-x','','close','Remove this image',function(){ dwightSend('chatimg:clear'); })); }
+  function dwightChatAttach(){ dwightSend('chatimg:pick'); }
+  function _chatImgFile(file){ if(!file) return;
+    if(file.size>_chatImgMax){ dwightSend('chatimg:big'); return; }
+    if(file.type!=='image/png'&&file.type!=='image/jpeg'){ dwightSend('chatimg:type'); return; }
+    var r=new FileReader(); r.onload=function(){ dwightSend('chatimg:'+r.result); }; r.onerror=function(){ dwightSend('chatimg:unreadable'); }; r.readAsDataURL(file); }
+  // A copy from a spreadsheet can carry a picture of its cells beside their text, and the text is what was meant there, so words on the clipboard win.
+  document.addEventListener('paste',function(e){ if(!e.target||e.target.id!=='ci'||!e.clipboardData) return;
+    var items=e.clipboardData.items||[], file=null, words=false;
+    for(var i=0;i<items.length;i++){ if(items[i].type==='text/plain') words=true; else if(items[i].kind==='file'&&items[i].type.indexOf('image/')===0&&!file) file=items[i].getAsFile(); }
+    if(!file||words) return;
+    e.preventDefault(); _chatImgFile(file); });
+  function _dragsFiles(e){ var t=e.dataTransfer&&e.dataTransfer.types; if(!t) return false; for(var i=0;i<t.length;i++) if(t[i]==='Files') return true; return false; }
+  function _overComposer(e){ return !!(e.target&&e.target.closest&&e.target.closest('.composer,.drop')); }
+  // A file dropped anywhere else in the panel does nothing, and text dragged into the box stays the browser's.
+  document.addEventListener('dragover',function(e){ if(!_dragsFiles(e)) return; e.preventDefault(); var on=_overComposer(e); e.dataTransfer.dropEffect=on?'copy':'none'; dwightChatDrop(on); });
+  document.addEventListener('dragleave',function(e){ if(e.relatedTarget===null) dwightChatDrop(false); });
+  document.addEventListener('drop',function(e){ if(!_dragsFiles(e)) return; e.preventDefault(); dwightChatDrop(false); if(_overComposer(e)) _chatImgFile(e.dataTransfer.files[0]); });
+  // Fit the box to what is in it. The CAP lives in ONE place - max-height on .composer textarea - and the
+  // browser clamps to it and scrolls the rest, so there is no second copy of the number here to disagree.
+  function dwightComposerGrow(){
+    var el=document.getElementById('ci'); if(!el) return;
+    el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+
+  // R2: give every code block a copy button. Called after any render that can produce one, and it skips
+  // blocks it has already decorated, so calling it twice is harmless.
+  function dwightDecorateCode(){
+    try{
+      var blocks = document.querySelectorAll('.doc pre');
+      for(var i=0;i<blocks.length;i++){
+        var pre = blocks[i];
+        if(pre.parentNode && pre.parentNode.className === 'codewrap') continue;
+        var wrap = document.createElement('div');
+        wrap.className = 'codewrap';
+        pre.parentNode.insertBefore(wrap, pre);
+        wrap.appendChild(pre);
+        var btn = document.createElement('button');
+        btn.className = 'copybtn';
+        btn.title = 'Copy to clipboard';
+        btn.textContent = 'Copy';
+        btn.onclick = function(e){ dwightCopyBlock(e.target); };
+        wrap.appendChild(btn);
+      }
+    }catch(e){}
+  }
+  function dwightCopyBlock(btn){
+    try{
+      var wrap = btn.parentNode; if(!wrap) return;
+      var pre = wrap.querySelector('pre'); if(!pre) return;
+      var text = pre.innerText || pre.textContent || '';
+      var done = function(){ btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Copy'; }, 1400); };
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, function(){ dwightCopyFallback(text, done); }); }
+      else dwightCopyFallback(text, done);
+    }catch(e){}
+  }
+  function dwightCopyFallback(text, done){
+    try{
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      done();
+    }catch(e){}
+  }
+  // The host asks for the composer. insist: a flip the user just made. Otherwise the page was new and the composer has only now been drawn, and in that moment the user
+  // may have moved: a focus they gave to something in this page stays, and with the page itself unfocused this waits a moment for the view's own focus to arrive.
+  // Brief DA: words for the person to finish and send. Nothing is sent from here.
+  function dwightComposerDraft(text){ var c=document.getElementById('ci'); if(!c) return; c.value=text||''; try{ dwightComposerGrow(); }catch(e){} }
+  function dwightFocusComposer(insist){
+    try{
+      var c=document.getElementById('ci');
+      if(!insist){
+        var a=document.activeElement;
+        if(a&&a!==document.body&&a!==document.documentElement) return;
+        if(document.hasFocus&&!document.hasFocus()){
+          var again=function(){ window.removeEventListener('focus',again); clearTimeout(t); dwightFocusComposer(false); };
+          var t=setTimeout(function(){ window.removeEventListener('focus',again); },1000);
+          window.addEventListener('focus',again);
+          return;
+        }
+      }
+      if(c&&!c.disabled) c.focus();
+    }catch(e){}
+  }
+  function dwightChatBusy(on){
+    try{
+      var stop=document.getElementById('chatstop'); if(stop) stop.style.display = on ? 'grid' : 'none';
+      var send=document.querySelector('.composer .send'); if(send) send.style.display = on ? 'none' : 'grid';
+      var input=document.getElementById('ci');
+      // Short because the composer is 340px wide now rather than 480: the old wording fitted the wide
+      // chat and is cut mid-word in the linear one. The Stop button sits beside it and is red.
+      if(input){ input.disabled = !!on; input.placeholder = on ? 'Dwight is working - press stop' : 'Reply, or describe what to build…'; }
+    }catch(e){}
+  }
+  // Brief BG: a receipt row opens and closes on a click anywhere on its row or reason, or on Enter or Space when it has focus. Its folded card is
+  // in the DOM either way; a click inside the opened card (a fold, a link, a selection) does not close it.
+  document.addEventListener('click',function(e){
+    var r=e.target&&e.target.closest?e.target.closest('.receipt'):null; if(!r) return;
+    if(e.target.closest('.rc-full')) return;
+    r.classList.toggle('open'); r.setAttribute('aria-expanded', r.classList.contains('open')?'true':'false');
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Enter'&&e.key!==' ') return;
+    var r=e.target&&e.target.classList&&e.target.classList.contains('receipt')?e.target:null; if(!r) return;
+    e.preventDefault(); r.classList.toggle('open'); r.setAttribute('aria-expanded', r.classList.contains('open')?'true':'false');
+  });
+  // Brief BG: the host says a card was answered (approved, approved automatically, superseded): the message holding the card minted with
+  // that token is replaced, in place, by its receipt as the host built it. Nothing is computed here.
+  function dwightCardAnswered(token, html){
+    if(!token) return; var th=document.getElementById('thread'); if(!th) return;
+    var ms=th.querySelectorAll('.msg'); var needle="consent:"+token;
+    for(var i=0;i<ms.length;i++){ var m=ms[i]; if(m.querySelector('.receipt')) continue; if(m.innerHTML.indexOf(needle)<0) continue;
+      var next=m.nextElementSibling; m.insertAdjacentHTML('afterend', msgBubble('dw', html)); m.remove();
+      if(next && next.getAttribute('data-echo')) next.remove(); }
+  }
+  // Brief BG (Tharun's ruling): the user line a click or an automatic approval appends is not rendered when a receipt with a state immediately precedes it - the
+  // state already says it. The line stays in the record and in the transcript the model reads; only the screen leaves it out. U111: BY THE HOST'S MARK, NEVER BY THE
+  // WORDS. A user who types "Yes, go ahead." after a receipt has said something, and it is sent and recorded, so it is drawn.
+  function _isStatedReceipt(html){ return /^\s*<div class="receipt[^>]*data-state="[^"]+"/.test(html||''); }
+  function _echoAfterReceipt(m, prev){ return !!m.echo && !!prev && prev.who!=='me' && _isStatedReceipt(prev.html); }
+  function dwightChatAppend(who, html, echo, imgJson){ var th=document.getElementById('thread'); if(!th)return;
+    var img=null; if(imgJson){ try{ img=JSON.parse(imgJson); }catch(e){} }
+    var last=th.lastElementChild; if(echo && last && last.classList.contains('rc')){ var rc=last.querySelector('.receipt[data-state]'); if(rc && rc.getAttribute('data-state')) return; } th.insertAdjacentHTML('beforeend', msgBubble(who, html, echo, img)); th.scrollTop=th.scrollHeight; dwightDecorateCode(); if(img) _chatImgWant(); }
+  // ---- Scaffold shell renderers (spec 3.10) - DORMANT: nothing calls these yet; the Phase-8 build
+  // loop wires them (file/image intake, the scaffold plan, drop + upload states). Presentation only.
+  function dwightChatFile(who, name, sizeText, tag){
+    var h='<div class="filecard"><svg class="ic" aria-hidden="true"><use href="#ic-file"/></svg>'+
+      '<div><div class="fn">'+esc(name)+'</div><div class="fm">'+esc(sizeText||'')+'</div></div>'+(tag?'<span class="ftag">'+esc(tag)+'</span>':'')+'</div>';
+    dwightChatAppend(who, h); }
+  function dwightChatPlan(json){ var d; try{ d=JSON.parse(json); }catch(e){ d={groups:[]}; }
+    var h='<div class="plan">';
+    (d.groups||[]).forEach(function(g){ h+='<div class="pc"><span class="pk">'+esc(g.key)+'</span><span class="pn">'+esc(g.name)+'</span>'+
+      '<button class="pb" onclick="_dwBuildStub(\''+esc(g.key)+'\')">Build '+esc(g.key)+'</button></div>'; });
+    h+='</div>'; dwightChatAppend('dw', (d.lead?esc(d.lead):'')+h); }
+  function dwightChatDrop(on){ var el=document.getElementById('drop'); if(el)el.classList.toggle('on', !!on); }
+  function dwightChatUpload(pct){ var el=document.querySelector('#upbar i'); if(el)el.style.width=(pct==null?0:Math.max(0,Math.min(100,pct)))+'%'; }
+  function _dwBuildStub(key){ /* SEAM (Phase 8): group-addressed building rides the mutation gate; inert in the shell */ }
+  function _dwImgModal(src){ try{ var m=document.getElementById('imgmodal'); document.getElementById('imgmodal-img').src=src; m.classList.add('on'); }catch(e){} }
+  // Brief BI: in a chat the footer is gone, and a status is the turn's live step, shown on the composer's line in place of the cost until the turn ends.
+  // Everywhere else it is the verb's footer, as it always was.
+  function dwightSetStatus(text,isError){
+    var d=document.querySelector('.doc'); if(d&&d.classList.contains('chatmode')){ _live=text||''; _hdrCost(); return; }
+    var s=document.getElementById('status'); if(!text){s.innerHTML='';return;}
+    s.innerHTML='<span class="statusdot'+(isError?' err':'')+'"></span>'+esc(text); }
+  function dwightSetTheme(t){ document.body.classList.toggle('dark',t==='dark'); }
+</script>
+</body>
+</html>

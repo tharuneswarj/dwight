@@ -1,0 +1,45 @@
+: HAND-MADE. Typed from the documented web search shape (see anthropic-HANDMADE-web-search-documented-wire-shape.sse), NOT captured from a live account.
+: What it witnesses (U82): with web search on, one passage arrives as several CONSECUTIVE text blocks, split where a citation attaches,
+: and the split can land in the middle of a Markdown table row. The reply string must be the blocks joined verbatim.
+: What this cannot witness: where the live API places its splits. The shape of the thread that prompted it (27 October, a pipe table
+: shown as broken lines) is the evidence that it can split inside a row.
+
+event: message_start
+data: {"type":"message_start","message":{"model":"claude-sonnet-5","id":"msg_HANDMADE_table","type":"message","role":"assistant","content":[],"stop_reason":null,"usage":{"input_tokens":900,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"output_tokens":3}}}
+
+event: content_block_start
+data: {"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"| Part | Length |\n|---|---|\n| Bridge | 12"}}
+
+event: content_block_stop
+data: {"type":"content_block_stop","index":0}
+
+event: content_block_start
+data: {"type":"content_block_start","index":1,"content_block":{"type":"text","text":""}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":" m |\n| Hall | 30"}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"citations_delta","citation":{"type":"web_search_result_location","url":"https://example.org/hall","title":"Hall - example","encrypted_index":"Eo8-HANDMADE-table","cited_text":"The hall is 30 m long"}}}
+
+event: content_block_stop
+data: {"type":"content_block_stop","index":1}
+
+event: content_block_start
+data: {"type":"content_block_start","index":2,"content_block":{"type":"text","text":""}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":2,"delta":{"type":"text_delta","text":" m |\n\nFirst paragraph.\n\nSecond paragraph."}}
+
+event: content_block_stop
+data: {"type":"content_block_stop","index":2}
+
+event: message_delta
+data: {"type":"message_delta","delta":{"stop_reason":"end_turn","stop_sequence":null},"usage":{"input_tokens":900,"output_tokens":60}}
+
+event: message_stop
+data: {"type":"message_stop"}
+

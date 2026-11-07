@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<!-- WP-2.2: strict CSP - fonts inlined below, no external network (see panel-shell for the rationale). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; font-src data:; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<style>/*__DWIGHT_FONTS__*/</style>
+<style>/*__DWIGHT_TOKENS__*/</style>
+<style>/*__DWIGHT_COMPONENTS__*/</style>
+<style>
+  html,body{height:100%;overflow:hidden}
+</style></head>
+<body>
+<!--__DWIGHT_ICONS__-->
+  <div class="app">
+    <div class="titlebar" id="bar">
+      <!--__DWIGHT_MARK__-->
+      <span class="title"><span class="who">Dwight</span><span class="sep">·</span><span class="act">Report a problem</span></span>
+      <button class="iconbtn" title="Close" onclick="dwightSend('close')"><svg class="ic" aria-hidden="true"><use href="#ic-close"/></svg></button>
+    </div>
+    <div class="form">
+      <h2 class="section-head">What Dwight will include</h2>
+      <div class="field">
+        <pre class="code wrap" id="block" tabindex="0">Reading the details...</pre>
+        <div class="hint">Computed by Dwight. It holds versions, the provider's name, the last verb or step and the last error text. It never holds your definition, component names, values, geometry, file paths, prompts, replies or API key.</div>
+      </div>
+
+      <h2 class="section-head">What happened?</h2>
+      <div class="field">
+        <textarea id="what" rows="5" maxlength="2000" placeholder="What you did, what you expected, and what you saw instead."></textarea>
+      </div>
+
+      <!-- The buttons live in the footer (measured 2026-10-25: in this block the primary button sat below the visible
+           area and behind the footer at the panel's default height, so a user had to scroll to find it). -->
+      <div class="hint">Dwight sends nothing itself. Your browser or mail app opens with this text, and you decide what to send.</div>
+    </div>
+    <div class="foot"><span class="meta" id="status"></span><span class="spacer"></span>
+      <button class="btn" id="mailbtn" style="display:none" onclick="sendMail()">Write an email</button>
+      <button class="btn primary" id="issuebtn" style="display:none" onclick="sendIssue()">Open a GitHub issue</button>
+      <button class="btn" onclick="dwightSend('close')">Close</button></div>
+  </div>
+<script>
+  function dwightSend(c){ try{ if(window.chrome&&window.chrome.webview){window.chrome.webview.postMessage(c);return;} }catch(e){} try{document.title='dwight:'+c+':'+Date.now();}catch(e){} }
+  function what(){ var w=document.getElementById('what'); return ((w&&w.value)||'').trim(); }
+  // The text goes only over the in-process bridge, never the document.title fallback, so it cannot leak into a window title.
+  function post(c){ try{ if(window.chrome&&window.chrome.webview){ window.chrome.webview.postMessage(c); return true; } }catch(e){} return false; }
+  function sendIssue(){ if(!post('issue:'+what())) dwightSetStatus('Could not open the link on this engine.'); else dwightSetStatus('Opened in your browser'); }
+  function sendMail(){ if(!post('mail:'+what())) dwightSetStatus('Could not open the link on this engine.'); else dwightSetStatus('Opened in your mail app'); }
+  function dwightFeedbackInit(json){ var d=JSON.parse(json);
+    document.getElementById('block').textContent = d.block||'';
+    document.getElementById('issuebtn').style.display = d.canIssue ? '' : 'none';
+    document.getElementById('mailbtn').style.display = d.canMail ? '' : 'none';
+    // With only one door open it is the primary button.
+    document.getElementById('mailbtn').classList.toggle('primary', !!d.canMail && !d.canIssue);
+    document.body.classList.toggle('dark', d.applied==='dark'); }
+  function dwightSetTheme(t){ document.body.classList.toggle('dark', t==='dark'); }
+  function dwightSetStatus(text){ document.getElementById('status').textContent = text||''; }
+</script></body></html>

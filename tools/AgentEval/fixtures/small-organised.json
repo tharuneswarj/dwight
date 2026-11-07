@@ -1,0 +1,34 @@
+{
+  "origin": "Stated by hand, recorded from no document: a small, organised definition of 11 components in 3 labelled groups, reading left to right. Port names are written from memory of Grasshopper's own.",
+  "canvas": {
+    "components": [
+      { "ref": "bay",    "type": "Number Slider", "nick": "Bay Width",  "kind": "param", "outputs": ["Number"], "constant": "3",  "x": 0,   "y": 0,   "w": 180, "h": 20, "region": "Inputs", "group": "Inputs" },
+      { "ref": "count",  "type": "Number Slider", "nick": "Bay Count",  "kind": "param", "outputs": ["Number"], "constant": "8",  "x": 0,   "y": 60,  "w": 180, "h": 20, "region": "Inputs", "group": "Inputs" },
+      { "ref": "height", "type": "Number Slider", "nick": "Height",     "kind": "param", "outputs": ["Number"], "constant": "12", "x": 0,   "y": 120, "w": 180, "h": 20, "region": "Inputs", "group": "Inputs" },
+
+      { "ref": "series", "type": "Series",        "nick": "Series", "inputs": ["Start (S)", "Step (N)", "Count (C)"], "outputs": ["Series (S)"],                 "x": 320, "y": 0,   "w": 100, "h": 60, "region": "Grid", "group": "Grid" },
+      { "ref": "unitx",  "type": "Unit X",        "nick": "X",      "inputs": ["Factor (F)"],                         "outputs": ["Unit vector (V)"],            "x": 460, "y": 0,   "w": 100, "h": 40, "region": "Grid", "group": "Grid" },
+      { "ref": "origin", "type": "Construct Point", "nick": "Pt",   "inputs": ["X coordinate (X)", "Y coordinate (Y)", "Z coordinate (Z)"], "outputs": ["Point (Pt)"], "x": 600, "y": 0, "w": 100, "h": 60, "region": "Grid", "group": "Grid" },
+      { "ref": "unitz",  "type": "Unit Z",        "nick": "Z",      "inputs": ["Factor (F)"],                         "outputs": ["Unit vector (V)"],            "x": 460, "y": 100, "w": 100, "h": 40, "region": "Grid", "group": "Grid" },
+
+      { "ref": "line",   "type": "Line SDL",      "nick": "Line",   "inputs": ["Start (S)", "Direction (D)", "Length (L)"], "outputs": ["Line (L)"],             "x": 800, "y": 0,   "w": 100, "h": 60, "region": "Fins", "group": "Fins" },
+      { "ref": "extr",   "type": "Extrude",       "nick": "Extrude", "inputs": ["Base (B)", "Direction (D)"],         "outputs": ["Extrusion (E)"],              "x": 940, "y": 0,   "w": 100, "h": 40, "region": "Fins", "group": "Fins" },
+      { "ref": "depth",  "type": "Number Slider", "nick": "Fin Depth", "kind": "param", "outputs": ["Number"], "constant": "0.4", "x": 800, "y": 120, "w": 180, "h": 20, "region": "Fins", "group": "Fins" },
+      { "ref": "out",    "type": "Geometry",      "nick": "FINS",   "kind": "param", "inputs": ["Geometry"], "outputs": ["Geometry"],                            "x": 1080, "y": 0,  "w": 80,  "h": 20, "region": "Fins", "group": "Fins" }
+    ],
+    "wires": [
+      { "from": "bay",    "fromParam": "Number",          "to": "series", "toParam": "Step (N)" },
+      { "from": "count",  "fromParam": "Number",          "to": "series", "toParam": "Count (C)" },
+      { "from": "series", "fromParam": "Series (S)",      "to": "unitx",  "toParam": "Factor (F)" },
+      { "from": "unitx",  "fromParam": "Unit vector (V)", "to": "origin", "toParam": "X coordinate (X)" },
+      { "from": "height", "fromParam": "Number",          "to": "unitz",  "toParam": "Factor (F)" },
+      { "from": "origin", "fromParam": "Point (Pt)",      "to": "line",   "toParam": "Start (S)" },
+      { "from": "unitz",  "fromParam": "Unit vector (V)", "to": "line",   "toParam": "Direction (D)" },
+      { "from": "height", "fromParam": "Number",          "to": "line",   "toParam": "Length (L)" },
+      { "from": "line",   "fromParam": "Line (L)",        "to": "extr",   "toParam": "Base (B)" },
+      { "from": "depth",  "fromParam": "Number",          "to": "extr",   "toParam": "Direction (D)" },
+      { "from": "extr",   "fromParam": "Extrusion (E)",   "to": "out",    "toParam": "Geometry" }
+    ]
+  },
+  "canned": {}
+}

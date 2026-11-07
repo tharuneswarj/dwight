@@ -1,0 +1,6 @@
+data: {"candidates":[{"content":{"parts":[{"text":"A Number Slider"}],"role":"model"},"index":0}],"usageMetadata":{"promptTokenCount":120,"totalTokenCount":120},"modelVersion":"gemini-handmade"}
+
+data: {"candidates":[{"content":{"parts":[{"text":" drives the radius of a Circle"}],"role":"model"},"index":0}],"usageMetadata":{"promptTokenCount":120,"totalTokenCount":120},"modelVersion":"gemini-handmade"}
+
+data: {"candidates":[{"content":{"parts":[{"text":" in its default plane."}],"role":"model"},"finishReason":"STOP","index":0}],"usageMetadata":{"promptTokenCount":120,"candidatesTokenCount":14,"totalTokenCount":134},"modelVersion":"gemini-handmade"}
+

@@ -1,0 +1,78 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Headless unit tests for the Phase-8 WP-1 durable per-file store (ADR-067, ADR-091). The serialization
+       core, the document-identity decision, and the content fingerprint are GH-free and link-compiled in; the
+       GH shim (reading GH_Document.DocumentID and the live topology) is NOT compiled here and is runtime-
+       verified by Tharun. System.Text.Json is referenced for the store format.
+       Run: dotnet test tests/Dwight.Session.Tests -->
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <NoWarn>NETSDK1138</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <!-- WP-3 Stage 0: ModelMarkdown is the ADR-088 escaping seam, so its claim is asserted here rather
+         than trusted. Pinned to the version the plugin ships. -->
+    <PackageReference Include="Markdig" Version="0.37.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="xunit" Version="2.6.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\Dwight\Session\SessionStoreCore.cs" Link="session\SessionStoreCore.cs" />
+    <Compile Include="..\..\Dwight\Session\DwightNotes.cs" Link="session\DwightNotes.cs" />
+    <Compile Include="..\..\Dwight\Session\NoteMarkdown.cs" Link="session\NoteMarkdown.cs" />
+    <!-- Brief AP: History's core, which the store's changes field normalises through. GH-free. -->
+    <Compile Include="..\..\Dwight\Session\HistoryCore.cs" Link="session\HistoryCore.cs" />
+    <Compile Include="..\..\Dwight\Session\DockRows.cs" Link="session\DockRows.cs" />
+    <Compile Include="..\..\Dwight\Agent\ApprovalMode.cs" Link="agent\ApprovalMode.cs" />
+    <Compile Include="..\..\Dwight\Session\PanelScript.cs" Link="session\PanelScript.cs" />
+    <Compile Include="..\..\Dwight\Session\ProvenanceView.cs" Link="session\ProvenanceView.cs" />
+    <!-- Brief I: what a run and a chat turn cost, kept in the per-document store. GH-free. -->
+    <Compile Include="..\..\Dwight\Session\Spend.cs" Link="session\Spend.cs" />
+    <!-- Brief AK: the central cost ledger's format, reader, totals, export and sentences. GH-free; the shim
+         (SpendLedger.cs, the path and the two write sites) is not compiled here. -->
+    <Compile Include="..\..\Dwight\Session\SpendLedgerCore.cs" Link="session\SpendLedgerCore.cs" />
+    <Compile Include="..\..\Dwight\Session\ChatTranscript.cs" Link="session\ChatTranscript.cs" />
+    <Compile Include="..\..\Dwight\Session\ChatImage.cs" Link="session\ChatImage.cs" />
+    <Compile Include="..\..\Dwight\Session\DocumentFingerprint.cs" Link="session\DocumentFingerprint.cs" />
+    <Compile Include="..\..\Dwight\Session\DocumentKey.cs" Link="session\DocumentKey.cs" />
+    <!-- WP-3 Stage 0: the size-aware thread bound. HTML-safe truncation is the load-bearing part - a
+         naive cut would leave an unclosed element that swallows every later message in the thread. -->
+    <Compile Include="..\..\Dwight\Session\ChatBudget.cs" Link="session\ChatBudget.cs" />
+    <!-- Namespace Dwight.UI, but GH-free and Eto-free by construction (Markdig + System.Net only): it is
+         the one place model text becomes HTML, which is a security decision, so it is tested. -->
+    <Compile Include="..\..\Dwight\UI\ModelMarkdown.cs" Link="ui\ModelMarkdown.cs" />
+    <!-- Phase 9 (stream E): the first-run tour's decisions and its payload, split GH-free from the window
+         that shows them (ADR-091). DwightVerbs comes with it, because it is the single source the payload,
+         both menus and the startup banner all read - the whole point of that file is that there is one. -->
+    <Compile Include="..\..\Dwight\UI\FirstRunCore.cs" Link="ui\FirstRunCore.cs" />
+    <Compile Include="..\..\Dwight\DwightVerbs.cs" Link="ui\DwightVerbs.cs" />
+    <!-- Tharun's first tour finding (2026-09-19): where a floating window goes - centred on Grasshopper's
+         screen, clamped inside it. Pure arithmetic, split from the Eto half that moves the window. -->
+    <Compile Include="..\..\Dwight\UI\WindowPlacement.cs" Link="ui\WindowPlacement.cs" />
+    <!-- Brief BR: the one window's decisions and its placement, GH-free and Eto-free. -->
+    <Compile Include="..\..\Dwight\UI\OneWindowCore.cs" Link="ui\OneWindowCore.cs" />
+    <!-- Brief DA: the Walk's state, order, keys, geometry and words, GH-free and Eto-free. -->
+    <Compile Include="..\..\Dwight\UI\CanvasLook.cs" Link="ui\CanvasLook.cs" />
+    <Compile Include="..\..\Dwight\UI\SolveReplayCore.cs" Link="ui\SolveReplayCore.cs" />
+    <Compile Include="..\..\Dwight\UI\WalkCore.cs" Link="ui\WalkCore.cs" />
+    <!-- Brief DH: Focus mode's state, the dim, the placement and the words. -->
+    <Compile Include="..\..\Dwight\UI\FocusCore.cs" Link="ui\FocusCore.cs" />
+    <Compile Include="..\..\Dwight\UI\TeachingCore.cs" Link="ui\TeachingCore.cs" />
+    <Compile Include="..\..\Dwight\UI\TeachingDeck.cs" Link="ui\TeachingDeck.cs" />
+    <!-- Brief EC unit 5: the Ask line's ids are the chat's, and a lesson's lines are what its chat carries. -->
+    <Compile Include="..\..\Dwight\Agent\RunIds.cs" Link="agent\RunIds.cs" />
+    <Compile Include="..\..\Dwight\Agent\RunHandOff.cs" Link="agent\RunHandOff.cs" />
+    <!-- #899 follow-up: the C# mirror of dwight-tokens.css, compiled in so its constants are tested against
+         the CSS file itself - "keep in sync" was held by a comment alone. -->
+    <Compile Include="..\..\Dwight\Branding\UiTokens.cs" Link="branding\UiTokens.cs" />
+  </ItemGroup>
+
+</Project>

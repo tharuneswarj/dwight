@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- WP-2.2: strict CSP - fonts inlined below, no external network (see panel-shell for the rationale). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; font-src data:; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<style>/*__DWIGHT_FONTS__*/</style>
+<style>/*__DWIGHT_TOKENS__*/</style>
+<style>/*__DWIGHT_COMPONENTS__*/</style>
+<style>
+  html,body{height:100%;overflow:hidden}
+</style>
+</head>
+<body>
+<!--__DWIGHT_ICONS__-->
+  <div class="dock">
+    <div class="titlebar dhead" id="tab" title="Dwight">
+      <button class="iconbtn navbtn" id="navbtn" title="Back to history" aria-label="Back to history"><svg class="ic" aria-hidden="true"><use href="#ic-back"/></svg></button>
+      <!--__DWIGHT_MARK__-->
+      <span class="title"><span class="who">Dwight</span><span class="sep">·</span><span class="act" id="action">History</span></span>
+      <button class="iconbtn tlbtn" id="tlbtn" title="Timeline" aria-label="Timeline"><svg class="ic" aria-hidden="true"><use href="#ic-timeline"/></svg></button>
+      <button class="iconbtn nbtn" id="nbtn" title="Notes" aria-label="Notes"><svg class="ic" aria-hidden="true"><use href="#ic-note"/></svg><span class="nbadge" id="nbadge" hidden></span></button>
+      <button class="iconbtn" id="mini" title="Minimise" aria-label="Minimise"><svg class="ic" aria-hidden="true"><use href="#ic-minimise"/></svg></button>
+    </div>
+    <div class="dbody" id="dbody">
+      <div class="dline"><span class="dfile" id="file">Unsaved file</span><button class="btn sm ghost newchat" id="newbtn" hidden><svg class="ic sm" aria-hidden="true"><use href="#ic-plus"/></svg><span id="newword"></span></button><button class="btn sm ghost newchat" id="notenew" hidden><svg class="ic sm" aria-hidden="true"><use href="#ic-plus"/></svg><span id="noteword"></span></button><button class="btn sm ghost" id="allbtn" hidden><svg class="ic sm" aria-hidden="true"><use id="allicon" href="#ic-expand"/></svg><span id="allword"></span></button></div>
+      <div id="list" class="dpane dlist"></div>
+      <div id="timeline" class="dpane dtimeline"></div>
+      <!-- Brief ED: the file's notes, one icon away. The Show notes switch (Brief DI) is at its head: the same setting, with the chord, Settings and the chip its other doors. -->
+      <div id="notes" class="dpane dnotelist">
+        <div class="dset"><div class="swrow"><label>Show notes</label><button class="sw" id="dnotes" role="switch" aria-label="Show notes" aria-checked="true"><i></i></button></div></div>
+        <div id="noterows"></div>
+      </div>
+    </div>
+  </div>
+<script>
+  function esc(s){return (s==null?'':String(s)).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function dwightSend(cmd){
+    try{ if(window.chrome&&window.chrome.webview&&window.chrome.webview.postMessage){window.chrome.webview.postMessage(cmd);return;} }catch(e){}
+    try{ document.title='dwight:'+cmd+':'+Date.now(); }catch(e){}
+  }
+  // Brief BR: Esc minimises, as it does on a conversation. The chip's state is the host's, and the library's rules read this attribute.
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') dwightSend('minimise'); });
+  function dwightChipState(s){ document.documentElement.setAttribute('data-chip', s||''); }
+  // The chip: a small drag moves it left or right along the canvas, and a click (no real drag) opens the window. The open bar has neither:
+  // only its minimise button and Esc go back to the chip (Brief BR: minimise never means two things).
+  (function(){
+    var tab=document.getElementById('tab'), down=null, moved=false;
+    tab.addEventListener('mousedown',function(e){ if(e.button!==0||document.body.classList.contains('open'))return; down=e.screenX; moved=false; e.preventDefault(); });
+    window.addEventListener('mousemove',function(e){ if(down===null)return; if(Math.abs(e.screenX-down)>3){ moved=true; dwightSend('dockmove:'+e.screenX); } });
+    window.addEventListener('mouseup',function(){ if(down===null)return; if(!moved) dwightSend('toggle'); down=null; });
+    document.getElementById('mini').addEventListener('click',function(){ dwightSend('minimise'); });
+    document.getElementById('tlbtn').addEventListener('click',function(){ dockView('timeline'); });
+    document.getElementById('nbtn').addEventListener('click',function(){ dockView('notes'); });
+    document.getElementById('notenew').addEventListener('click',function(){ dwightSend('note:new'); });
+    document.getElementById('navbtn').addEventListener('click',function(){ dockView('list'); });
+    document.getElementById('newbtn').addEventListener('click',function(){ dwightSend('new'); });
+    document.getElementById('dnotes').addEventListener('click',function(){ var on=this.getAttribute('aria-checked')!=='true'; dwightDockNotes(on); dwightSend('notes:'+(on?'on':'off')); });
+    document.getElementById('allbtn').addEventListener('click',dockAll);
+    // A row or a button carries what it does as data, so nothing the plugin sends reaches a script string.
+    document.getElementById('list').addEventListener('click',onAct);
+    document.getElementById('timeline').addEventListener('click',onAct);
+    document.getElementById('notes').addEventListener('click',onAct);
+  })();
+  // Brief DI: one setting with three doors, so the host says when another door moved it.
+  function dwightDockNotes(on){ document.getElementById('dnotes').setAttribute('aria-checked',on?'true':'false'); }
+  function onAct(e){
+    var b=e.target.closest('[data-cmd],[data-key]'); if(!b)return;
+    if(b.hasAttribute('data-cmd')){ dwightSend(b.getAttribute('data-cmd')); return; }
+    dockToggleRow(b.getAttribute('data-key'));
+  }
+  // the five verb glyphs, from the one icon table, keyed by action prefix.
+  var VERB_ICONS={'Explain':'explain','Diagnose':'diagnose','Reorganise':'reorganise','Simplify':'simplify','Build':'build'};
+  function ic(name,cls){ return '<svg class="ic'+(cls?' '+cls:'')+'" aria-hidden="true"><use href="#ic-'+name+'"/></svg>'; }
+  function verbName(action){ for(var k in VERB_ICONS){ if(action&&action.indexOf(k)===0) return VERB_ICONS[k]; } return null; }
+  function verbIcon(action, fallback){ var n=verbName(action); return n?ic(n):esc(fallback||'·'); }
+
+  // ---- History, the list of conversations. The dock always opens here (Brief BQ); the view is not remembered.
+  var LIST=[], VIEW=null, OPENED={}, LAST_CONFIRM=null;
+  function dwightDockList(json){
+    try{ LIST=JSON.parse(json)||[]; }catch(e){ LIST=[]; }
+    drawList();
+  }
+  function drawList(){
+    var h=''; LIST.forEach(function(c,i){
+      // WP-5: a stopped / failed run is kept with its STATE - "nothing is lost" has to include the failures, and
+      // a run that did not land must never read like one that did. Reopening it offers Retry.
+      var st=(c.state&&c.state!=='ok')?c.state:'';
+      // #179: a row inherited from a Save-As sibling of this file (one DocumentID, several files) is labelled
+      // "from <name>" so the shared lineage is honest and never silently interleaved.
+      var from=c.from?'<span class="rfrom">from '+esc(c.from)+'</span>':'';
+      // Section 9: no cost and no tokens here; the chat's own line and Settings' Usage hold those. A chat's row is its name and its time, and the icon says it is a Build. A verb's keeps its word and subtitle. A state sits beside the title.
+      var name=c.chat?c.subtitle:c.action, sub=c.chat?'':c.subtitle;
+      // A conversation that is working or waiting says so in the time's place. The word is the only difference between the two (Tharun, #1160), and it is the plugin's.
+      var right=(c.live&&c.liveWord)?'<span class="rlive tag">'+esc(c.liveWord)+'</span>':'<span class="rw">'+esc(c.meta)+'</span>';
+      h+='<button class="rec'+(st?' '+esc(st):'')+'" data-cmd="open:'+i+'"><span class="ri">'+verbIcon(c.action, c.icon)+'</span>'+
+         '<span class="rt"><span class="r1"><span class="ra" title="'+esc(name)+'">'+esc(name)+'</span>'+(st?'<span class="rstate tag'+(st==='failed'?' err':'')+'">'+esc(st)+'</span>':'')+right+'</span>'+
+         (sub?'<span class="rs">'+esc(sub)+'</span>':'')+from+'</span></button>';
+    });
+    document.getElementById('list').innerHTML = h || '<div class="dock-empty">'+esc(VIEW?VIEW.historyEmpty:'')+'</div>';
+  }
+
+  // ---- The Timeline, one icon away. Every word arrives from the plugin (HistoryCore); this places them.
+  // Leaving it ends a question it was asking and a result it was showing, so neither is waiting on the way back.
+  function dockView(t){
+    var tl=t==='timeline', was=document.body.classList.contains('timeline');
+    if(was&&!tl&&VIEW&&(VIEW.confirm||VIEW.note)) dwightSend('hist:no');
+    document.body.classList.toggle('timeline',tl);
+    document.body.classList.toggle('notes',t==='notes');
+    if(t==='notes') dwightSend('note:list');   // Brief ED: the pane is read again each time it opens
+    drawChrome();
+  }
+  function eventKeys(){ return ((VIEW&&VIEW.items)||[]).filter(function(i){ return i.type==='event'; }).map(function(i){ return i.key; }); }
+  function anyOpen(){ return eventKeys().some(function(k){ return OPENED[k]; }); }
+  function drawChrome(){
+    var tl=document.body.classList.contains('timeline'), nt=document.body.classList.contains('notes'), open=anyOpen(), all=document.getElementById('allbtn'), nw=document.getElementById('newbtn');
+    if(VIEW){
+      document.getElementById('action').textContent=tl?VIEW.heading:VIEW.historyHeading;
+      var t=document.getElementById('tlbtn'), n=document.getElementById('navbtn');
+      t.title=VIEW.heading; t.setAttribute('aria-label',VIEW.heading); n.title=VIEW.back; n.setAttribute('aria-label',VIEW.back);
+      document.getElementById('allword').textContent=open?VIEW.collapseAll:VIEW.expandAll;
+      document.getElementById('newword').textContent=VIEW.newChat;
+    }
+    if(NOTES){
+      if(nt) document.getElementById('action').textContent=NOTES.heading;
+      document.getElementById('noteword').textContent=NOTES.newNote;
+      var nb=document.getElementById('nbtn'), badge=document.getElementById('nbadge');
+      nb.title=NOTES.heading; nb.setAttribute('aria-label',NOTES.count?NOTES.heading+', '+NOTES.count:NOTES.heading);
+      badge.textContent=NOTES.count?String(NOTES.count):''; badge.hidden=!NOTES.count;
+    }
+    document.getElementById('allicon').setAttribute('href',open?'#ic-collapse':'#ic-expand');
+    // Rows are frozen while a question is up, and one the walk cuts through is forced open, so the button has nothing true to offer until it is answered.
+    all.hidden=!tl||!VIEW||!eventKeys().length||!!VIEW.confirm;
+    nw.hidden=tl||nt||!VIEW;
+    document.getElementById('notenew').hidden=!nt||!NOTES;
+  }
+  // The window came back from a conversation: the three lines go to History, whatever this page last showed.
+  function dwightDockHome(){ dockView('list'); }
+  // One button: Collapse all whenever anything is open, Expand all only when everything is closed (section 9).
+  function dockAll(){ var open=anyOpen(); OPENED={}; if(!open) eventKeys().forEach(function(k){ OPENED[k]=true; }); drawHistory(); drawChrome(); }
+  function dockToggleRow(key){ if(VIEW&&VIEW.confirm)return; OPENED[key]=!OPENED[key]; drawHistory(); drawChrome(); }
+  function idOk(id){ return /^[0-9a-fA-F-]{36}$/.test(id||''); }
+  function stateOf(s){ return ['standing','undone','gone','unknown','takenback'].indexOf(s)>=0?s:'unknown'; }
+  // The state is the mark, never a word on the row: its word is on hover and is the accessible name (section 9).
+  function mark(st,word,small){
+    var c='mk'+(small?' sm':'')+(st==='unknown'?' m-q':''), attrs=' role="img" title="'+esc(word)+'" aria-label="'+esc(word)+'"';
+    if(st==='takenback') return '<span class="'+c+'"'+attrs+'>'+ic('close','sm')+'</span>';
+    if(st==='unknown') return '<span class="'+c+'"'+attrs+'>?</span>';
+    return '<span class="'+c+'"'+attrs+'><i class="m-'+st+'"></i></span>';
+  }
+  // One shape means one thing: the pin is "here", the back arrow is before this, the forward arrow is redo, the two bubbles are the chat. Each carries its pinned words as title and accessible name.
+  var ACT_ICONS={back:'here',before:'undo',redo:'redo'};
+  function actBtn(a,cls,label){
+    return (a&&ACT_ICONS[a.action]&&idOk(a.id)&&(cls!=='sm'||a.action!=='before'))
+      ? '<button class="iconbtn'+(cls?' '+cls:'')+'" title="'+esc(a.button)+'" aria-label="'+esc(label||a.button)+'" data-cmd="hist:'+a.action+':'+esc(a.id)+'">'+ic(ACT_ICONS[a.action],cls)+'</button>' : '';
+  }
+  function stepRow(s,e,ids){
+    var st=s.yours?'yours':stateOf(s.state), tint=ids.indexOf(s.id)>=0;
+    return '<div class="ev-step '+st+(tint?' inwalk':'')+'">'+(s.yours?'<span class="mk sm"><i class="m-yours"></i></span>':mark(st,s.word,true))+
+      '<span class="sl">'+esc(s.line)+(s.reverted?'<span class="sr">'+esc(s.reverted)+'</span>':'')+(s.by&&s.by!==e.by?'<span class="sr">'+esc(s.by)+'</span>':'')+'</span>'+
+      '<span class="tm">'+esc(s.time)+'</span>'+(actBtn(s.action,'sm',s.action&&(s.action.button+': '+s.line))||'<span></span>')+'</div>';
+  }
+  function eventRow(e,ids){
+    var st=stateOf(e.state), steps=e.steps||[], title=e.title||e.verb;
+    // A closed row tints only if every step still on the stack is in the walk. Gone and unknown ids never are, and a taken-back one can be, so this reads the state, not the absence.
+    var live=steps.filter(function(s){ return !s.yours&&(s.state==='standing'||s.state==='undone'); });
+    var inWalk=live.filter(function(s){ return ids.indexOf(s.id)>=0; }).length;
+    var whole=live.length>0&&inWalk===live.length, part=inWalk>0&&!whole, open=OPENED[e.key]||part;
+    var name=[title,e.word,e.countWord,e.time].filter(Boolean).join(', ');
+    var h='<div class="ev '+st+(open?' open':'')+(whole?' inwalk':'')+'"><button class="ev-head" aria-expanded="'+(open?'true':'false')+'" aria-label="'+esc(name)+'" data-key="'+esc(e.key)+'">'+
+      mark(st,e.word)+ic(verbName(e.verb)||'dot','sm vic')+'<span class="t">'+esc(title)+'</span><span class="ct">'+esc(e.countWord)+'</span><span class="tm">'+esc(e.time)+'</span>'+ic('chev','sm chv')+'</button>';
+    if(open){
+      // Who approved it and the actions, then the steps. After the steps, the actions fell below the 340 window.
+      var acts=(e.actions||[]).map(function(a){ return actBtn(a); }).join('');
+      if(e.openChat&&e.threadId) acts+='<button class="iconbtn" title="'+esc(e.openChat)+'" aria-label="'+esc(e.openChat)+'" data-cmd="chat:'+esc(e.threadId)+'">'+ic('chat')+'</button>';
+      if(e.by||acts) h+='<div class="ev-rest">'+(e.by?'<span class="ev-by">'+esc(e.by)+'</span>':'')+(acts?'<span class="ev-acts">'+acts+'</span>':'')+'</div>';
+      // A single step that only repeats the row's own line has nothing to add.
+      if(steps.length>1||(steps[0]&&steps[0].line!==title)) steps.forEach(function(s){ h+=stepRow(s,e,ids); });
+    }
+    return h+'</div>';
+  }
+  function yoursRow(y,ids,above){ var tint=(y.ids||[]).some(function(i){ return ids.indexOf(i)>=0; }); return '<div class="yo'+(above?' dull':'')+(tint?' inwalk':'')+'">'+esc(y.line)+'</div>'; }
+  function drawHistory(){
+    var v=VIEW; if(!v)return;
+    var el=document.getElementById('timeline'), ids=v.confirmIds||[], items=v.items||[], top=el.scrollTop, h='';
+    var fKey=document.activeElement&&document.activeElement.getAttribute&&el.contains(document.activeElement)?(document.activeElement.getAttribute('data-key')||document.activeElement.getAttribute('data-cmd')):null;
+    if(v.confirm){
+      h+='<div class="hconfirm"><div class="hctext">'+esc(v.confirm)+'</div><div class="hbtns"><button class="btn sm primary" data-cmd="hist:yes">'+esc(v.yes)+'</button>'+
+         '<button class="btn sm" id="histno" data-cmd="hist:no">'+esc(v.no)+'</button></div></div>';
+    } else if(v.note){ h+='<div class="hnote">'+esc(v.note)+'</div>'; }
+    if(items.length){
+      // What is above "You are here" can be redone, so its quiet lines go dull with its rows.
+      var above=items.some(function(it){ return it.type==='here'; });
+      h+='<div class="tl">'; items.forEach(function(it){
+        if(it.type==='here') above=false;
+        h+= it.type==='event'?eventRow(it,ids) : it.type==='yours'?yoursRow(it,ids,above) : it.type==='here'?'<div class="here"><span>'+esc(it.line)+'</span></div>' : '';
+      }); h+='</div>';
+    } else if(!v.confirm){ h+='<div class="dock-empty">'+esc(v.empty)+'</div>'; }
+    el.innerHTML=h; el.scrollTop=top;
+    var fresh=v.confirm&&v.confirm!==LAST_CONFIRM; LAST_CONFIRM=v.confirm||null;
+    if(fresh){
+      // The row that stays must be in view when he agrees, so a new question scrolls to the end of its walk. Cancel takes the focus, so a second Enter cannot agree by accident.
+      el.scrollTop=0;
+      var tinted=el.querySelectorAll('.inwalk'), last=tinted[tinted.length-1];
+      if(last){ var over=last.getBoundingClientRect().bottom+last.offsetHeight-el.getBoundingClientRect().bottom; if(over>0) el.scrollTop+=over; }
+      if(fKey){ var no=document.getElementById('histno'); if(no) no.focus({preventScroll:true}); }
+    } else if(fKey){
+      // Redrawing the rows must not cost the keyboard its place. Opened rows and the scroll position survive for the same reason.
+      var back=null; try{ back=el.querySelector('[data-key="'+fKey+'"],[data-cmd="'+fKey+'"]'); }catch(e){} (back||document.getElementById('tlbtn')).focus({preventScroll:true});
+    }
+  }
+  function dwightDockHistory(json){
+    var v; try{ v=JSON.parse(json); }catch(e){ return; }
+    VIEW=v; drawHistory(); drawChrome();
+    if(!LIST.length) drawList();
+  }
+  // ---- Brief ED: the file's notes, newest first. Every word is the plugin's (NotesPane), and a row goes there.
+  var NOTES=null;
+  function dwightDockNoteList(json){ var n; try{ n=JSON.parse(json); }catch(e){ return; } NOTES=n; drawNotes(); drawChrome(); }
+  function drawNotes(){
+    if(!NOTES) return;
+    var h=''; (NOTES.rows||[]).forEach(function(r){
+      var sub=[r.who,r.about,r.stateWord].filter(Boolean).join(' \u00b7 ');
+      h+='<button class="rec" data-cmd="note:go:'+esc(r.id)+'"><span class="ri">'+ic('note')+'</span>'+
+         '<span class="rt"><span class="r1"><span class="ra" title="'+esc(r.words)+'">'+esc(r.words)+'</span><span class="rw">'+esc(r.when)+'</span></span>'+
+         '<span class="rs">'+esc(sub)+'</span></span></button>';
+    });
+    document.getElementById('noterows').innerHTML = h || '<div class="dock-empty">'+esc(NOTES.empty)+'</div>';
+  }
+  function dwightDockFile(name){ document.getElementById('file').textContent = name || 'Unsaved file'; }
+  function dwightDockExpanded(b){
+    document.body.classList.toggle('open', !!b); document.getElementById('dbody').style.display = b ? 'flex' : 'none'; }
+  function dwightSetTheme(t){ document.body.classList.toggle('dark', t==='dark'); }
+  // The first-run tour's last button ("Open Dwight") points at this window: the ring above pulses three times and
+  // stops. ATTN_MS must outlast the CSS (3 pulses x 1.1s = 3.3s) so the class is taken off only after the ring has
+  // finished; taking it off is what makes a second call play again. Never runs anything - it only draws.
+  var ATTN_MS = 3600, attnTimer = null;
+  function dwightDockAttention(){
+    var d=document.querySelector('.dock'); if(!d) return;
+    d.classList.remove('attn'); void d.offsetWidth; d.classList.add('attn');
+    if(attnTimer) clearTimeout(attnTimer);
+    attnTimer=setTimeout(dwightDockAttentionStop, ATTN_MS); }
+  function dwightDockAttentionStop(){
+    var d=document.querySelector('.dock'); if(d) d.classList.remove('attn');
+    attnTimer=null; }
+</script>
+</body>
+</html>

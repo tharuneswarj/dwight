@@ -1,0 +1,20 @@
+: HAND-MADE. Typed from the documented Responses streaming shape, NOT captured from a live reply. It witnesses that the reader reads the documentation, and a live capture must join it (Brief BV).
+: Sources read 2026-10-31: developers.openai.com/api/docs/guides/ streaming-responses, function-calling, reasoning, migrate-to-responses; the event, item and usage types in openai-python src/openai/types/responses/.
+event: response.created
+data: {"type":"response.created","response":{"id":"resp_1","object":"response","status":"in_progress","output":[],"usage":null},"sequence_number":0}
+
+event: response.output_item.added
+data: {"type":"response.output_item.added","output_index":0,"item":{"id":"msg_r","type":"message","role":"assistant","status":"completed","content":[]},"sequence_number":1}
+
+event: response.refusal.delta
+data: {"type":"response.refusal.delta","item_id":"msg_r","output_index":0,"content_index":0,"delta":"I cannot help with that.","sequence_number":2}
+
+event: response.refusal.done
+data: {"type":"response.refusal.done","item_id":"msg_r","output_index":0,"content_index":0,"refusal":"I cannot help with that.","sequence_number":3}
+
+event: response.output_item.done
+data: {"type":"response.output_item.done","output_index":0,"item":{"id":"msg_r","type":"message","role":"assistant","status":"completed","content":[{"type":"refusal","refusal":"I cannot help with that."}]},"sequence_number":4}
+
+event: response.completed
+data: {"type":"response.completed","response":{"id":"resp_1","object":"response","status":"completed","output":[{"id":"msg_r","type":"message","role":"assistant","status":"completed","content":[{"type":"refusal","refusal":"I cannot help with that."}]}],"usage":{"input_tokens":1200,"input_tokens_details":{"cached_tokens":900,"cache_write_tokens":100},"output_tokens":320,"output_tokens_details":{"reasoning_tokens":250},"total_tokens":1520}},"sequence_number":5}
+

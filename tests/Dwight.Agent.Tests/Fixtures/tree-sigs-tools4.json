@@ -1,0 +1,451 @@
+{
+ "note": "Written by the product's own get_tree_signature (AgentTools.Invoke through reflection, a fresh AgentScope after get_overview and get_region reads), on Desktop\tools4.gh, ninth build Release 0B35C7CDD85CFBC0 (Dwight.gha 4,344,832 bytes, 1 Nov 10:40:19), read on 2026-11-01 12:19 IST by Rhino 2. Numbers and type names only: no values, no geometry. tools4 holds ONE wire (Boolean Toggle to LAMCP Bridge, an item) so the shapes several equal lists and mixed-length lists DO NOT EXIST on tools4 (every live output has PathCount 0 or 1), and a list on a wire does not exist either: the only list output (FIXTURE boxes, 3 items, 1 path) is unwired. The unwired outputs are recorded with their live data and with what the tool answers when asked about them.",
+ "node_ids": {
+  "3": "Cluster",
+  "5": "Python 3 Script",
+  "1": "Boolean Toggle",
+  "9": "LAMCP Bridge",
+  "2": "Number Slider",
+  "11": "FIXTURE curve (closed planar)",
+  "14": "FIXTURE mesh DEFECTIVE (naked + duplicate + unused)",
+  "16": "FIXTURE boxes (two intersect, one apart)",
+  "13": "FIXTURE surface (open, untrimmed)",
+  "15": "FIXTURE mesh clean (control)",
+  "6": "Cluster",
+  "10": "Panel",
+  "8": "Number",
+  "4": "C# Script",
+  "12": "FIXTURE brep (capped extrusion)",
+  "7": "Curve"
+ },
+ "live_outputs": [
+  {
+   "source_nick": "Number Slider",
+   "source_type": "GH_NumberSlider",
+   "source_name": "Number Slider",
+   "output": "Number Slider",
+   "output_name": "Number Slider",
+   "live_DataCount": 1,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    1
+   ],
+   "first_item_type": "GH_Number",
+   "recipients": []
+  },
+  {
+   "source_nick": "Curve",
+   "source_type": "Param_Curve",
+   "source_name": "Curve",
+   "output": "Curve",
+   "output_name": "Curve",
+   "live_DataCount": 1,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    1
+   ],
+   "first_item_type": "GH_Curve",
+   "recipients": []
+  },
+  {
+   "source_nick": "Number",
+   "source_type": "Param_Number",
+   "source_name": "Number",
+   "output": "Number",
+   "output_name": "Number",
+   "live_DataCount": 1,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    1
+   ],
+   "first_item_type": "GH_Number",
+   "recipients": []
+  },
+  {
+   "source_nick": "Python 3 Script",
+   "source_type": "Python3Component",
+   "source_name": "Python 3 Script",
+   "output": "out",
+   "output_name": "out",
+   "live_DataCount": 0,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    0
+   ],
+   "first_item_type": null,
+   "recipients": []
+  },
+  {
+   "source_nick": "Python 3 Script",
+   "source_type": "Python3Component",
+   "source_name": "Python 3 Script",
+   "output": "area",
+   "output_name": "area",
+   "live_DataCount": 1,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    1
+   ],
+   "first_item_type": "null",
+   "recipients": []
+  },
+  {
+   "source_nick": "Python 3 Script",
+   "source_type": "Python3Component",
+   "source_name": "Python 3 Script",
+   "output": "centroid",
+   "output_name": "centroid",
+   "live_DataCount": 1,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    1
+   ],
+   "first_item_type": "null",
+   "recipients": []
+  },
+  {
+   "source_nick": "C#",
+   "source_type": "CSharpComponent",
+   "source_name": "C# Script",
+   "output": "out",
+   "output_name": "out",
+   "live_DataCount": 0,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    0
+   ],
+   "first_item_type": null,
+   "recipients": []
+  },
+  {
+   "source_nick": "C#",
+   "source_type": "CSharpComponent",
+   "source_name": "C# Script",
+   "output": "siteBoundaryA_Curve",
+   "output_name": "siteBoundaryA_Curve",
+   "live_DataCount": 1,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    1
+   ],
+   "first_item_type": "GH_Rectangle",
+   "recipients": []
+  },
+  {
+   "source_nick": "Cluster",
+   "source_type": "GH_Cluster",
+   "source_name": "Cluster",
+   "output": "roadsideBoundary_Curve",
+   "output_name": "Curve",
+   "live_DataCount": 0,
+   "live_PathCount": 0,
+   "live_items_per_path": [],
+   "first_item_type": null,
+   "recipients": []
+  },
+  {
+   "source_nick": "Cluster",
+   "source_type": "GH_Cluster",
+   "source_name": "Cluster",
+   "output": "S(0)",
+   "output_name": "Stream",
+   "live_DataCount": 0,
+   "live_PathCount": 0,
+   "live_items_per_path": [],
+   "first_item_type": null,
+   "recipients": []
+  },
+  {
+   "source_nick": "Message Panel",
+   "source_type": "GH_Panel",
+   "source_name": "Panel",
+   "output": "Message Panel",
+   "output_name": "Panel",
+   "live_DataCount": 1,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    1
+   ],
+   "first_item_type": "GH_String",
+   "recipients": []
+  },
+  {
+   "source_nick": "LAMCP Bridge",
+   "source_type": "ScriptComponent",
+   "source_name": "LAMCP Bridge",
+   "output": "status",
+   "output_name": "status",
+   "live_DataCount": 1,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    1
+   ],
+   "first_item_type": "GH_String",
+   "recipients": []
+  },
+  {
+   "source_nick": "Boolean Toggle",
+   "source_type": "GH_BooleanToggle",
+   "source_name": "Boolean Toggle",
+   "output": "Boolean Toggle",
+   "output_name": "Boolean Toggle",
+   "live_DataCount": 1,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    1
+   ],
+   "first_item_type": "GH_Boolean",
+   "recipients": [
+    "LAMCP Bridge"
+   ]
+  },
+  {
+   "source_nick": "FIXTURE curve (closed planar)",
+   "source_type": "ScriptComponent",
+   "source_name": "FIXTURE curve (closed planar)",
+   "output": "curve",
+   "output_name": "curve",
+   "live_DataCount": 1,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    1
+   ],
+   "first_item_type": "GH_Curve",
+   "recipients": []
+  },
+  {
+   "source_nick": "FIXTURE brep (capped extrusion)",
+   "source_type": "ScriptComponent",
+   "source_name": "FIXTURE brep (capped extrusion)",
+   "output": "brep",
+   "output_name": "brep",
+   "live_DataCount": 1,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    1
+   ],
+   "first_item_type": "GH_Brep",
+   "recipients": []
+  },
+  {
+   "source_nick": "FIXTURE surface (open, untrimmed)",
+   "source_type": "ScriptComponent",
+   "source_name": "FIXTURE surface (open, untrimmed)",
+   "output": "surface",
+   "output_name": "surface",
+   "live_DataCount": 1,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    1
+   ],
+   "first_item_type": "GH_Surface",
+   "recipients": []
+  },
+  {
+   "source_nick": "FIXTURE mesh DEFECTIVE (naked + duplicate + unused)",
+   "source_type": "ScriptComponent",
+   "source_name": "FIXTURE mesh DEFECTIVE (naked + duplicate + unused)",
+   "output": "mesh",
+   "output_name": "mesh",
+   "live_DataCount": 1,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    1
+   ],
+   "first_item_type": "GH_Mesh",
+   "recipients": []
+  },
+  {
+   "source_nick": "FIXTURE mesh clean (control)",
+   "source_type": "ScriptComponent",
+   "source_name": "FIXTURE mesh clean (control)",
+   "output": "mesh",
+   "output_name": "mesh",
+   "live_DataCount": 1,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    1
+   ],
+   "first_item_type": "GH_Mesh",
+   "recipients": []
+  },
+  {
+   "source_nick": "FIXTURE boxes (two intersect, one apart)",
+   "source_type": "ScriptComponent",
+   "source_name": "FIXTURE boxes (two intersect, one apart)",
+   "output": "boxes",
+   "output_name": "boxes",
+   "live_DataCount": 3,
+   "live_PathCount": 1,
+   "live_items_per_path": [
+    3
+   ],
+   "first_item_type": "GH_Brep",
+   "recipients": []
+  }
+ ],
+ "tool_calls": [
+  {
+   "case": "real wire: one item (Boolean Toggle -> LAMCP Bridge enable)",
+   "args": {
+    "from": {
+     "node": 1,
+     "param": "Boolean Toggle"
+    },
+    "to": {
+     "node": 9,
+     "param": "enable"
+    }
+   },
+   "reply": {
+    "ok": true,
+    "result": {
+     "paths": 1,
+     "depth": 1,
+     "items": [
+      1
+     ],
+     "means": "a wire's sig is its data-tree signature: paths is the branch count, depth the path depth, items the item count per branch in branch order (the first 24 branches). Structure only, never values; a wire with no sig carried no data at the last solution."
+    }
+   }
+  },
+  {
+   "case": "unwired list output, 3 items 1 path (FIXTURE boxes) asked against Bridge enable",
+   "args": {
+    "from": {
+     "node": 16,
+     "param": "boxes"
+    },
+    "to": {
+     "node": 9,
+     "param": "enable"
+    }
+   },
+   "reply": {
+    "ok": false,
+    "error": {
+     "code": "unknown_id",
+     "message": "No wire runs from 16.boxes to 9.enable.",
+     "detail": {
+      "wiresBetweenTheseNodes": [],
+      "cause": "ids come from this session's own reads; this one was never issued"
+     }
+    }
+   }
+  },
+  {
+   "case": "unwired empty output, 0 items 1 path (Python 3 Script out) asked against Bridge enable",
+   "args": {
+    "from": {
+     "node": 5,
+     "param": "out"
+    },
+    "to": {
+     "node": 9,
+     "param": "enable"
+    }
+   },
+   "reply": {
+    "ok": false,
+    "error": {
+     "code": "unknown_id",
+     "message": "No wire runs from 5.out to 9.enable.",
+     "detail": {
+      "wiresBetweenTheseNodes": [],
+      "cause": "ids come from this session's own reads; this one was never issued"
+     }
+    }
+   }
+  },
+  {
+   "case": "unwired single item output (Number Slider) asked against Bridge enable",
+   "args": {
+    "from": {
+     "node": 2,
+     "param": "Number Slider"
+    },
+    "to": {
+     "node": 9,
+     "param": "enable"
+    }
+   },
+   "reply": {
+    "ok": false,
+    "error": {
+     "code": "unknown_id",
+     "message": "No wire runs from 2.Number Slider to 9.enable.",
+     "detail": {
+      "wiresBetweenTheseNodes": [],
+      "cause": "ids come from this session's own reads; this one was never issued"
+     }
+    }
+   }
+  },
+  {
+   "case": "no such param on a real node",
+   "args": {
+    "from": {
+     "node": 1,
+     "param": "nothing"
+    },
+    "to": {
+     "node": 9,
+     "param": "enable"
+    }
+   },
+   "reply": {
+    "ok": false,
+    "error": {
+     "code": "unknown_id",
+     "message": "No wire runs from 1.nothing to 9.enable.",
+     "detail": {
+      "wiresBetweenTheseNodes": [
+       {
+        "from": {
+         "node": 1,
+         "param": "Boolean Toggle"
+        },
+        "to": {
+         "node": 9,
+         "param": "enable"
+        },
+        "sig": {
+         "paths": 1,
+         "depth": 1,
+         "items": [
+          1
+         ]
+        }
+       }
+      ],
+      "cause": "ids come from this session's own reads; this one was never issued"
+     }
+    }
+   }
+  },
+  {
+   "case": "no such node id",
+   "args": {
+    "from": {
+     "node": 999,
+     "param": "x"
+    },
+    "to": {
+     "node": 9,
+     "param": "enable"
+    }
+   },
+   "reply": {
+    "ok": false,
+    "error": {
+     "code": "unknown_id",
+     "message": "No component with id 999 exists. Ids come from this session's reads - do not invent them.",
+     "detail": {
+      "id": 999,
+      "cause": "ids come from this session's own reads; this one was never issued"
+     }
+    }
+   }
+  }
+ ]
+}

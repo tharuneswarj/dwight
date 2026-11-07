@@ -1,0 +1,62 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Headless unit tests for the Phase 7 Simplify verification stack (ADR-090/091). The safety-critical cores
+       are GH-free and LINK-COMPILED in (no reference to Dwight.gha / Grasshopper): the delta predictor (layer 1)
+       operates on the fingerprint's FpDoc model, so BehaviourFingerprintCore.cs is linked in too; the value
+       digest and multiset output-equivalence (layer 2) are pure. The GH-coupled apply, harvest, and re-solve
+       shims are NOT compiled here - they are runtime-verified by Tharun. Run: dotnet test tests/Dwight.Simplify.Tests -->
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <NoWarn>NETSDK1138</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="xunit" Version="2.6.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\Dwight\Data\BehaviourFingerprintCore.cs" Link="core\BehaviourFingerprintCore.cs" />
+    <Compile Include="..\..\Dwight\Simplify\SimplifyPlan.cs" Link="core\SimplifyPlan.cs" />
+    <Compile Include="..\..\Dwight\Simplify\DeltaPredictor.cs" Link="core\DeltaPredictor.cs" />
+    <Compile Include="..\..\Dwight\Simplify\ValueDigest.cs" Link="core\ValueDigest.cs" />
+    <Compile Include="..\..\Dwight\Simplify\OutputEquivalence.cs" Link="core\OutputEquivalence.cs" />
+    <Compile Include="..\..\Dwight\Simplify\SimplifyProposal.cs" Link="core\SimplifyProposal.cs" />
+    <Compile Include="..\..\Dwight\Simplify\ProposalValidator.cs" Link="core\ProposalValidator.cs" />
+    <Compile Include="..\..\Dwight\Simplify\SimplifyProposalParser.cs" Link="core\SimplifyProposalParser.cs" />
+    <Compile Include="..\..\Dwight\Simplify\Layer2Surface.cs" Link="core\Layer2Surface.cs" />
+    <Compile Include="..\..\Dwight\Simplify\WiringMerge.cs" Link="core\WiringMerge.cs" />
+    <Compile Include="..\..\Dwight\Simplify\PlanFilter.cs" Link="core\PlanFilter.cs" />
+    <Compile Include="..\..\Dwight\Data\SimplifyBoundary.cs" Link="core\SimplifyBoundary.cs" />
+    <Compile Include="..\..\Dwight\Simplify\ExternalizeInputPicker.cs" Link="core\ExternalizeInputPicker.cs" />
+    <Compile Include="..\..\Dwight\Simplify\AppliedSummary.cs" Link="core\AppliedSummary.cs" />
+    <Compile Include="..\..\Dwight\Simplify\ExternalizeDemotion.cs" Link="core\ExternalizeDemotion.cs" />
+    <Compile Include="..\..\Dwight\Simplify\Completeness.cs" Link="core\Completeness.cs" />
+    <Compile Include="..\..\Dwight\Simplify\BestPracticeAdvisor.cs" Link="core\BestPracticeAdvisor.cs" />
+    <Compile Include="..\..\Dwight\Simplify\GroupContainment.cs" Link="core\GroupContainment.cs" />
+    <Compile Include="..\..\Dwight\UI\PanelTransport.cs" Link="core\PanelTransport.cs" />
+    <!-- WP-4 (to-script): the GH-free half - the goo->script type map, the plugin-computed interface's access
+         derivation + identifier sanitisation, and the arity validator that refuses a model-invented port. -->
+    <Compile Include="..\..\Dwight\Simplify\ScriptTypeMap.cs" Link="core\ScriptTypeMap.cs" />
+    <Compile Include="..\..\Dwight\Simplify\ToScriptPlan.cs" Link="core\ToScriptPlan.cs" />
+    <!-- ToScriptPlan.Describe gates the port-semantics interface text on the eval-only PortSemantics flag
+         (RR20 #56, the one-variable isolation); the flag class is pure/GH-free, so it link-compiles here too.
+         Without it ToScriptPlan.cs cannot build in this project (CS0234 on Dwight.Eval). -->
+    <Compile Include="..\..\Dwight\Eval\EvalFlags.cs" Link="core\EvalFlags.cs" />
+    <!-- Phase-8 WP-0 (#141/#146): the using-normalizer. The script component supplies NO implicit usings
+         (instrumented), so the PLUGIN owns the C# format contract (ADR-056). Pure string work - the union /
+         dedupe / alias-preservation / idempotence rules are headless-tested. -->
+    <Compile Include="..\..\Dwight\Simplify\UsingNormalizer.cs" Link="core\UsingNormalizer.cs" />
+    <!-- Phase-9 U35 (#928): the beside-verify's compare, with the identity guard that makes it a compare. The
+         copy's parameters carried the original's guids and the trial compared the original with itself; the
+         core refuses two sides that share an identity, and the positive control (a changed source reports a
+         mismatch) is asserted here. -->
+    <Compile Include="..\..\Dwight\Simplify\ScriptTrialCompare.cs" Link="core\ScriptTrialCompare.cs" />
+  </ItemGroup>
+
+</Project>

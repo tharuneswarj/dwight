@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Costura embeds the listed assemblies INTO Dwight.gha and removes their loose DLLs from the output, so
+     none can clash with another plugin's copy in the Grasshopper Libraries folder.
+
+     Markdig (ADR-045) and MSAGL (ADR-063) are the Phase-6 baseline: pure-managed, no transitive deps, proven.
+
+     WP-2.5 adds the cross-plugin CLASH surface pulled in transitively by the GhJSON chain: Newtonsoft.Json
+     (the classic Grasshopper cross-plugin clash), Humanizer, and the json-everything trio (Json.More,
+     JsonPointer.Net, JsonSchema.Net) - all pure-managed. GhJSON (loose) resolves these through Costura's
+     AppDomain.AssemblyResolve hook (installed by Dwight.gha's module initializer, before GhJSON first loads).
+     Dwight then stops adding a loose Newtonsoft to the ecosystem, and its own code binds its embedded copy
+     when nothing else loaded one first.
+
+     DELIBERATELY left loose (WP-2.5 decision, recorded in the as-built): GhJSON.Core / GhJSON.Grasshopper -
+     Dwight-specific (not a common cross-plugin clash) and a GH-INTEGRATION assembly whose Costura embedding
+     is the fragile part that needs the Rhino host to verify (build-green cannot prove it); and
+     System.Text.Json / System.Text.Encodings.Web - framework-adjacent, where embedding risks a runtime
+     conflict with the shared-framework copy. Tharun runtime-verifies that GhJSON's diagnostic commands (Read
+     Selection / Dump GhJSON) still round-trip after this. -->
+<Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
+  <Costura>
+    <IncludeAssemblies>
+      Markdig
+      Microsoft.Msagl
+      Newtonsoft.Json
+      Humanizer
+      Json.More
+      JsonPointer.Net
+      JsonSchema.Net
+    </IncludeAssemblies>
+  </Costura>
+</Weavers>

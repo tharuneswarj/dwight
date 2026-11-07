@@ -1,0 +1,14 @@
+{
+  "name": "dwight-shell-gates",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CI gates over the three WebView shells. Not shipped - the .gha embeds the HTML directly.",
+  "scripts": {
+    "gate:syntax": "node tools/check-shell-js.js",
+    "gate:chars": "node tools/check-source-chars.js",
+    "gate:render": "node tools/check-shell-render.js"
+  },
+  "devDependencies": {
+    "jsdom": "^30.0.1"
+  }
+}

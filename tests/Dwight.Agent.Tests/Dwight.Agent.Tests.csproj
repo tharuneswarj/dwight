@@ -1,0 +1,399 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Headless unit tests for the Phase-8 WP-2 agent tool surface (ADR-069/098, ADR-091). The pure
+       decisions - component name matching, the append-only id registry (#191), tool projections and
+       refusal shapes, the build-spec validator, and the three-state thinking wire (#192) - are
+       GH-free and LINK-COMPILED in; the GH-coupled shims (live document reads, ScheduleSolution
+       applies) are NOT compiled here and are runtime-verified by Tharun.
+       Run: dotnet test tests/Dwight.Agent.Tests -->
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <NoWarn>NETSDK1138</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="xunit" Version="2.6.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Stage 0: the whitelist's GH-free half - normalisation + nearest-match ranking. The ranking is
+         the repair payload on an unknown_component_type refusal, so it is tested, not assumed. -->
+    <Compile Include="..\..\Dwight\Components\ComponentMatchCore.cs" Link="components\ComponentMatchCore.cs" />
+    <!-- Stage A: the append-only id registry (#191 - the review's worst finding), the snapshot DTOs +
+         refusal envelope, and every read-tool projection. All GH-free by construction. -->
+    <Compile Include="..\..\Dwight\Agent\AgentIds.cs" Link="agent\AgentIds.cs" />
+    <!-- Phase-9 U22: the staleness stamp, the read record the registry holds, and the turn-start sentence. -->
+    <Compile Include="..\..\Dwight\Agent\ComponentStamp.cs" Link="agent\ComponentStamp.cs" />
+    <Compile Include="..\..\Dwight\Agent\HandoffSeed.cs" Link="agent\HandoffSeed.cs" />
+    <!-- Lane B 3.1's call site (#885): the Scaffold turn's front door - eligibility BEFORE the key, and the pinned
+         rule - held GH-free so a test fails if a reshuffle flips the order. -->
+    <Compile Include="..\..\Dwight\Agent\AgentFrontDoor.cs" Link="agent\AgentFrontDoor.cs" />
+    <Compile Include="..\..\Dwight\Agent\ChatAnchors.cs" Link="agent\ChatAnchors.cs" />
+    <!-- Brief EC unit 5: a run's ids into a chat's, and what a run's chat is seeded with. -->
+    <Compile Include="..\..\Dwight\Agent\RunIds.cs" Link="agent\RunIds.cs" />
+    <Compile Include="..\..\Dwight\Agent\RunHandOff.cs" Link="agent\RunHandOff.cs" />
+    <Compile Include="..\..\Dwight\Agent\VerbScope.cs" Link="agent\VerbScope.cs" />
+    <Compile Include="..\..\Dwight\Agent\AgentTypes.cs" Link="agent\AgentTypes.cs" />
+    <Compile Include="..\..\Dwight\Agent\AgentToolCore.cs" Link="agent\AgentToolCore.cs" />
+    <!-- Phase-9 U1: the agent's bound on a script's source - GH-free, so its cut and its marker are asserted. -->
+    <Compile Include="..\..\Dwight\Agent\SourceBound.cs" Link="agent\SourceBound.cs" />
+    <!-- Phase-9 U2: the geometry read set's GH-free halves - the target parser and arity port resolution,
+         the fact DTOs whose SHAPE is the coordinate bound, the emitter with its caps, the bounding-box
+         pre-filter and the ranking cap. The RhinoCommon reader (GhGeometry) is not compiled here. -->
+    <Compile Include="..\..\Dwight\Agent\GeometryArgs.cs" Link="agent\GeometryArgs.cs" />
+    <Compile Include="..\..\Dwight\Agent\GeometryFacts.cs" Link="agent\GeometryFacts.cs" />
+    <Compile Include="..\..\Dwight\Agent\GeometryReport.cs" Link="agent\GeometryReport.cs" />
+    <Compile Include="..\..\Dwight\Agent\BoxOverlap.cs" Link="agent\BoxOverlap.cs" />
+    <Compile Include="..\..\Dwight\Agent\RankCap.cs" Link="agent\RankCap.cs" />
+    <!-- The privacy contract as DATA (the two-copies ruling): the table both surfaces render from, and the
+         path collector the behaviour-side test compares it against. -->
+    <Compile Include="..\..\Dwight\Data\PayloadContract.cs" Link="data\PayloadContract.cs" />
+    <!-- Phase-9 U4: set_value's GH-free core - the predicted-delta over the fingerprint core, the click-time
+         scope rule, the change description and the verdict. The applier (GhSetValue) is not compiled here. -->
+    <Compile Include="..\..\Dwight\Agent\SetValueCore.cs" Link="agent\SetValueCore.cs" />
+    <Compile Include="..\..\Dwight\Agent\SetValueAsk.cs" Link="agent\SetValueAsk.cs" />
+    <!-- The advertised surface as data: the schemas ARE the contract the model reads, so they are
+         asserted here rather than trusted. -->
+    <Compile Include="..\..\Dwight\Agent\AgentToolCatalog.cs" Link="agent\AgentToolCatalog.cs" />
+    <Compile Include="..\..\Dwight\Agent\ShowOnCanvasCore.cs" Link="agent\ShowOnCanvasCore.cs" />
+    <!-- Phase-9 U23 (lane C): the solve-timing read's GH-free core, and the ONE rounding it shares with
+         Simplify's hotspot signal - linked so the contract test drives the writer's real output (#649) and the
+         catalogue's descriptor, which quotes the read's bounds, compiles here. The GH read is not linked. -->
+    <Compile Include="..\..\Dwight\Agent\SolveTiming.cs" Link="agent\SolveTiming.cs" />
+    <Compile Include="..\..\Dwight\Data\SolveTimeBucket.cs" Link="data\SolveTimeBucket.cs" />
+    <!-- Phase-9 U23 (lane C) unit 2: the units and plugin-inventory reports, the shared no-document refusal and
+         tolerance decision the geometry reads now take, and the one plugin-name rule. The Rhino reads are not linked. -->
+    <Compile Include="..\..\Dwight\Agent\SessionFacts.cs" Link="agent\SessionFacts.cs" />
+    <Compile Include="..\..\Dwight\Data\PluginName.cs" Link="data\PluginName.cs" />
+    <!-- Phase-9 U23 (lane C) unit 3: the file-state fact and the layout relations - boxes in, relations out. The
+         Grasshopper reads (GhCanvasFacts) are not linked. -->
+    <Compile Include="..\..\Dwight\Agent\CanvasFacts.cs" Link="agent\CanvasFacts.cs" />
+    <!-- WP-3 Stage A: the multi-tool loop's decisions - what a turn may CALL (#220, ADR-075's whole
+         mechanism), when it must STOP (#223), and what it may resend (#209). GH-free and provider-free;
+         the shim that drives a provider and marshals to the UI thread is not compiled here. -->
+    <Compile Include="..\..\Dwight\Agent\AgentLoopCore.cs" Link="agent\AgentLoopCore.cs" />
+    <!-- #612: the loop's STEPS, driven here by a scripted provider. A test beside the loop asserted that
+         request_mutation ends the turn by NAME; it was green, and it was the defect (#609 link 3). Only
+         tool dispatch stays GH-coupled, and it is handed in. ILlmProvider is linked because it is GH-free
+         as it stands. -->
+    <Compile Include="..\..\Dwight\Agent\AgentTurnDriver.cs" Link="agent\AgentTurnDriver.cs" />
+    <Compile Include="..\..\Dwight\Agent\TurnSpend.cs" Link="agent\TurnSpend.cs" />
+    <Compile Include="..\..\Dwight\Llm\ILlmProvider.cs" Link="llm\ILlmProvider.cs" />
+    <!-- WP-4 Stage 0 (#268/#280): the full-path drill's VERDICT. The drill's wiring is GH-coupled and
+         cannot be tested; the decision can, and the decision is the half that has gone wrong before -
+         a drill that printed pass criteria for a path it never walked, and one that passed while the
+         product hung. Deliberately NOT #if DEBUG: a test whose subject exists only in a Debug build is
+         a test a build configuration can silently empty (#252's class, wearing a compiler flag). -->
+    <Compile Include="..\..\Dwight\Agent\FullPathDrill.cs" Link="agent\FullPathDrill.cs" />
+
+    <!-- #296/#297: the chat-thread -> model-transcript assembly, so a fresh and a reopened thread can be
+         built and pre-flighted headlessly on the SAME path the panel uses. -->
+    <Compile Include="..\..\Dwight\Session\SessionStoreCore.cs" Link="session\SessionStoreCore.cs" />
+    <Compile Include="..\..\Dwight\Session\DwightNotes.cs" Link="session\DwightNotes.cs" />
+    <Compile Include="..\..\Dwight\Session\NoteMarkdown.cs" Link="session\NoteMarkdown.cs" />
+    <Compile Include="..\..\Dwight\UI\NoteLayout.cs" Link="ui\NoteLayout.cs" />
+    <Compile Include="..\..\Dwight\UI\Woff2.cs" Link="ui\Woff2.cs" />
+    <Compile Include="..\..\Dwight\UI\NoteFaces.cs" Link="ui\NoteFaces.cs" />
+    <Compile Include="..\..\Dwight\UI\CanvasNotesCore.cs" Link="ui\CanvasNotesCore.cs" />
+    <!-- Brief EH: the dots and the chip, drawn on a bitmap whose Graphics carries a scale and a translation. The painter takes the card's
+         StringFormat and the tokens; the card's faces are lazy and never loaded here, because the tests hand the painter its font. -->
+    <Compile Include="..\..\Dwight\UI\NoteDotPainter.cs" Link="ui\NoteDotPainter.cs" />
+    <Compile Include="..\..\Dwight\UI\NoteCard.cs" Link="ui\NoteCard.cs" />
+    <Compile Include="..\..\Dwight\Branding\UiTokens.cs" Link="branding\UiTokens.cs" />
+    <!-- Brief AP: History's core, which the store's changes field normalises through. GH-free. -->
+    <Compile Include="..\..\Dwight\Session\HistoryCore.cs" Link="session\HistoryCore.cs" />
+    <Compile Include="..\..\Dwight\Session\Spend.cs" Link="session\Spend.cs" />
+    <Compile Include="..\..\Dwight\Session\LargeRun.cs" Link="session\LargeRun.cs" />
+    <Compile Include="..\..\Dwight\UI\TreeLensCore.cs" Link="ui\TreeLensCore.cs" />
+    <!-- Brief ES unit 1: the numbering the canvas wears, the composer, and the measured badge function, out of CanvasGlow. -->
+    <Compile Include="..\..\Dwight\UI\CanvasNumbers.cs" Link="ui\CanvasNumbers.cs" />
+    <Compile Include="..\..\Dwight\Session\SpendLedgerCore.cs" Link="session\SpendLedgerCore.cs" />
+    <Compile Include="..\..\Dwight\Session\StoppedEstimate.cs" Link="session\StoppedEstimate.cs" />
+    <Compile Include="..\..\Dwight\Data\SelectionSerializer.cs" Link="data\SelectionSerializer.cs" />
+    <Compile Include="..\..\Dwight\Session\ChatBudget.cs" Link="session\ChatBudget.cs" />
+    <Compile Include="..\..\Dwight\Session\ChatTranscript.cs" Link="session\ChatTranscript.cs" />
+    <Compile Include="..\..\Dwight\Session\ChatImage.cs" Link="session\ChatImage.cs" />
+    <Compile Include="..\..\Dwight\Session\VisionAdvisor.cs" Link="session\VisionAdvisor.cs" />
+    <Compile Include="..\..\Dwight\Session\ChatImageCodec.cs" Link="session\ChatImageCodec.cs" />
+    <Compile Include="..\..\Dwight\Session\ChatImageStore.cs" Link="session\ChatImageStore.cs" />
+    <Compile Include="..\..\Dwight\Agent\ScreenAsk.cs" Link="session\ScreenAsk.cs" />
+    <Compile Include="..\..\Dwight\Agent\ChatToTranscript.cs" Link="agent\ChatToTranscript.cs" />
+    <!-- WP-3 Stage B: the HOST tool set (#230) - what you can do in this surface, kept out of the
+         catalogue so the MCP contract stays "what you can do to the canvas". UI-only by construction. -->
+    <Compile Include="..\..\Dwight\Agent\AgentHostTools.cs" Link="agent\AgentHostTools.cs" />
+    <!-- Defect 3 (the WP-4 gate): the chat's own words about what the chat can do. It greeted users with
+         "the build agent arrives in a later work-package" throughout the work-package that shipped the
+         build agent. #316 pointed at the human - so the claim moved out of the GH-coupled panel and into
+         a GH-free file for the sole reason that a test can reach it here. -->
+    <Compile Include="..\..\Dwight\Agent\ChatChrome.cs" Link="agent\ChatChrome.cs" />
+    <!-- F5 (the WP-4 gate): the detector for "asked permission to ask". A prompt line's effect on a
+         model cannot be asserted, so this counts RECURRENCE instead - and what is tested here is the
+         detector's own accuracy, especially the cases it must NOT count, since a false positive costs
+         trust in the number. -->
+    <Compile Include="..\..\Dwight\Agent\TurnShape.cs" Link="agent\TurnShape.cs" />
+    <!-- U63 / U61: the build style (fact + card clause) and the live step line; both GH-free and clock-injected. -->
+    <Compile Include="..\..\Dwight\Agent\BuildStyle.cs" Link="agent\BuildStyle.cs" />
+    <!-- Brief AL: the approval modes (the one pure Decide) and the folded script card's summary line; both GH-free. -->
+    <Compile Include="..\..\Dwight\Agent\ApprovalMode.cs" Link="agent\ApprovalMode.cs" />
+    <Compile Include="..\..\Dwight\Agent\ScriptSummary.cs" Link="agent\ScriptSummary.cs" />
+    <!-- Full control (U90): the sentences, the run_script descriptor, the grant comparison and the report formatting; GH-free. -->
+    <Compile Include="..\..\Dwight\Agent\FullControl.cs" Link="agent\FullControl.cs" />
+    <!-- Brief AW (U100): the approval runs the grant; its words and its follow-up decision. GH-free. -->
+    <Compile Include="..\..\Dwight\Agent\RunScriptApproval.cs" Link="agent\RunScriptApproval.cs" />
+    <!-- Brief AY (U102): the script's output, read from streams Dwight assigns. GH-free. -->
+    <Compile Include="..\..\Dwight\Agent\ScriptStreams.cs" Link="agent\ScriptStreams.cs" />
+    <!-- Brief AO: the chat header (list, texts, resolution order, document); GH-free. -->
+    <Compile Include="..\..\Dwight\Agent\ChatHeader.cs" Link="agent\ChatHeader.cs" />
+    <Compile Include="..\..\Dwight\Agent\LocalBadge.cs" Link="agent\LocalBadge.cs" />
+    <Compile Include="..\..\Dwight\Agent\ApprovedScripts.cs" Link="agent\ApprovedScripts.cs" />
+    <Compile Include="..\..\Dwight\Agent\StepProgress.cs" Link="agent\StepProgress.cs" />
+    <!-- B1 / #235: the consent card is the one place model text enters plugin markup, on the surface
+         whose whole job is informed consent. Two properties asserted, not reviewed: markup renders as
+         text, and a reason that misdescribes the action changes neither what is shown nor where an
+         approval lands. -->
+    <Compile Include="..\..\Dwight\Agent\ConsentCard.cs" Link="agent\ConsentCard.cs" />
+    <Compile Include="..\..\Dwight\Agent\CardReceipt.cs" Link="agent\CardReceipt.cs" />
+    <!-- The first-run tour DRAWS the build consent card, and types its two labels (FirstRunCore.ApproveLabel,
+         ReasonLabel) rather than borrowing them, because ConsentCard.Render holds them as inline literals in
+         another lane's file. Two copies held equal by a test: TourConsentPictureTests. FirstRunCore names
+         DwightVerbs, so both come; both are GH-free and dependency-free (ADR-091). -->
+    <Compile Include="..\..\Dwight\UI\FirstRunCore.cs" Link="ui\FirstRunCore.cs" />
+    <Compile Include="..\..\Dwight\DwightVerbs.cs" Link="ui\DwightVerbs.cs" />
+    <!-- Stage C: the scaffold plan's validator and ADDRESSING (the #219 substrate). The addresses are the
+         plugin's, from the dependency layering - an address the model could choose would stop meaning
+         position in the flow. GH-free; the geometry shim above it is not compiled here. -->
+    <Compile Include="..\..\Dwight\Agent\ScaffoldPlan.cs" Link="agent\ScaffoldPlan.cs" />
+    <!-- Stage D: the stored map and the conversation's account of it. Two readers, two forms - WP-4
+         builds from the plan, a person reads the summary - and the summary escapes the model's region
+         names, because it reaches insertAdjacentHTML (#235's rule, second site). -->
+    <!-- WP-4 Stage A (#355): what an ADDRESS means, in one place. Four consumers have to agree
+         about it - the re-stack that orders by it, the reader that parses it off a group name, the
+         producer that translates dependsOn into it, and WP-4's build that is aimed by it. -->
+    <Compile Include="..\..\Dwight\Agent\ScaffoldAddress.cs" Link="agent\ScaffoldAddress.cs" />
+    <!-- U18: where a SPOT address comes from, and the property everything downstream leans on - an address
+         on a card is a PROMISE, reserved when the card is minted and never renumbered, because one that
+         moved between the card and the click would have been approved as something else. The gap between
+         the card and the click is the whole reason this type exists, so the race it closes (two cards
+         outstanding on one canvas, neither clicked) is asserted rather than reasoned about. GH-free on
+         purpose: keyed by the document's GUID and handed what the canvas holds, exactly as #720's in-use
+         set is. -->
+    <Compile Include="..\..\Dwight\Agent\SpotMint.cs" Link="agent\SpotMint.cs" />
+    <!-- U18's carrier: what the user is actually approving when a spot card is shown. THE RECORD IS THE
+         SPEC - the validated result is what gets built, not a description of what will be, because a card
+         naming one set while the turn built another would pass every guard and return a TRUE verdict
+         (nothing in the system reads the card). It reuses BuildSpecParser rather than parsing its own, so
+         "what a component declaration is" keeps one definition (#248) and the refusals keep the
+         near-matches and real port lists this path's budget obliges it to give. GH-free: every live read
+         arrives as a delegate. -->
+    <Compile Include="..\..\Dwight\Agent\SpotAsk.cs" Link="agent\SpotAsk.cs" />
+    <!-- U18: the consent tokens, extracted GH-free from the panel so the rule a spot card added - its two
+         buttons are siblings, and redeeming one voids the other - is tested rather than only written. -->
+    <Compile Include="..\..\Dwight\Agent\ConsentTokens.cs" Link="agent\ConsentTokens.cs" />
+    <!-- #573: the turn-start canvas fact. The model answered what is on the map from memory after the map was undone; an instruction to re-read did not bind, so the plugin states the change as a fact, with the region delta. Silence when unchanged, not-known after a restart. -->
+    <Compile Include="..\..\Dwight\Agent\CanvasChangeFact.cs" Link="agent\CanvasChangeFact.cs" />
+    <!-- #611c: the approved-turn fact and the system text one turn is sent. The build that never ran was
+         told to raise cards and never told that its own turn was the approval; the composition moved out
+         of the panel so the test reads the text the model reads. -->
+    <Compile Include="..\..\Dwight\Agent\ApprovedTurnFact.cs" Link="agent\ApprovedTurnFact.cs" />
+    <!-- #624/#634: the last approved build's outcome as a turn-start fact, until superseded. The closing
+         report is chrome the model never sees, so its false "both fixes landed" outlived the correction. -->
+    <Compile Include="..\..\Dwight\Agent\BuildOutcomeFact.cs" Link="agent\BuildOutcomeFact.cs" />
+    <!-- #625: a rebuild keeps its boundary - the cut-wire record and the match of declared reconnections, decided
+         before anything is removed. -->
+    <Compile Include="..\..\Dwight\Agent\RebuildBoundary.cs" Link="agent\RebuildBoundary.cs" />
+    <!-- #625's narrow sibling: the plugin's diff that finds an input whose ONLY change is a source lost from a
+         region's earlier build. -->
+    <Compile Include="..\..\Dwight\Agent\RestorableLoss.cs" Link="agent\RestorableLoss.cs" />
+
+    <Compile Include="..\..\Dwight\Agent\ScaffoldMapRecord.cs" Link="agent\ScaffoldMapRecord.cs" />
+    <!-- F4 (the WP-4 gate): the map payload's PARTITION. The tool told the truth - every region carried
+         onCanvas:false after the user undid the map - and the model described all nine as present,
+         twice. The fix is the payload's shape rather than a prompt line, and it was extracted out of the
+         GH-coupled shim for one reason: a fix for a dropped-truth defect must not itself be unverifiable. -->
+    <Compile Include="..\..\Dwight\Agent\ScaffoldMapPayload.cs" Link="agent\ScaffoldMapPayload.cs" />
+    <!-- The catalogue DELIVERY rule (found at the Stage-B deploy): a refresh that cannot reach an
+         existing install is not a refresh. Pure decision, no file IO - tests never touch %APPDATA%. -->
+    <Compile Include="..\..\Dwight\Models\CatalogueSeed.cs" Link="models\CatalogueSeed.cs" />
+    <!-- Stage B: the three-state thinking wire (#192) and the exact JSON it produces. This decides what
+         all five shipped verbs put on the wire, so the body is asserted rather than trusted - including
+         the inertness proof (byte-identical where off == omit) and the thinking-block round-trip. -->
+    <Compile Include="..\..\Dwight\Llm\ThinkingWire.cs" Link="llm\ThinkingWire.cs" />
+    <!-- #216: the answer budget and the thinking reserve. Measured into existence at the Stage-D gate -
+         effort "max" against a 4096 budget spent all of it thinking and returned nothing - so the rule
+         that keeps the answer whole is asserted rather than trusted. -->
+    <Compile Include="..\..\Dwight\Llm\ThinkingBudget.cs" Link="llm\ThinkingBudget.cs" />
+    <Compile Include="..\..\Dwight\Llm\LlmTypes.cs" Link="llm\LlmTypes.cs" />
+    <Compile Include="..\..\Dwight\Llm\AnthropicRequestBody.cs" Link="llm\AnthropicRequestBody.cs" />
+    <Compile Include="..\..\Dwight\Llm\StructuredOutput.cs" Link="llm\StructuredOutput.cs" />
+    <Compile Include="..\..\Dwight\UI\TeachingCore.cs" Link="ui\TeachingCore.cs" />
+    <Compile Include="..\..\Dwight\UI\TeachingDeck.cs" Link="ui\TeachingDeck.cs" />
+    <Compile Include="..\..\Dwight\UI\TeachingCall.cs" Link="ui\TeachingCall.cs" />
+    <!-- The schema pre-flight (#823): a tool whose schema cannot be published is not published. GH-free
+         and provider-neutral, and the one instrument that has to be right about REAL input - which is
+         why its tests run it over the shipped catalogue, not only over hand-made bad schemas. -->
+    <Compile Include="..\..\Dwight\Llm\LlmSchemaCheck.cs" Link="llm\LlmSchemaCheck.cs" />
+    <!-- Lane B (#873): the raw reply-stream recorder the new reader's fixtures come from. GH-free. -->
+    <Compile Include="..\..\Dwight\Llm\StreamCapture.cs" Link="llm\StreamCapture.cs" />
+    <!-- U38 (#873): the ONE spec-correct reply-stream reader every provider reads through, which refuses a
+         damaged reply instead of skipping the damage. Tested on the captured streams below. GH-free. -->
+    <Compile Include="..\..\Dwight\Llm\SseReader.cs" Link="llm\SseReader.cs" />
+    <!-- U38: the Anthropic reply's assembly, moved out of the provider (which needs the live catalogue) so it is
+         tested on the streams Anthropic really sent. LlmTrace is its DEBUG instrument, GH-free. -->
+    <Compile Include="..\..\Dwight\Llm\AnthropicReplyStream.cs" Link="llm\AnthropicReplyStream.cs" />
+    <Compile Include="..\..\Dwight\Llm\LlmTrace.cs" Link="llm\LlmTrace.cs" />
+    <!-- #823 Part 2: the schema builder every published schema is now built with, so the catalogue
+         cannot compile here without it. -->
+    <Compile Include="..\..\Dwight\Agent\Sch.cs" Link="agent\Sch.cs" />
+    <!-- Brief V: web search through the provider - the modes, the turn-start sentence, the two client handlers over a faked
+         HTTP seam, and the wording of what Dwight says when a search could not run. GH-free. -->
+    <Compile Include="..\..\Dwight\Agent\WebSearch.cs" Link="agent\WebSearch.cs" />
+    <!-- U18: what a component declaration looks like ON THE WIRE, published once for both tools that take
+         one (build_region, and request_mutation's `place`). The PARSER was already one definition; this is
+         the published half. A test holds build_region's inline declaration SEMANTICALLY equal to it - parsed
+         and order-insensitive, never as strings (#866 found three schemas equal in meaning and different in
+         key order) - so drift goes red for whoever changes either side, without this lane touching the
+         catalogue's file. -->
+    <Compile Include="..\..\Dwight\Agent\BuildSpecSchema.cs" Link="agent\BuildSpecSchema.cs" />
+    <!-- Stage C (#199): model selection must be a function of the DATA, never its layout in the JSON
+         file. ModelInfo is now its own IO-free file precisely so the choice can be tested. -->
+    <Compile Include="..\..\Dwight\Models\ModelInfo.cs" Link="models\ModelInfo.cs" />
+    <Compile Include="..\..\Dwight\Models\ModelPick.cs" Link="models\ModelPick.cs" />
+    <!-- Lane B, 3.1 step 2: may the Scaffold agent run on this model, through this provider's connection?
+         The pure decision, and the OpenAI and Google adapters - linked so the test that holds each adapter's
+         PassesTools declaration to the body it REALLY builds can build one. Both adapters are GH-free. -->
+    <Compile Include="..\..\Dwight\Llm\AgentEligibility.cs" Link="llm\AgentEligibility.cs" />
+    <Compile Include="..\..\Dwight\Llm\OpenAIProvider.cs" Link="llm\OpenAIProvider.cs" />
+    <Compile Include="..\..\Dwight\Llm\OpenAIResponses.cs" Link="llm\OpenAIResponses.cs" />
+    <Compile Include="..\..\Dwight\Llm\ProviderLimit.cs" Link="llm\ProviderLimit.cs" />
+    <Compile Include="..\..\Dwight\Llm\GoogleProvider.cs" Link="llm\GoogleProvider.cs" />
+    <!-- Stage D: the build spec's refusals and the preservation check - the two decisions that stand
+         between "the agent may write to the canvas" and a definition quietly re-plumbed. The
+         preservation check compares FpDoc snapshots, so it inherits the fingerprint reader's coverage
+         rather than inventing a weaker notion of "changed". -->
+    <Compile Include="..\..\Dwight\Agent\BuildSpec.cs" Link="agent\BuildSpec.cs" />
+    <!-- WP-4 tail (#377): the initial state a placed component is born with. Every refusal here was
+         earned by INSTRUMENTING the live GH_NumberSlider, because Grasshopper's answer to each of these
+         mistakes is to accept it silently and be wrong - an inverted domain, an out-of-range value, an
+         off-grid value. The checks themselves are properties of the DECLARATION (is it in range, is it
+         whole, is it even), so they are GH-free and reproduce none of Grasshopper's rounding (#137). -->
+    <Compile Include="..\..\Dwight\Agent\BuildState.cs" Link="agent\BuildState.cs" />
+    <!-- WP-4 Stage B (#352): what a REBUILD may delete. The most dangerous capability WP-4 adds,
+         so its four constraints are pure decisions and every one is tested - a failure in any of
+         them is a real deletion of somebody's work. -->
+    <!-- WP-4 Stage C (#338 in address space): which regions a build turn may write to. -->
+    <Compile Include="..\..\Dwight\Agent\BuildScope.cs" Link="agent\BuildScope.cs" />
+    <!-- WP-4 Stage C (#96): the running summary and the record behind it. The merge is a decision -
+         what a second attempt on one region does to the record - so it is tested. -->
+    <Compile Include="..\..\Dwight\Agent\BuildProgress.cs" Link="agent\BuildProgress.cs" />
+    <!-- WP-4 Stage D (#353): the MOVED-SET guard. Neither inherited instrument can see a move -
+         preservation compares FpDoc and the fingerprint carries no pivots, both correctly - so the
+         tidy needed its own, and its declaration is computed BEFORE the move from the engine's own
+         output. A guard deriving its expectation from the observation it checks is Family B. -->
+    <Compile Include="..\..\Dwight\Agent\RegionTidy.cs" Link="agent\RegionTidy.cs" />
+    <Compile Include="..\..\Dwight\Agent\RegionSpacing.cs" Link="agent\RegionSpacing.cs" />
+    <Compile Include="..\..\Dwight\Agent\Landing.cs" Link="agent\Landing.cs" />
+    <Compile Include="..\..\Dwight\Agent\SpotLayout.cs" Link="agent\SpotLayout.cs" />
+    <Compile Include="..\..\Dwight\Agent\BlockColumns.cs" Link="agent\BlockColumns.cs" />
+    <Compile Include="..\..\Dwight\Layout\LayoutTypes.cs" Link="layout\LayoutTypes.cs" />
+    <!-- WP-4 Stage C (#316): the master prompt is a CONTRACT about our own behaviour, and everything we
+         tell a model about ourselves can go stale in silence - only a test at the far end notices. It has
+         no usings at all, so linking it costs nothing. -->
+    <Compile Include="..\..\Dwight\Prompts\Prompts.cs" Link="prompts\Prompts.cs" />
+    <!-- F1(b): the AS-LEFT RECORD - the state Dwight left a component in, so a rebuild can tell what the
+         user has since ADOPTED. Deliberately NOT called a fingerprint: it carries the NickName and the
+         behaviour fingerprint must not, because a rename is an adoption signal and not a behaviour
+         change. Both files carry a note explaining the other's absence, so unifying them requires
+         overriding a written reason rather than being an easy tidy-up. -->
+    <Compile Include="..\..\Dwight\Agent\AsLeftRecord.cs" Link="agent\AsLeftRecord.cs" />
+    <Compile Include="..\..\Dwight\Agent\BuildLedger.cs" Link="agent\BuildLedger.cs" />
+    <!-- F1(b): the sentence the user consents to. The delete-claim now outlives the turn that made it,
+         and the ONLY thing that makes that safe is the user reading what will be removed at the moment
+         they approve it - so this is the safety property rather than a courtesy, and it is tested. -->
+    <Compile Include="..\..\Dwight\Agent\RebuildPreview.cs" Link="agent\RebuildPreview.cs" />
+    <Compile Include="..\..\Dwight\Agent\BuildVerdict.cs" Link="agent\BuildVerdict.cs" />
+    <!-- U26 (#916, #923): what the buildline says instead of "verified" - the post-solve facts about the components a
+         build PLACED, composed GH-free from the geometry reads' own per-object facts. The reader (GhBuildRegion over
+         GhGeometry) is not linked; the sentence, its bounds and its wire shape are asserted here. -->
+    <Compile Include="..\..\Dwight\Agent\BuildPlacedFacts.cs" Link="agent\BuildPlacedFacts.cs" />
+    <!-- Phase-9 U27 (#917, lane C reads): solve_and_check's projection, GH-free so the sentence that gives
+         "solved" its meaning is asserted beside the boolean it explains - the meaning used to be a C# comment. -->
+    <Compile Include="..\..\Dwight\Agent\SolveCheckReport.cs" Link="agent\SolveCheckReport.cs" />
+    <!-- Phase-9 U31 (#926, lane C reads): a fed panel's displayed values - the bound and the DTO shape, GH-free. -->
+    <Compile Include="..\..\Dwight\Agent\PanelDisplay.cs" Link="agent\PanelDisplay.cs" />
+    <!-- Phase-9 U25 (#915, lane C reads): the qualified-name decision (ambiguity, parse, resolve) and kb_lookup's
+         projection, GH-free; the whitelist's proxies arrive mapped, the live-instance ports as a function. -->
+    <Compile Include="..\..\Dwight\Agent\QualifiedNames.cs" Link="agent\QualifiedNames.cs" />
+    <Compile Include="..\..\Dwight\Data\BehaviourFingerprintCore.cs" Link="data\BehaviourFingerprintCore.cs" />
+    <!-- #779: the script-source digest, so the as-left record's two OPPOSITE failure directions can be
+         asserted here rather than described - an EDIT reads as changed, and a source we could not READ
+         has no token at all, which both resolution paths already treat as "leave it". -->
+    <Compile Include="..\..\Dwight\Data\SourceToken.cs" Link="data\SourceToken.cs" />
+    <!-- Phase-9 U20: the edit ask and the diff a user reads before approving it. GH-free so every refusal is
+         asserted rather than reviewed - a refusal is a claim, and it must be true in every state that can
+         reach it (#613/#617/#626/#683). -->
+    <Compile Include="..\..\Dwight\Data\SourceDiff.cs" Link="data\SourceDiff.cs" />
+    <Compile Include="..\..\Dwight\Data\ScriptSourceReflect.cs" Link="data\ScriptSourceReflect.cs" />
+    <Compile Include="..\..\Dwight\Agent\EditScriptAsk.cs" Link="agent\EditScriptAsk.cs" />
+    <Compile Include="..\..\Dwight\Agent\ChatAnswerBudget.cs" Link="agent\ChatAnswerBudget.cs" />
+    <!-- Brief BY: the console harness's GH-free half. -->
+    <Compile Include="..\..\tools\AgentEval\Harness\*.cs" Link="agenteval\%(Filename)%(Extension)" />
+    <Compile Include="..\..\Dwight\DwightConfig.cs" Link="agenteval\DwightConfig.cs" />
+    <Compile Include="..\..\Dwight\Models\ModelCatalogue.cs" Link="models\ModelCatalogue.cs" />
+    <Compile Include="..\..\Dwight\Models\ModelResolver.cs" Link="models\ModelResolver.cs" />
+    <!-- Phase-9 U6 + U21 (#760): consented, batched edits. The validation (every row resolves to exactly one existing
+         target or the card refuses naming the rows), the orphan sentences, and the predicted-delta verdict are GH-free
+         and asserted here; the plan the verdict is computed from is Simplify's own (DeltaPredictor + SimplifyPlan, linked
+         so the edit's prediction runs the SAME code layer 1 does, not a copy). GhEditOps needs Grasshopper and is not. -->
+    <Compile Include="..\..\Dwight\Agent\EditOpsAsk.cs" Link="agent\EditOpsAsk.cs" />
+    <Compile Include="..\..\Dwight\Agent\EditPortIndex.cs" Link="agent\EditPortIndex.cs" />
+    <Compile Include="..\..\Dwight\Simplify\SimplifyPlan.cs" Link="simplify\SimplifyPlan.cs" />
+    <Compile Include="..\..\Dwight\Simplify\DeltaPredictor.cs" Link="simplify\DeltaPredictor.cs" />
+    <Compile Include="..\..\Dwight\Agent\ScriptEditVerdict.cs" Link="agent\ScriptEditVerdict.cs" />
+    <Compile Include="..\..\Dwight\Agent\ScriptEditReport.cs" Link="agent\ScriptEditReport.cs" />
+    <!-- U36 (#929): what one Ctrl-Z after a script edit writes back - the source and the port counts the custom
+         undo action holds. The action itself needs Grasshopper; the data and its arithmetic are asserted here. -->
+    <Compile Include="..\..\Dwight\Agent\ScriptEditRestore.cs" Link="agent\ScriptEditRestore.cs" />
+    <!-- U20's sitting (3c): the turn's edit trials per target - the repair budget, and each target's last
+         outcome, which the panel turns into Dwight's own line when a turn ends with an edit refused and no card. -->
+    <Compile Include="..\..\Dwight\Agent\EditAttempts.cs" Link="agent\EditAttempts.cs" />
+    <!-- U20's sitting (3h): the compile-repair text, moved out of the GH-coupled gate so the header a C# failure
+         is sent can be tested - it was chosen from the wrong field, and nothing could see it. -->
+    <Compile Include="..\..\Dwight\Simplify\CompileRepair.cs" Link="simplify\CompileRepair.cs" />
+    <!-- U19: a script written from source - the parse, the emptiness oracle and the card pieces, all GH-free. -->
+    <Compile Include="..\..\Dwight\Agent\BuildScript.cs" Link="agent\BuildScript.cs" />
+    <Compile Include="..\..\Dwight\Agent\ScriptBuildVerdict.cs" Link="agent\ScriptBuildVerdict.cs" />
+    <Compile Include="..\..\Dwight\Agent\BuildUndoGuard.cs" Link="agent\BuildUndoGuard.cs" />
+    <Compile Include="..\..\Dwight\Agent\RevertMeasure.cs" Link="agent\RevertMeasure.cs" />
+    <!-- Wave 5: U45 puts a C# source in the component's class template (UsingNormalizer, to-script's format contract);
+         U47's click guard is GH-free. -->
+    <Compile Include="..\..\Dwight\Simplify\UsingNormalizer.cs" Link="simplify\UsingNormalizer.cs" />
+    <Compile Include="..\..\Dwight\Simplify\ScriptTypeMap.cs" Link="simplify\ScriptTypeMap.cs" />
+    <Compile Include="..\..\Dwight\Simplify\CSharpSignature.cs" Link="simplify\CSharpSignature.cs" />
+    <Compile Include="..\..\Dwight\Simplify\ScriptMarshFlags.cs" Link="simplify\ScriptMarshFlags.cs" />
+    <Compile Include="..\..\Dwight\Agent\SpotClickGuard.cs" Link="agent\SpotClickGuard.cs" />
+    <!-- Report a problem: the diagnostic block, the two links and the error ring buffer - GH-free, so what the report may carry is asserted. -->
+    <Compile Include="..\..\Dwight\Feedback\ProblemReport.cs" Link="feedback\ProblemReport.cs" />
+    <!-- Brief ES unit 3: the one build line About shows and the report sends. -->
+    <Compile Include="..\..\Dwight\Feedback\BuildLine.cs" Link="feedback\BuildLine.cs" />
+    <!-- Brief EX: the fault-chain trace (roots, ancestors, the order, the chains drawn) - GH-free, so a ROOT CAUSE is asserted on a graph of three nodes. -->
+    <Compile Include="..\..\Dwight\Diagnostics\FaultChainCore.cs" Link="diagnostics\FaultChainCore.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The SHIPPED catalogue itself, copied beside the tests: it is now data that decides what goes on
+         the wire (#188/#192), so its invariants are asserted rather than eyeballed. -->
+    <None Include="..\..\Dwight\Resources\models.json" Link="models.json" CopyToOutputDirectory="PreserveNewest" />
+    <!-- U38: the captured reply streams (byte-exact; .gitattributes keeps git from rewriting their line ends). -->
+    <None Update="Fixtures\streams\*.sse" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Fixtures\golden\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

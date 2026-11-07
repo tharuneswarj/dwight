@@ -1,0 +1,331 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<!-- WP-2.2: strict CSP - fonts inlined below, no external network (see panel-shell for the rationale). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; font-src data:; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<style>/*__DWIGHT_FONTS__*/</style>
+<style>/*__DWIGHT_TOKENS__*/</style>
+<style>/*__DWIGHT_COMPONENTS__*/</style>
+<style>
+  html,body{height:100%;overflow:hidden}
+</style></head>
+<body>
+<!--__DWIGHT_ICONS__-->
+  <div class="app">
+    <div class="titlebar" id="bar">
+      <!--__DWIGHT_MARK__-->
+      <span class="title"><span class="who">Dwight</span><span class="sep">·</span><span class="act">Settings</span></span>
+      <button class="iconbtn" title="Close" onclick="dwightSend('close')"><svg class="ic" aria-hidden="true"><use href="#ic-close"/></svg></button>
+    </div>
+    <!-- Brief BO (Tharun): start from what the user came to do. They come rarely: to connect a key, change the model, change how much Dwight asks, turn
+         something on or off, see what they have spent. So one group at a time, a rail of icons that opens into words on hover or focus, over the content so
+         nothing jumps, and a dropdown for every choice with each option's sentence in its menu. Pinned sentences keep their exact words here; a dropdown
+         reads its options from this markup when the page loads. -->
+    <div class="navwrap">
+      <div class="railslot" id="railslot"><nav class="railin" aria-label="Settings">
+        <div class="raillist">
+          <button class="railitem" data-g="Connection" title="Connection" onclick="dwightSettingsGo('Connection')"><svg class="ic" aria-hidden="true"><use href="#ic-connection"/></svg><span class="railword">Connection</span></button>
+          <button class="railitem" data-g="Model" title="Model" onclick="dwightSettingsGo('Model')"><svg class="ic" aria-hidden="true"><use href="#ic-model"/></svg><span class="railword">Model</span></button>
+          <button class="railitem" data-g="Explain" title="Explain" onclick="dwightSettingsGo('Explain')"><svg class="ic" aria-hidden="true"><use href="#ic-explain"/></svg><span class="railword">Explain</span></button>
+          <button class="railitem" data-g="Build" title="Build" onclick="dwightSettingsGo('Build')"><svg class="ic" aria-hidden="true"><use href="#ic-build"/></svg><span class="railword">Build</span></button>
+          <button class="railitem" data-g="Reorganise" title="Reorganise" onclick="dwightSettingsGo('Reorganise')"><svg class="ic" aria-hidden="true"><use href="#ic-reorganise"/></svg><span class="railword">Reorganise</span></button>
+          <button class="railitem" data-g="Notes" title="Notes" onclick="dwightSettingsGo('Notes')"><svg class="ic" aria-hidden="true"><use href="#ic-note"/></svg><span class="railword">Notes</span></button>
+          <button class="railitem" data-g="You" title="You" onclick="dwightSettingsGo('You')"><svg class="ic" aria-hidden="true"><use href="#ic-you"/></svg><span class="railword">You</span></button>
+          <button class="railitem" data-g="Usage" title="Usage" onclick="dwightSettingsGo('Usage')"><svg class="ic" aria-hidden="true"><use href="#ic-usage"/></svg><span class="railword">Usage</span></button>
+          <button class="railitem" data-g="About" title="About" onclick="dwightSettingsGo('About')"><svg class="ic" aria-hidden="true"><use href="#ic-about"/></svg><span class="railword">About</span></button>
+        </div>
+        <button class="railitem railpin" id="railpin" title="Keep names" aria-pressed="false" onclick="setRailPin(this.getAttribute('aria-pressed')!=='true')"><svg class="ic" aria-hidden="true"><use href="#ic-pin"/></svg><span class="railword">Keep names</span></button>
+      </nav></div>
+      <div class="form" id="form">
+
+        <section class="pane" data-pane="Connection">
+          <h1 class="navtitle">Connection</h1>
+          <div class="field"><label>Provider</label><div class="dd" id="provider"></div></div>
+          <div class="localbadge" id="localbadge"><svg class="ic sm" aria-hidden="true"><use href="#ic-lock"/></svg><span id="localtext">Fully local. Nothing leaves your machine.</span></div>
+          <div class="field keyfield"><label id="keyhead">API key</label>
+            <div class="keyrow" id="keyrow"><span class="keydot" id="keydot"></span><span class="st" id="keyst">…</span></div></div>
+          <div class="field row2" id="keybtns"><button class="btn primary" onclick="showKeyInput(true)">Set / replace key</button>
+            <button class="btn" onclick="dwightSend('removekey')">Remove</button></div>
+          <div class="field" id="keyinput" style="display:none">
+            <input id="keyval" type="password" placeholder="Paste your API key" autocomplete="off"
+              onkeydown="if(event.key==='Enter')saveKey(); if(event.key==='Escape')showKeyInput(false);" />
+            <!-- Brief EN: the site's keys page, shown only when the plugin offers it (FirstRunCore.KeysUrl). A button and not an href: the page
+                 sends a bare "keys" and the plugin decides the address, as Documentation does. -->
+            <div class="hint" id="keyhelp" hidden><button type="button" class="settings-keyhelp" onclick="dwightSend('keys')">No key yet? How to get one, and what it costs</button></div>
+            <div class="row2 rowgap">
+              <button class="btn primary" onclick="saveKey()">Save key</button>
+              <button class="btn" onclick="showKeyInput(false)">Cancel</button></div>
+          </div>
+          <div class="field"><label id="modelshead">Models on your key</label>
+            <div class="row2"><button class="btn" onclick="dwightSend('reconcile')">Check models</button></div>
+            <div class="recon" id="recon"></div>
+            <details class="fold"><summary>What the dots mean</summary><div class="hint">Green = callable · Amber = not on this key (e.g. a paid-only preview) · Red = unknown id (fix it in the catalogue).
+              <div id="localnote" class="hintgap">Local (Ollama) models are free and private but slower and hardware-dependent (see each model's min VRAM); they suit a quick explanation more than a deep diagnosis.</div></div></details></div>
+        </section>
+
+        <section class="pane" data-pane="Model" hidden>
+          <h1 class="navtitle">Model</h1>
+          <div class="field"><label>Profile</label><div class="dd" id="posture">
+              <div class="opt">Economy: the lowest band each task can use on this provider, thinking off where the model allows</div>
+              <div class="opt">Balanced: default</div>
+              <div class="opt">Quality: the highest band each task can use on this provider, thinking high where the task allows</div>
+              <div class="opt">Ultra: the same model as Quality, thinking at its deepest where the task allows</div></div>
+            <div class="hint" id="postureline" hidden></div>
+            <div class="hint">Dwight picks the right model for each task; the profile only slides spend/latency where the task allows.</div></div>
+          <div class="field"><label>Pin a model</label><div class="dd" id="override"></div>
+            <div class="hint">Overrides the profile, for all actions.</div></div>
+        </section>
+
+        <section class="pane" data-pane="Explain" hidden>
+          <h1 class="navtitle">Explain</h1>
+          <div class="field swfield"><div class="swrow"><label>Dim canvas</label><button class="sw" id="walkdim" role="switch" aria-label="Dim canvas" aria-checked="true" onclick="setWalkDim(this.getAttribute('aria-checked')==='true'?'off':'on')"><i></i></button></div>
+            <div class="hint">On each step of Step by step, the rest of the canvas dims so the step stands out. The panel's footer and the Focus bar have the same switch.</div></div>
+        </section>
+
+        <section class="pane" data-pane="Build" hidden>
+          <h1 class="navtitle">Build</h1>
+          <div class="hint" id="hint-chatdefaults">A chat keeps its own model, approval mode and Full control; change them under the chat's text box. These are the defaults for a new chat.</div>
+          <div class="field"><label>Build style</label><div class="dd" id="buildstyle" data-vals="components scripts auto">
+              <div class="opt">Components: every step is a component on the canvas, sliders reach everything, Dwight checks the wiring.</div>
+              <div class="opt">Scripts: one C# or Python script per region where the logic is a loop or a formula, inputs and outputs still as components, far fewer steps and tokens, the source shown whole before it runs.</div>
+              <div class="opt">Let Dwight choose: components for inputs, outputs and anything you will tweak, scripts for the algorithmic middle.</div></div></div>
+          <div class="field"><label>Approval</label><div class="dd" id="approval" data-vals="ask scripts_and_deletions never">
+              <div class="opt">Ask every time: every change waits for your click on its card.</div>
+              <div class="opt">Ask for scripts and deletions only: Dwight applies sliders, wires, placements and builds of components on its own, shows each card marked as approved automatically, and still asks before a script runs or a component is deleted.</div>
+              <div class="opt">Do not ask: every change Dwight can check is applied on its own; it still asks before Reorganise and Simplify. With Full control on, a script runs without asking too, and one Ctrl-Z may not undo everything it touches. Every other change is one Ctrl-Z.</div></div>
+            <div class="hint"><div class="optnote">A conversation keeps the mode it was opened with, so changing this does not change one that is already open.</div></div></div>
+          <div class="field"><label>Steps per turn</label><div class="dd" id="steps" data-vals="4 8 12 16 20 30 40">
+              <div class="opt">4: for short questions; a turn may stop before it has read enough.</div>
+              <div class="opt">8: for a small definition.</div>
+              <div class="opt">12: the default.</div>
+              <div class="opt">16: for a larger definition.</div>
+              <div class="opt">20: for a larger definition.</div>
+              <div class="opt">30: for a very large definition; each step costs tokens.</div>
+              <div class="opt">40: the most a turn may take; each step costs tokens.</div></div>
+            <div class="hint"><div class="optnote">How many steps a chat turn may take before Dwight asks it to say where it got to. Every chat takes this from its next turn. An approved build has its own budget of 30. A longer task, such as a build with many regions or a long script, may need more steps; raise this if turns end before the work is done.</div></div></div>
+          <!-- On or off is a switch. Full control's warning and web search's privacy sentence do not hide behind an icon: they show when it is on. -->
+          <div class="field swfield"><div class="swrow"><label>Full control</label><button class="sw" id="fullcontrol" role="switch" aria-label="Full control" aria-checked="false" onclick="setFullControl(this.getAttribute('aria-checked')==='true'?'off':'on')"><i></i></button></div>
+            <div class="hint swsent" id="hint-fullcontrol" hidden>Full control: everything Build has, plus Dwight can run a script you have read, with full access to Rhino and this definition. Dwight cannot check what such a script does, and one Ctrl-Z may not undo everything it touches. It costs more tokens, and nothing it does is proven. For people who know Grasshopper and Rhino and want speed. Turn it on only when you need it. With the Do not ask approval mode, a script runs without asking, and you read it afterwards.</div></div>
+          <div class="field swfield"><div class="swrow"><label>Web search</label><button class="sw" id="websearch" role="switch" aria-label="Web search" aria-checked="false" onclick="setWebSearch(this.getAttribute('aria-checked')==='true'?'off':'on')"><i></i></button></div>
+            <div class="hint swsent" id="hint-websearch" hidden>Let the model search the web through your provider's own search. Off by default. The query leaves your machine exactly as your prompts already do; Dwight itself never fetches a page.</div></div>
+        </section>
+
+        <section class="pane" data-pane="Reorganise" hidden>
+          <h1 class="navtitle">Reorganise</h1>
+          <div class="field"><label>Wires between groups</label><div class="dd" id="wires" data-vals="faint hidden solid">
+              <div class="opt">Faint</div>
+              <div class="opt">Hidden</div>
+              <div class="opt">Solid</div></div>
+            <div class="hint">Long wires that cross between groups can be faded, hidden, or left solid. Display-only - your wiring is never changed.</div></div>
+          <div class="field"><label>Arrangement</label><div class="dd" id="arrangement" data-vals="compact hchain vertical grid">
+              <div class="opt">Compact: Dense, balanced packing - the general-purpose read.</div>
+              <div class="opt">Chain: One left-to-right row - reads like a sentence.</div>
+              <div class="opt">Vertical: One top-to-bottom column - the vertical read.</div>
+              <div class="opt">Grid: Columns by flow stage - maximum air, the poster read.</div></div>
+            <div class="hint">How Reorganise packs the groups: Compact = dense · Chain = one row · Vertical = one column · Grid = columns by depth. You can also switch this from the result after any Reorganise. Layout-only.</div></div>
+        </section>
+
+        <section class="pane" data-pane="Notes" hidden>
+          <h1 class="navtitle">Notes</h1>
+          <div class="field swfield"><div class="swrow"><label>Show notes</label><button class="sw" id="shownotes" role="switch" aria-label="Show notes" aria-checked="true" onclick="setShowNotes(this.getAttribute('aria-checked')==='true'?'off':'on')"><i></i></button></div>
+            <div class="hint swsent">Hiding notes only takes them off the canvas. Dwight still reads them, and a note still goes to your provider with the component it is on.</div></div>
+        </section>
+
+        <section class="pane" data-pane="You" hidden>
+          <h1 class="navtitle">You</h1>
+          <div class="field"><label>Your name</label>
+            <input id="name" placeholder="e.g. Tharun" onchange="dwightSend('name:'+this.value)" />
+            <div class="hint">Shown in the Build chat.</div></div>
+          <div class="field"><label>Theme</label><div class="dd" id="theme" data-vals="light dark system">
+              <div class="opt">Light</div>
+              <div class="opt">Dark</div>
+              <div class="opt">System</div></div></div>
+        </section>
+
+        <!-- Brief AK: the central cost ledger (spend.jsonl). Every cell arrives worded from SpendLedgerCore.UsageJson;
+             this shell places text and computes nothing, so the sentences are pinned in one place.
+             Brief BC: going to this group asks the plugin for the totals (usage:open), so nothing is read until then. -->
+        <section class="pane" data-pane="Usage" hidden>
+          <h1 class="navtitle">Usage</h1>
+          <!-- Brief CS: LargeRun decides; this only places the choice. Zero is a real value, so the shell reads it with no fallback. -->
+          <div class="field"><label>Ask above</label><div class="dd" id="askover" data-vals="0 5 10 25 50 100 200">
+              <div class="opt">Never: Dwight does not ask, whatever a verb's read may cost.</div>
+              <div class="opt">5 cents</div>
+              <div class="opt">10 cents</div>
+              <div class="opt">25 cents: the default.</div>
+              <div class="opt">50 cents</div>
+              <div class="opt">$1</div>
+              <div class="opt">$2</div></div>
+            <div class="hint"><div class="optnote">Ask before a verb run whose estimated cost is at or above this; Never does not ask; an unpriced model asks at the size that would cost this on Claude Sonnet 5. The estimate is Dwight's: the read and the answer, from the read's size, the catalogue's price and what your recent runs measured. The chat does not ask.</div></div></div>
+          <div id="usage">
+            <div class="field"><table class="usage" id="usage-periods">
+            <thead><tr><th>Period</th><th>Runs</th><th>Turns</th><th>In</th><th>Out</th><th>Cost</th></tr></thead>
+            <tbody><tr><td colspan="6" class="empty">Reading your spend…</td></tr></tbody></table></div>
+            <div class="field"><div class="dd" id="usage-period" data-vals="0 1 2 3">
+              <div class="opt">Today</div>
+              <div class="opt">7 days</div>
+              <div class="opt">Month</div>
+              <div class="opt">All time</div></div></div>
+            <div class="field"><label>By model</label><table class="usage" id="usage-model">
+            <thead><tr><th>Model</th><th>Runs</th><th>Turns</th><th>In</th><th>Out</th><th>Cost</th></tr></thead><tbody></tbody></table></div>
+            <div class="field"><label>By verb</label><table class="usage" id="usage-verb">
+            <thead><tr><th>Verb</th><th>Runs</th><th>Turns</th><th>In</th><th>Out</th><th>Cost</th></tr></thead><tbody></tbody></table></div>
+            <div class="field"><label>By file</label><table class="usage" id="usage-doc">
+            <thead><tr><th>File</th><th>Runs</th><th>Turns</th><th>In</th><th>Out</th><th>Cost</th></tr></thead><tbody></tbody></table></div>
+            <div class="hint" id="usage-file"></div>
+            <div class="hint" id="usage-skipped" style="display:none"></div>
+            <div class="field row2 rowgap"><button class="btn" onclick="dwightSend('usage:export')">Export CSV...</button>
+            <button class="btn" onclick="dwightSend('usage:folder')">Open folder</button></div>
+          </div>
+        </section>
+
+        <section class="pane" data-pane="About" hidden>
+          <h1 class="navtitle">About</h1>
+          <!-- Brief ES unit 3: which build this is, the line Report a problem sends, pushed by the host (BuildLine) and never typed here. -->
+          <div class="hint" id="buildline" hidden></div>
+          <!-- Documentation is hidden unless the plugin supplies a URL (FirstRunCore.DocsUrl): an affordance
+               is an assertion that its target exists, so the button does not appear before the page does. -->
+          <div class="field row2">
+            <button class="btn" onclick="dwightSend('tour')">Show the tour again</button>
+            <button class="btn" id="docsbtn" style="display:none" onclick="dwightSend('docs')">Documentation</button>
+          </div>
+          <div class="hint">A short tour of the five verbs, how to reach Dwight, and how it shows you what it changes.
+            It opens in its own window and changes nothing.</div>
+          <div class="field"><label>Model catalogue</label>
+            <div class="row2"><button class="btn" onclick="dwightSend('openmodels')">Open models.json</button></div>
+            <div class="hint">Add a model the day it ships, drop one your key can't call, or correct a price - no recompile. Reopen Settings to reload.</div></div>
+          <!-- RR20 #50: the payload now carries user VALUES and user CODE, so the privacy statement must say so
+               plainly and per-action. An honest, specific statement is worth more than a reassuring vague one. -->
+          <!-- Phase 9: RENDERED FROM THE PAYLOAD CONTRACT (PayloadContract.SettingsHtml), never hand-written.
+               The statement used to live here as prose and on the public page as prose, with no test on
+               either; two texts agreeing prove nothing. The table is the source and a test holds it to the
+               code. This div is filled by dwightSetSends at init; until then it says so rather than guessing. -->
+          <div class="field"><label>What Dwight sends</label>
+            <details class="fold"><summary>What leaves your machine, per action</summary><div class="hint" id="sends">The payload contract could not be displayed here. What Dwight sends, per action, is
+              documented on the privacy page of the public docs (docs/public/privacy.md), which is generated from the same
+              contract.</div></details></div>
+        </section>
+      </div>
+    </div>
+    <div class="foot"><span class="meta" id="status"></span><span class="spacer"></span>
+      <button class="btn primary" onclick="dwightSend('close')">Done</button></div>
+  </div>
+<script>
+/*__DWIGHT_DROPDOWN__*/
+</script>
+<script>
+  function dwightSend(c){ try{ if(window.chrome&&window.chrome.webview){window.chrome.webview.postMessage(c);return;} }catch(e){} try{document.title='dwight:'+c+':'+Date.now();}catch(e){} }
+  var THEME='system', GROUP='Connection';
+  // One group at a time. Going to Usage asks the plugin for its totals, so the ledger is read only when it is wanted.
+  function dwightSettingsGo(id){ var was=GROUP; GROUP=id;
+    document.querySelectorAll('.pane').forEach(function(p){ p.hidden=p.getAttribute('data-pane')!==id; });
+    document.querySelectorAll('.railitem[data-g]').forEach(function(b){ var on=b.getAttribute('data-g')===id; b.classList.toggle('on',on); b.setAttribute('aria-current',on?'page':'false'); });
+    var f=document.getElementById('form'); if(f) f.scrollTop=0;
+    if(id==='Usage'&&was!=='Usage') dwightSend('usage:open'); }
+  // The rail's names stay open, pushing the content aside; the choice is a real setting, remembered by the plugin.
+  function dwightRailPin(on){ document.getElementById('railslot').classList.toggle('pinned',!!on); document.getElementById('railpin').setAttribute('aria-pressed',on?'true':'false'); }
+  function setRailPin(on){ dwightRailPin(on); dwightSend('railpin:'+(on?'on':'off')); }
+  // A dropdown's options are read from its markup: "Name: its sentence", in the order of data-vals, so the words live in one place.
+  function ddOpts(id){ var el=document.getElementById(id); if(el._opts) return el._opts; var vals=(el.getAttribute('data-vals')||'').split(' ');
+    var opts=[].map.call(el.querySelectorAll('.opt'),function(o,i){ var t=o.textContent, c=t.indexOf(': '); return { value:vals[i], name:c>0?t.slice(0,c):t, sentence:c>0?t.slice(c+2):'' }; });
+    el._opts=opts; return opts; }
+  function choice(id,label,value,onPick){ var o=ddOpts(id); ddMake(document.getElementById(id),{ label:label, value:value, options:o, onPick:onPick }); }
+  function dwightSettingsInit(json){ var d=JSON.parse(json);
+    ddMake(document.getElementById('provider'),{ label:'Provider', value:d.provider, options:(d.providers||[]).map(function(p){ return { value:p.id, name:p.name }; }), onPick:function(v){ dwightSend('provider:'+v); } });
+    var said=ddOpts('posture');
+    ddMake(document.getElementById('posture'),{ label:'Profile', value:d.posture, options:(d.postures||[]).map(function(p){ var s=said.filter(function(x){ return x.name===p.name; })[0]; return { value:p.id, name:p.name, sentence:s?s.sentence:'' }; }), onPick:function(v){ dwightSend('posture:'+v); } });
+    dwightPostureLine(d.postureLine);
+    ddMake(document.getElementById('override'),{ label:'Pin a model', value:d['override'], options:(d.overrides||[]).map(function(p){ return { value:p.id, name:p.name, sentence:p.sentence||'' }; }), onPick:function(v){ dwightSend('override:'+v); } });
+    renderRecon(d.models||[]);
+    THEME=d.theme; choice('theme','Theme',THEME,setTheme);
+    choice('wires','Wires between groups',d.wires||'faint',setWires);
+    choice('arrangement','Arrangement',d.arrangement||'compact',setArrangement);
+    choice('buildstyle','Build style',d.buildStyle||'components',setBuildStyle);
+    choice('approval','Approval',d.approvalMode||'ask',setApproval);
+    choice('steps','Steps per turn',String(d.stepsPerTurn||12),setSteps);
+    choice('askover','Ask above',String(d.askOverCents),setAskOver);
+    markSwitch('fullcontrol','hint-fullcontrol',!!d.fullControl);
+    markSwitch('websearch','hint-websearch',!!d.webSearch);
+    dwightShowNotes(d.showNotes!==false);
+    document.getElementById('walkdim').setAttribute('aria-checked',d.walkDim?'true':'false');
+    keyStatus(d.hasKey, d.needsKey);
+    document.getElementById('localbadge').classList.toggle('show', !!d.isLocal);
+    if(d.localBadge) document.getElementById('localtext').textContent = d.localBadge;
+    if(d.modelsHeading) document.getElementById('modelshead').textContent = d.modelsHeading;   // Brief FN: the provider's own heading; a local one has no key
+    document.getElementById('name').value = d.name||'';
+    var docs=document.getElementById('docsbtn'); if(docs) docs.style.display = d.docs ? '' : 'none';
+    var keyhelp=document.getElementById('keyhelp'); if(keyhelp) keyhelp.hidden = !d.keys;
+    var build=document.getElementById('buildline'); if(build){ build.textContent = d.build ? 'Dwight ' + d.build : ''; build.hidden = !d.build; }
+    dwightRailPin(!!d.railPinned);
+    document.body.classList.toggle('dark', d.applied==='dark'); }
+  // Brief CW: what the profile costs against Balanced. The host's sentence, placed as text.
+  function dwightPostureLine(t){ var e=document.getElementById('postureline'); e.textContent=t||''; e.hidden=!t; }
+  // Brief BI: the chat's cost opens Settings here, and going to the group asks the plugin for the totals.
+  function dwightOpenUsage(){ dwightSettingsGo('Usage'); }
+  // Brief BO: the tour's "Add your API key" lands here, on Connection with the field open.
+  function dwightOpenKey(){ dwightSettingsGo('Connection'); showKeyInput(true); }
+  function reconClass(s){ return s==='green'||s==='amber'||s==='red' ? s : ''; }
+  function renderRecon(arr){ var el=document.getElementById('recon'); if(!el)return; el.innerHTML='';
+    (arr||[]).forEach(function(m){ var r=document.createElement('div'); r.className='reconrow '+reconClass(m.status);
+      var dot=document.createElement('span'); dot.className='rdot';
+      var name=document.createElement('span'); name.textContent=m.name;
+      var tier=document.createElement('span'); tier.className='rtier'; tier.textContent=m.tier||'';
+      r.appendChild(dot); r.appendChild(name); r.appendChild(tier); el.appendChild(r); }); }
+  function dwightReconcile(json){ try{ renderRecon(JSON.parse(json)); }catch(e){} }
+  function setTheme(t){ THEME=t; dwightSend('theme:'+t); }
+  function setWires(w){ dwightSend('wires:'+w); }
+  function setArrangement(a){ dwightSend('arrangement:'+a); }
+  function setBuildStyle(v){ dwightSend('buildstyle:'+v); }
+  function setApproval(v){ dwightSend('approval:'+v); }
+  function setSteps(v){ dwightSend('steps:'+v); }
+  function setAskOver(v){ dwightSend('askover:'+v); }
+  function markSwitch(id,sentence,on){ document.getElementById(id).setAttribute('aria-checked',on?'true':'false'); document.getElementById(sentence).hidden=!on; }
+  function setFullControl(v){ markSwitch('fullcontrol','hint-fullcontrol',v==='on'); dwightSend('fullcontrol:'+v); }
+  function dwightShowNotes(on){ document.getElementById('shownotes').setAttribute('aria-checked',on?'true':'false'); }
+  function setShowNotes(v){ dwightShowNotes(v==='on'); dwightSend('shownotes:'+v); }
+  function setWebSearch(v){ markSwitch('websearch','hint-websearch',v==='on'); dwightSend('websearch:'+v); }
+  function setWalkDim(v){ document.getElementById('walkdim').setAttribute('aria-checked',v==='on'?'true':'false'); dwightSend('walkdim:'+v); }
+  function keyStatus(has, needs){
+    var show = needs!==false;
+    ['keyhead','keyrow','keybtns'].forEach(function(i){ var e=document.getElementById(i); if(e) e.style.display = show?'':'none'; });
+    if(!show){ showKeyInput(false); return; }
+    document.getElementById('keyst').textContent = has?'Stored in Windows Credential Manager':'Not set';
+    document.getElementById('keydot').classList.toggle('ok', !!has); }
+  function dwightKey(has, needs){ keyStatus(has, needs); showKeyInput(false); }
+  // While the field is open the set and remove buttons have no job, and Save key is the one primary.
+  function showKeyInput(show){ var e=document.getElementById('keyinput'); if(!e)return; e.style.display=show?'':'none';
+    var kb=document.getElementById('keybtns'); if(kb&&document.getElementById('keyrow').style.display!=='none') kb.style.display=show?'none':'';
+    if(show){ var k=document.getElementById('keyval'); k.value=''; setTimeout(function(){k.focus();},0); } }
+  // The key goes ONLY over the in-process WebView postMessage bridge, never the document.title fallback,
+  // so it cannot leak into the window title; C# writes it straight to the OS credential store (ADR-011).
+  function saveKey(){ var k=document.getElementById('keyval'); var v=(k.value||'').trim(); if(!v){ showKeyInput(false); return; }
+    var sent=false; try{ if(window.chrome&&window.chrome.webview){ window.chrome.webview.postMessage('setkey:'+v); sent=true; } }catch(e){}
+    k.value=''; showKeyInput(false);
+    if(!sent) dwightSetStatus('Could not save the key on this engine.'); }
+  function dwightSetTheme(t){ document.body.classList.toggle('dark', t==='dark'); }
+  function dwightSetStatus(text){ document.getElementById('status').textContent = text||''; }
+  // Plugin-authored HTML from PayloadContract.SettingsHtml - no user or model text ever enters it (ADR-088).
+  function dwightSetSends(html){ var s=document.getElementById('sends'); if(s) s.innerHTML = html||''; }
+  // Brief AK: the Usage section. Every string is worded by the plugin; textContent only, never markup.
+  var USAGE=null, UPERIOD=2;
+  function usageRows(id, rows, empty){ var t=document.querySelector('#'+id+' tbody'); if(!t)return; t.innerHTML='';
+    if(!rows||!rows.length){ var tr=document.createElement('tr'), td=document.createElement('td'); td.colSpan=6; td.className='empty'; td.textContent=empty; tr.appendChild(td); t.appendChild(tr); return; }
+    rows.forEach(function(r){ var tr=document.createElement('tr');
+      [r.label, r.runs, r.turns, r.tokensIn, r.tokensOut, r.cost].forEach(function(v, i){ var td=document.createElement('td'); v=String(v); td.title=(i===0&&r.id)?String(r.id):v;   // Brief FN: a model shown by name keeps its id on hover
+        // a priced-and-qualified cost breaks at its comma and nowhere else ("~10.5¢," over "partly priced")
+        var cut = i===5 ? v.indexOf(', ') : -1;
+        if(cut<0) td.textContent=v; else { td.appendChild(document.createTextNode(v.slice(0, cut+1))); td.appendChild(document.createElement('br'));
+          var q=document.createElement('span'); q.className='cost-q'; q.textContent=v.slice(cut+2); td.appendChild(q); }
+        tr.appendChild(td); });
+      t.appendChild(tr); }); }
+  function setUsagePeriod(p){ UPERIOD=+p; ddSet(document.getElementById('usage-period'),String(UPERIOD));
+    if(!USAGE)return; usageRows('usage-model', USAGE.byModel[UPERIOD], USAGE.emptyLine); usageRows('usage-verb', USAGE.byVerb[UPERIOD], USAGE.emptyLine);
+    usageRows('usage-doc', USAGE.byDocument[UPERIOD], USAGE.emptyLine); }
+  function dwightUsage(json){ try{ USAGE=JSON.parse(json); }catch(e){ return; }
+    usageRows('usage-periods', USAGE.periods, '');
+    document.getElementById('usage-file').textContent = USAGE.fileLine||'';
+    var sk=document.getElementById('usage-skipped'); sk.textContent = USAGE.skippedLine||''; sk.style.display = USAGE.skippedLine ? '' : 'none';
+    setUsagePeriod(UPERIOD); }
+  // What needs no plugin: the first group, and the period's control, which holds its place before the totals arrive.
+  choice('usage-period','Period',String(UPERIOD),setUsagePeriod);
+  dwightSettingsGo('Connection');
+</script></body></html>

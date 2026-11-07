@@ -1,0 +1,147 @@
+/* DWIGHT - the token layer, in three tiers (Brief BK). docs/dwight-ui-system.md is the system; docs/dwight-ui-system-sheet.html
+   is rendered from this file. Inlined into every WebView surface by ShellAssets; the C# mirror is Dwight/Branding/UiTokens.cs,
+   held to this file by TokenMirrorTests.
+
+   TIER 1, PRIMITIVES: scales by step. A shell or a card never references one (tools/ui-style-audit.js fails it).
+   TIER 2, ROLES: what a colour is for. Nothing in a shell is named by hue.
+   TIER 3, TYPE, SPACE, CONTROLS, MOTION: the scales.
+
+   THEME: light is the default (:root, body); the dark class on body is the override and restates only what differs.
+   WHY body AS WELL AS :root (#899): a var() resolves on the element that DECLARES it. Declared on :root only, every role
+   resolved against the light scale on html and body inherited the result, so dark mode painted light brand colours. Declared
+   on body too, each role follows the scale the dark class sets. tools/check-token-aliases.js measures it in a real browser.
+
+   The tier markers below are read by tools/ui-style-audit.js. Keep them. */
+
+/*@tier:primitive*/
+:root, body{
+  /* sand, warm neutrals (Radix Sand). s10h is ours: the step between s10 and s11 that clears 4.5:1 on every ground. */
+  --s1:#FDFDFC; --s2:#F9F9F8; --s3:#F1F0EF; --s4:#E9E8E6; --s5:#E2E1DE;
+  --s6:#DAD9D6; --s7:#CFCECA; --s8:#BCBBB5; --s9:#8D8D86; --s10:#82827C; --s10h:#6E6E68;
+  --s11:#63635E; --s12:#21201C;
+
+  /* amber, the brand */
+  /* 8h is the step between 8 and 9 that the light theme's fill stands on: the warmest amber white text clears 4.5:1 on (Tharun, R1). */
+  --amber-2:#FDF0E2; --amber-3:#FBE3C8; --amber-7:#D4864A; --amber-8:#BE6F30; --amber-8h:#AD6426; --amber-9:#A0581F;
+  --white:#FFFFFF;
+
+  /* teal, links and "fully local" */
+  --teal-2:#E2F6F2; --teal-7:#3B9E8F; --teal-8:#2B8578; --teal-9:#216F62; --teal-wire:#0A8374;
+
+  /* lavender, ONLY for the working state */
+  --lav-7:#AE82D9; --lav-9:#8450BC;
+
+  /* the verdicts: 7 is the fill, 9 the ink that words may be set in */
+  --red-7:#D4584A; --red-9:#AE3A2A;
+  --yellow-7:#E8A23D; --yellow-9:#8F5B0B;
+  --green-7:#6B9E4A; --green-9:#436E28;
+}
+
+/*@tier:role*/
+:root, body{
+  /* text */
+  --text:var(--s12); --body:var(--s11); --subtle:var(--s10h); --faint:var(--s9);
+
+  /* surfaces and lines */
+  --surface:var(--s2); --raised:var(--s1); --inset:var(--s3); --bar:var(--s3);
+  --border:var(--s5); --border-strong:var(--s7);
+  /* The tour's line-work: outlines and hard shadows in the ink. One line to flip in dark, below; tools/check-shell-render.js holds it to 3:1 (WCAG 1.4.11). */
+  --line:var(--text);
+  --hover:rgba(33,32,28,.05);
+  --shadow-ink:var(--border);
+
+  /* the accent is the amber: a fill, its hover and the text on it, which are per-theme (white on 8h in light, dark text on the light amber in dark),
+     a tint, and the ink for amber words and lines */
+  --accent:var(--amber-8h); --accent-hover:var(--amber-9); --accent-inverse:var(--white);
+  --accent-tint:var(--amber-2); --accent-ink:var(--amber-9);
+
+  /* links and "fully local" */
+  --link:var(--teal-7); --link-ink:var(--teal-9); --link-tint:var(--teal-2);
+
+  /* thinking, ONLY for the working state */
+  --thinking:var(--lav-7); --thinking-ink:var(--lav-9);
+
+  /* the four verdicts: a fill, the ink for words, and a tint for a ground */
+  --ok:var(--green-7); --ok-ink:var(--green-9); --ok-tint:color-mix(in srgb,var(--ok) 12%,transparent);
+  --warn:var(--yellow-7); --warn-ink:var(--yellow-9); --warn-tint:color-mix(in srgb,var(--warn) 14%,transparent);
+  --err:var(--red-7); --err-ink:var(--red-9); --err-tint:color-mix(in srgb,var(--err) 12%,transparent);
+  --info:var(--teal-7); --info-ink:var(--teal-9); --info-tint:var(--teal-2);
+
+  /* the one focus ring */
+  --focus:var(--amber-9);
+
+  /* group colours (Reorganise): categorical canvas fills, functional not chrome */
+  --g-input:#81D8D0;  --g-geometry:#D99E82;  --g-data:#D7D982;  --g-output:#AE82D9;
+
+  /* behind a modal */
+  --scrim:rgba(33,32,28,.55);
+
+  /* where words are cut and more follow: the edge fades into the window's ground, so a cut is never read as the end */
+  --fade-surface:linear-gradient(to bottom,transparent,var(--surface));
+
+  /* the amber selection glow on the canvas */
+  --glow:rgba(212,134,74,.45);
+}
+
+/*@tier:scale*/
+:root, body{
+  /* three faces */
+  --font-display:'Space Grotesk','Inter','Segoe UI',system-ui,sans-serif;
+  --font-body:'Inter','Segoe UI',system-ui,sans-serif;
+  --font-mono:'Space Mono',Consolas,ui-monospace,monospace;
+
+  /* five steps, each a weight, a size and a line height; a class names a step and a face:
+     font:var(--type-body) var(--font-body). Space Mono has 400 and 700, so 600 in mono draws the 700 face. */
+  --type-caption:400 10.5px/1.45;
+  --type-caption-strong:600 10.5px/1.45;  /* the section heading: caption, with the system's one stated exception */
+  --type-control:400 11.5px/1;
+  --type-body:400 12.5px/1.55;
+  --type-label:600 12.5px/1.4;
+  --type-title:600 14px/1.3;
+  --type-display:700 22px/1.18;           /* the tour's headline, and nowhere else (Tharun, R6); the audit fails any other use */
+  --track-caps:.08em; --track-tight:-.012em;
+  --track-badge:.04em;   /* carried from the old library so the closing PR changes nothing on screen. Without it .badge sets as .tag does, 3 to 8px narrower. */
+
+  /* six steps of space */
+  --space-2xs:2px; --space-xs:4px; --space-s:8px; --space-m:12px; --space-l:16px; --space-xl:24px;
+  --space-nudge:calc(var(--space-xs) * -1);   /* the bar's three lines and back arrow: a control box wider than the mark it stands in for, so "Dwight" stays in one place */
+  --space-spine:calc(var(--space-m) + var(--icon) + var(--space-xs));   /* the timeline's words start here, clear of its spine and marks */
+
+  /* controls */
+  --control-h:32px; --control-h-sm:24px; --bar-h:46px; --text-max:128px; --tag-col:88px; --num-col:40.5px; --rail:48px; --rail-open:120px; --radius-switch:999px;
+  --icon:16px; --icon-sm:12px; --icon-stroke:1.75; --dot:8px; --bullet:4px;
+  --mark:24px; --mark-sm:16px; --mark-lg:32px;
+  --border-w:1px; --border-w-strong:2px; --scrollbar:8px;
+  --disabled-opacity:.5;
+
+  /* the hard-offset drawing-set shadow, no blur. There is no radius token: sharp is the absence of a value. */
+  --shadow:6px 6px 0 0 var(--shadow-ink);
+  --shadow-card:3px 3px 0 0 var(--shadow-ink);
+  --shadow-line:3px 3px 0 0 var(--line); --shadow-line-sm:2px 2px 0 0 var(--line);
+
+  /* motion: the reference's names and values */
+  --dur-instant:100ms; --dur-fast:180ms; --dur-base:280ms; --dur-slow:500ms;
+  --ease-out:cubic-bezier(0.16,1,0.3,1); --ease-in-out:cubic-bezier(0.65,0,0.35,1);
+  --loop-breathe:1.8s; --loop-attn:1.1s;
+}
+
+/* the dark theme: only what differs */
+body.dark{
+  /* primitives, dark */
+  --s1:#111110; --s2:#191918; --s3:#222221; --s4:#2A2A28; --s5:#31312E;
+  --s6:#3B3A37; --s7:#494844; --s8:#62605B; --s9:#6F6D66; --s10:#7C7B74; --s10h:#8F8D86;
+  --s11:#B5B3AD; --s12:#EEEEEC;
+
+  --amber-2:#2A2019; --amber-3:#3A2E26; --amber-7:#E09458; --amber-8:#E8A46E; --amber-8h:#E09458; --amber-9:#E09458;
+  --teal-2:#1C2E2B; --teal-7:#4FB3A3; --teal-8:#5BC0B0; --teal-9:#4FB3A3; --teal-wire:#0A8374;
+  --lav-7:#C9A6EC; --lav-9:#C9A6EC;
+  --red-9:#E87B6D; --yellow-9:#E8A23D; --green-9:#7FB35C;
+
+  /* roles that are not the same step in dark */
+  --accent-hover:var(--amber-8); --accent-inverse:var(--s1);  /* the fill is the light amber, so the text on it is the darkest step */
+  --hover:rgba(255,255,255,.06);
+  --glow:rgba(224,148,88,.42);
+  /* Dark line-work, one line to flip: the calmest neutral step that clears 3:1 on the card, the scene ground and the title bar (Tharun, 2026-09-20). */
+  --line:var(--s9);
+  --shadow-ink:#0c0c0b;
+}

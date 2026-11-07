@@ -1,0 +1,395 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<!-- Same strict CSP as every other surface: fonts are inlined below, nothing loads from the network. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; font-src data:; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<style>/*__DWIGHT_FONTS__*/</style>
+<style>/*__DWIGHT_TOKENS__*/</style>
+<style>/*__DWIGHT_COMPONENTS__*/</style>
+<style>
+  /* THE TOUR IS A CARD: 560 x 392 logical points, and the WINDOW is the card. Five steps, each a picture that moves
+     once, a headline and one line. It takes the system's tokens and components and keeps only its scenes here. The one
+     exception is the depiction of Grasshopper itself (the --gh-* block), which is the host and not Dwight.
+
+     NO OUTER SHADOW. The card's hard offset shadow cannot be painted outside its own window, and a transparent
+     window renders black in WebView2, so the shadows live on the elements INSIDE the card. */
+  html,body{height:100%;overflow:hidden}
+  /* Grasshopper's own look - rounded, grey, outlined. The host, not Dwight, so it takes nothing from the tokens. */
+  .mini,.minibar,.minicorner,.cur{--gh-canvas:#D8D6D0; --gh-grid:#CCC9C2; --gh-comp:#E8E6E0; --gh-edge:#57544C; --gh-text:#222222;
+    --gh-wire:#6E6B63; --gh-bar:#FFFFFF; --host-ink:#21201C; --host-paper:#FFFFFF}
+
+  .app{background:var(--raised);border:var(--border-w) solid var(--line)}
+
+  /* ---- the picture ------------------------------------------------------------------------------------------ */
+  /* 192px tall. The replay chip sits bottom right, so every scene keeps its content clear of the bottom of it. */
+  .scenes{position:relative;flex:0 0 192px;overflow:hidden;background:var(--surface);border-bottom:var(--border-w) solid var(--border)}
+  .scene{position:absolute;inset:0;display:none}
+  .scene.on{display:block}
+  .replay{position:absolute;right:var(--space-s);bottom:var(--space-xs);z-index:5;display:flex;align-items:center;gap:var(--space-xs);padding:0 var(--space-xs);cursor:pointer;font:var(--type-caption) var(--font-mono);color:var(--subtle);
+    background:var(--raised);border:var(--border-w) solid var(--border)}
+
+  .cur{position:absolute;width:16px;height:20px;z-index:3}
+  .cur path{fill:var(--host-ink);stroke:var(--host-paper);stroke-width:1.2}
+  kbd{padding:0 var(--space-xs);font:var(--type-caption) var(--font-mono);color:var(--text);background:var(--raised);border:var(--border-w) solid var(--line);border-bottom:var(--border-w-strong) solid var(--line)}
+  .mark{image-rendering:pixelated}
+
+  /* 1 - select, ask, read the answer beside it */
+  .mini{position:absolute;inset:0;background-color:var(--gh-canvas);
+    background-image:linear-gradient(var(--gh-grid) 1px,transparent 1px),linear-gradient(90deg,var(--gh-grid) 1px,transparent 1px);
+    background-size:20px 20px}
+  .mini svg.w{position:absolute;inset:0;width:100%;height:100%}
+  .mini svg.w path{fill:none;stroke:var(--gh-wire);stroke-width:1.5}
+  .comp{position:absolute;height:26px;border-radius:6px;background:var(--gh-comp);border:1px solid var(--gh-edge);
+    display:flex;align-items:center;justify-content:center;font:11px 'Segoe UI',system-ui,sans-serif;color:var(--gh-text);
+    box-shadow:0 1px 0 rgba(0,0,0,.18)}
+  .comp.slider{justify-content:flex-start;gap:6px;padding:0 8px}
+  .comp.slider .track{flex:1;height:2px;background:var(--gh-wire);position:relative}
+  .comp.slider .knob{position:absolute;top:-4px;width:6px;height:10px;background:var(--gh-edge);border-radius:1px}
+  .comp.slider .val{font:var(--type-caption) var(--font-mono)}
+  .mini .sel{position:absolute;left:142px;top:66px;width:186px;height:54px;background:color-mix(in srgb,var(--accent) 12%,transparent);border:var(--border-w) dashed var(--accent-ink);transform-origin:top left}
+  .cur1{left:320px;top:112px}
+  .ans{position:absolute;left:330px;top:var(--space-l);width:212px;padding:var(--space-s) var(--space-m);background:var(--raised);border:var(--border-w) solid var(--line);box-shadow:var(--shadow-line)}
+  .ans .ah{display:flex;align-items:center;gap:var(--space-xs);margin-bottom:var(--space-xs);font:var(--type-caption) var(--font-mono);color:var(--accent-ink)}
+  .ans .ah .mark{width:var(--mark-sm);height:var(--mark-sm)}
+  .ans p{margin:0;font:var(--type-body) var(--font-body);color:var(--text)}
+  .ans .af{margin-top:var(--space-xs);font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+
+  /* 2 - five verbs: ONE colour for every icon block, ink hard shadows */
+  .verbs{position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--space-s);padding:var(--space-s) var(--space-l) var(--space-xl);align-content:center}
+  .verb{display:flex;flex-direction:column;gap:var(--space-xs);min-width:0;padding:var(--space-s);background:var(--raised);border:var(--border-w) solid var(--line);box-shadow:var(--shadow-line)}
+  .vi{width:var(--mark-lg);height:var(--mark-lg);display:grid;place-items:center;color:var(--accent-inverse);background:var(--accent);border:var(--border-w) solid var(--line)}
+  .verb b{font:var(--type-label) var(--font-display);color:var(--text);overflow-wrap:anywhere}
+  .verb small{font:var(--type-caption) var(--font-mono);color:var(--body)}
+
+  /* 3 - three places. The numbered squares stay (Tharun singled them out). */
+  .ways{position:absolute;inset:0;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);gap:var(--space-m);padding:var(--space-m) var(--space-l) var(--space-xl);align-content:center}
+  .way{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-s);min-width:0;padding:var(--space-m);background:var(--raised);border:var(--border-w) solid var(--border-strong)}
+  .way .n{width:var(--mark);height:var(--mark);display:grid;place-items:center;font:var(--type-caption-strong) var(--font-mono);color:var(--accent-inverse);background:var(--accent);border:var(--border-w) solid var(--line)}
+  .way .lbl{font:var(--type-label) var(--font-display);color:var(--text)}
+  .way .sub{font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+  .keys{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2xs);font:var(--type-caption) var(--font-mono);color:var(--subtle)}
+  .minibar{display:flex;gap:1px;font:9.5px 'Segoe UI',system-ui,sans-serif;color:var(--gh-text);border:1px solid var(--gh-edge);
+    background:var(--gh-bar);padding:3px 3px;max-width:100%}
+  .minibar span{padding:1px 4px}
+  .minibar .hi{background:var(--accent);color:var(--accent-inverse);outline:1.5px solid var(--host-ink)}
+  .minicorner{position:relative;width:100%;height:46px;background-color:var(--gh-canvas);
+    background-image:linear-gradient(var(--gh-grid) 1px,transparent 1px),linear-gradient(90deg,var(--gh-grid) 1px,transparent 1px);
+    background-size:12px 12px;border:1px solid var(--gh-edge)}
+  .minicorner .dk{position:absolute;right:8px;bottom:7px;width:26px;height:26px;display:grid;place-items:center;
+    background:var(--surface);border:1px solid var(--border-strong)}
+  .minicorner .dk .mark{width:20px;height:20px}
+  .minicorner .dk::after{content:"";position:absolute;inset:-4px;border:2px solid var(--accent-ink);pointer-events:none}
+
+  /* 4 - a conversation, not a form */
+  .chatpic{position:absolute;inset:0;display:flex;flex-direction:column;gap:var(--space-s);padding:var(--space-s) var(--space-l)}
+  .chatpic .bubble{flex:none;max-width:80%;padding:var(--space-xs) var(--space-m);color:var(--text)}
+  .chatpic .me{align-self:flex-end;background:var(--accent-tint);border:var(--border-w) solid var(--accent)}
+  .chatpic .dw{align-self:flex-start;background:var(--raised);border:var(--border-w) solid var(--line);box-shadow:var(--shadow-line)}
+  .chatpic .dw .who{display:flex;align-items:center;gap:var(--space-xs);margin-bottom:var(--space-2xs);font:var(--type-caption) var(--font-mono);color:var(--accent-ink)}
+  .chatpic .dw .who .mark{width:var(--mark-sm);height:var(--mark-sm)}
+  .chatpic .maplist{margin:var(--space-xs) 0 0;list-style:none}
+  .chatpic .tag{align-self:flex-start}
+  .think{position:absolute;left:var(--space-xl);top:52px;gap:var(--space-xs)}
+  .think i{display:block;width:var(--dot);height:var(--dot);background:var(--thinking)}
+
+  /* 5 - the card: the real .consent, with its own words, pushed by the plugin. */
+  .consentpic{position:absolute;inset:0;display:grid;grid-template-columns:3fr 1fr;gap:var(--space-m);padding:var(--space-s) var(--space-l);align-items:center}
+  /* The real card, drawn a step tighter so that it fits the 192px picture whole. */
+  .consentpic .consent{position:relative;min-width:0;padding:var(--space-s) var(--space-m)}
+  .consentpic .consent .consent-act{margin-bottom:var(--space-xs)}
+  .consentpic .consent .consent-why{margin-bottom:var(--space-s)}
+  .consentpic .consent .consent-btns{margin:0 0 var(--space-xs)}
+  .cur5{left:122px;top:94px}
+  .after{display:flex;flex-direction:column;gap:var(--space-s);align-items:flex-start}
+  .undo{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-xs);font:var(--type-body) var(--font-body);color:var(--text)}
+
+  /* ---- the words ------------------------------------------------------------------------------------------- */
+  .copy{flex:1;min-height:0;padding:var(--space-s) var(--space-l) 0}
+  .copy h2{margin:0 0 var(--space-xs);font:var(--type-display) var(--font-display);letter-spacing:var(--track-tight);color:var(--text);text-wrap:balance}
+  .copy p{margin:0;font:var(--type-body) var(--font-body);color:var(--body)}
+  .trust{display:flex;flex-wrap:wrap;gap:var(--space-xs);margin-top:var(--space-s)}
+  .trust .badge{color:var(--body);background:var(--raised);border-color:var(--border-strong)}
+  .trust .badge .dot{background:var(--accent)}
+  .keynote{display:none;margin-top:var(--space-s);font:var(--type-caption) var(--font-mono);color:var(--accent-ink)}
+  .keynote.on{display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--space-s)}
+  /* A ghost link on the key's own line, at the line's size, so the line keeps its height: a 24px button pushed the copy 6px into the foot. */
+  .getkey{padding:0;font:var(--type-caption) var(--font-mono);color:var(--subtle);background:transparent;border:0;text-decoration:underline;text-underline-offset:var(--space-2xs);cursor:pointer}
+  .getkey:hover{color:var(--text)}
+
+  /* ---- the foot: the numbered squares stay (Tharun singled them out), and the buttons are the system's ------------ */
+  .foot .stages{flex:1;gap:var(--space-xs);margin:0}
+  .foot .stage{padding:0;color:inherit;background:none;border:0;cursor:pointer}
+  .foot .stage .n{width:var(--mark);height:var(--mark);font:var(--type-caption-strong) var(--font-mono);color:var(--subtle);background:var(--raised);border:var(--border-w) solid var(--border-strong)}
+  .foot .stage.done .n{color:var(--text);background:var(--raised);border-color:var(--line)}
+  .foot .stage.active .n{color:var(--accent-inverse);background:var(--accent);border-color:var(--line);box-shadow:var(--shadow-line-sm)}
+  .cta{display:flex;align-items:center;gap:var(--space-s)}
+  [hidden]{display:none !important}
+
+  /* ---- motion. EVERY ELEMENT RESTS VISIBLE: with no .play on the card, nothing here is transparent, displaced or
+     hidden. .play only runs a sequence FROM that visible state (animation-fill-mode both holds the first frame through
+     each element's delay, so it arrives instead of blinking). The one thing that is not there at rest is the
+     thinking dots (data-transient): they exist only while a sequence plays, because a reply replaces them. Durations
+     are the system's; each element's delay is data on the element (--d). Both are multiplied by --speed, which is 1
+     the first time a step plays and SEEN_SPEED after. */
+  @keyframes pop{from{opacity:0;transform:translateY(8px) scale(.96)}to{opacity:1;transform:none}}
+  @keyframes slide{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+  @keyframes grow{from{opacity:0;transform:scale(.15)}to{opacity:1;transform:none}}
+  @keyframes drag{from{transform:translate(-178px,-46px)}to{transform:none}}
+  @keyframes toyes{from{opacity:0;transform:translate(150px,64px)}25%{opacity:1}to{opacity:1;transform:none}}
+  @keyframes press{0%,100%{transform:none}50%{transform:translate(2px,2px)}}
+  @keyframes think{0%{opacity:0}15%{opacity:1}80%{opacity:1}100%{opacity:0}}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  @keyframes ring{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 60%,transparent)}70%{box-shadow:0 0 0 10px transparent}100%{box-shadow:0 0 0 0 transparent}}
+  .think{display:none}
+  .app.play .scene.on .a-pop{animation:pop calc(var(--dur-slow) * .8 * var(--speed,1)) var(--ease-out) calc(var(--d,0s) * var(--speed,1)) both}
+  .app.play .scene.on .a-slide{animation:slide calc(var(--dur-slow) * .9 * var(--speed,1)) var(--ease-out) calc(var(--d,0s) * var(--speed,1)) both}
+  .app.play .scene.on .sel{animation:grow calc(var(--dur-slow) * var(--speed,1)) var(--ease-out) calc(var(--d,0s) * var(--speed,1)) both}
+  .app.play .scene.on .cur1{animation:drag calc(var(--dur-slow) * var(--speed,1)) var(--ease-out) calc(var(--d,0s) * var(--speed,1)) both}
+  .app.play .scene.on .think{display:flex;animation:think calc(var(--dur-slow) * 1.3 * var(--speed,1)) var(--ease-in-out) calc(var(--d,0s) * var(--speed,1)) both}
+  .app.play .scene.on .think i{animation:bob calc(var(--dur-slow) * 2) var(--ease-in-out) infinite}
+  .app.play .scene.on .think i:nth-child(2){animation-delay:calc(var(--dur-slow) * .3)}
+  .app.play .scene.on .think i:nth-child(3){animation-delay:calc(var(--dur-slow) * .6)}
+  .app.play .scene.on .cur5{animation:toyes calc(var(--dur-slow) * 1.4 * var(--speed,1)) var(--ease-out) calc(var(--d,0s) * var(--speed,1)) both}
+  .app.play .scene.on .consent .btn{animation:press calc(var(--dur-base) * var(--speed,1)) var(--ease-in-out) calc(var(--d,0s) * var(--speed,1)) both}
+  .app.play .scene.on .minicorner .dk::after{animation:ring calc(var(--dur-slow) * 1.6 * var(--speed,1)) var(--ease-out) 3 calc(var(--d,0s) * var(--speed,1)) both}
+  html.reduced *,html.reduced *::before,html.reduced *::after{animation:none !important;transition:none !important}
+</style></head>
+<body>
+<!--__DWIGHT_ICONS__-->
+  <div class="app" id="app" role="dialog" aria-label="Dwight first-run tour">
+    <div class="titlebar">
+      <!--__DWIGHT_MARK__-->
+      <span class="title"><span class="who">Dwight</span><span class="sep">&middot;</span><span class="act" id="act">Welcome</span></span>
+      <button class="iconbtn" id="close" title="Close" aria-label="Close the tour" onclick="dwightSend('close')"><svg class="ic" aria-hidden="true"><use href="#ic-close"/></svg></button>
+    </div>
+
+    <div class="scenes" id="scenes">
+      <!-- 1 - select, ask, read the answer beside it. The verb named on the answer card is pushed (dwightTourInit). -->
+      <div class="scene on" data-i="0">
+        <div class="mini">
+          <svg class="w" viewBox="0 0 558 192" preserveAspectRatio="none"><path d="M130 93 L152 93"/><path d="M226 93 L248 93"/></svg>
+          <div class="comp slider" style="left:16px;top:80px;width:114px"><span class="track"><span class="knob" style="left:40%"></span></span><span class="val">4.0</span></div>
+          <div class="comp" style="left:152px;top:80px;width:74px">Circle</div>
+          <div class="comp" style="left:248px;top:80px;width:66px">Area</div>
+          <div class="sel" style="--d:.25s"></div>
+          <svg class="cur cur1" style="--d:.25s" viewBox="0 0 16 20"><path d="M1 1 L1 16 L5 12 L8 19 L11 18 L8 11 L14 11 Z"/></svg>
+          <div class="ans a-slide" style="--d:.9s">
+            <div class="ah"><!--__DWIGHT_MARK__--><span id="ansverb"></span></div>
+            <p>Makes a circle from the slider's radius, then measures its area.</p>
+            <div class="af">2 components &middot; read, not changed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 - the five verbs. Names and taglines are PUSHED and filled in by index (the order is pinned by a test);
+           the five icons are keyed by position for the same reason, so no verb name is typed into this file. -->
+      <div class="scene" data-i="1">
+        <div class="verbs" id="verbs">
+          <div class="verb a-pop" style="--d:.05s"><span class="vi"><svg class="ic" aria-hidden="true"><use href="#ic-explain"/></svg></span><b class="vn"></b><small class="vt"></small></div>
+          <div class="verb a-pop" style="--d:.11s"><span class="vi"><svg class="ic" aria-hidden="true"><use href="#ic-diagnose"/></svg></span><b class="vn"></b><small class="vt"></small></div>
+          <div class="verb a-pop" style="--d:.17s"><span class="vi"><svg class="ic" aria-hidden="true"><use href="#ic-reorganise"/></svg></span><b class="vn"></b><small class="vt"></small></div>
+          <div class="verb a-pop" style="--d:.23s"><span class="vi"><svg class="ic" aria-hidden="true"><use href="#ic-simplify"/></svg></span><b class="vn"></b><small class="vt"></small></div>
+          <div class="verb a-pop" style="--d:.29s"><span class="vi"><svg class="ic" aria-hidden="true"><use href="#ic-build"/></svg></span><b class="vn"></b><small class="vt"></small></div>
+        </div>
+      </div>
+
+      <!-- 3 - three places. The chord is the pushed string, split into keycaps by the script. The menu and the corner
+           are illustrations INSIDE the card: both are Grasshopper's own UI, with no position to point at, and an
+           overlay drawn over another program's UI is the placement class that put this tour off-screen (#176). -->
+      <div class="scene" data-i="2">
+        <div class="ways">
+          <div class="way a-pop" style="--d:.1s"><span class="n">1</span><span class="lbl">The chord</span>
+            <span class="keys" id="keys" role="img"></span><span class="sub">on your selection</span></div>
+          <div class="way a-pop" style="--d:.55s"><span class="n">2</span><span class="lbl">The menu</span>
+            <span class="minibar" aria-hidden="true"><span>Solution</span><span>Help</span><span class="hi">Dwight</span></span><span class="sub">in the top bar</span></div>
+          <div class="way a-pop" style="--d:1s"><span class="n">3</span><span class="lbl">The Dwight icon</span>
+            <span class="minicorner" aria-hidden="true"><span class="dk" style="--d:1s"><!--__DWIGHT_MARK__--></span></span><span class="sub">bottom right</span></div>
+        </div>
+      </div>
+
+      <!-- 4 - a conversation. The thinking dots are the one transient: not there at rest, present only while it plays. -->
+      <div class="scene" data-i="3">
+        <div class="chatpic">
+          <div class="bubble me a-pop" style="--d:.05s">A tower whose floor plates twist 3&deg; per level</div>
+          <div class="think" style="--d:.35s" data-transient aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="bubble dw a-pop" style="--d:.95s">
+            <span class="who"><!--__DWIGHT_MARK__-->Dwight</span>
+            Here is a plan in three regions.
+            <ul class="maplist"><li class="a-pop" style="--d:1.15s"><strong>A1</strong> Site</li><li class="a-pop" style="--d:1.27s"><strong>A2</strong> Floor plates</li><li class="a-pop" style="--d:1.39s"><strong>A3</strong> Twist</li></ul>
+          </div>
+          <div class="tag ok a-pop" style="--d:1.7s">&#10003; A1 built &middot; checked &middot; one undo</div>
+        </div>
+      </div>
+
+      <!-- 5 - the waiting card, drawn from the REAL card (Brief BG's frame): its act, its reason label, its ONE button, its one plain line and its fold's label all
+           arrive pushed (ConsentCard, via FirstRunCore), held to the real card by TourConsentPictureTests. The reason line below is an example of what a model
+           might say, not Dwight's wording. Inert, because it is a picture. -->
+      <div class="scene" data-i="4">
+        <div class="consentpic">
+          <div class="consent a-pop" id="consent" inert style="--d:.05s">
+            <p class="consent-act"><strong id="cAct"></strong></p>
+            <div class="consent-why"><span class="consent-why-label" id="cReasonL"></span>You asked for the site boundary first.</div>
+            <div class="consent-btns"><span class="btn primary" id="cApprove" style="--d:1s"></span></div>
+            <p class="consent-line" id="cLine"></p>
+            <details class="consent-more"><summary id="cMore"></summary></details>
+            <svg class="cur cur5" style="--d:.35s" viewBox="0 0 16 20"><path d="M1 1 L1 16 L5 12 L8 19 L11 18 L8 11 L14 11 Z"/></svg>
+          </div>
+          <div class="after">
+            <span class="tag ok a-pop" style="--d:1.25s">&#10003; Placed &middot; checked</span>
+            <span class="undo a-pop" style="--d:1.55s"><kbd>Ctrl</kbd><kbd>Z</kbd><span>undoes it.</span></span>
+          </div>
+        </div>
+      </div>
+
+      <button class="replay" type="button" aria-label="Replay this step's animation" onclick="dwightTourReplay()"><svg class="ic sm" aria-hidden="true"><use href="#ic-replay"/></svg>replay</button>
+    </div>
+
+    <div class="copy" aria-live="polite">
+      <h2 id="h"></h2>
+      <p id="p"></p>
+      <div class="trust" id="trust"></div>
+      <!-- Brief EN: the way to find out what a key is sits on the line that names the key, just above "Add your API key". The foot has
+           no room for a fourth button: Back, Documentation, this and the primary measured 76px past the card's 560 at scales 1 and 1.5.
+           A ghost link, not a ghost button, because a button's height pushed the copy 6px into the foot. -->
+      <div class="keynote" id="keynote"><span>One thing first: Dwight needs your API key.</span>
+        <button class="getkey" id="getkey" onclick="dwightSend('keys')" hidden>How to get a key</button></div>
+    </div>
+
+    <div class="foot">
+      <span class="stages" id="stages"></span>
+      <span class="cta">
+        <button class="btn ghost" id="back" onclick="dwightTourGo(STEP-1)">Back</button>
+        <button class="btn ghost" id="docs" onclick="dwightSend('docs')" hidden>Documentation</button>
+        <button class="btn primary" id="next" onclick="dwightNext()">Next</button>
+      </span>
+    </div>
+  </div>
+<script>
+  function dwightSend(c){ try{ if(window.chrome&&window.chrome.webview){window.chrome.webview.postMessage(c);return;} }catch(e){} try{document.title='dwight:'+c+':'+Date.now();}catch(e){} }
+
+  // TIMING, tuned by eye. Every step's sequence is meant to finish inside about two seconds; a step already seen this
+  // session replays at SEEN_SPEED (half), so nothing feels slow the second time through. The delays themselves live in
+  // the CSS (--d), because each belongs to the element it delays.
+  var SEEN_SPEED = .5;
+
+  // The step copy. PRESENTATION only: every FACT on this surface - the verb names and their taglines, the chord, the
+  // trust badges, the consent card's own words, whether a key is needed, the docs link, the keys link - is pushed by the plugin
+  // (dwightTourInit) and set with textContent, never innerHTML. {v4} is the last verb's pushed name.
+  var STEPS = [
+    { t:'Welcome',       h:'Tools for Grasshopper, on the canvas.',           p:'Select components, ask, and read the answer right beside them.' },
+    { t:'Five verbs',    h:'Five verbs. That is the whole menu.',             p:'Most start from what you select.' },
+    { t:'Three places',  h:'Three places Dwight lives.',                      p:'Ask from the chord or the menu. History keeps every answer.' },
+    { t:'The chat',      h:'{v4} is a conversation.',                         p:'Describe what you want. Dwight plans it, builds it, and checks each part.' },
+    { t:'Your approval', h:'In the chat, nothing changes without a card.',    p:'Dwight checks what it builds, and Ctrl-Z undoes it. Full control, off by default, is the one exception.' }
+  ];
+
+  var STEP = 0, NEEDSKEY = false, DOCS = '', KEYS = '', VERBS = [], TRUST = [], CONSENT = {}, SEEN = [], PLAYS = 0, REDUCED = false;
+  function $(id){ return document.getElementById(id); }
+  function setText(id, s){ var el=$(id); if(el) el.textContent = (s==null?'':String(s)); }
+  function fill(s){ return String(s).replace('{v4}', (VERBS[4] && VERBS[4].name) || 'The chat'); }
+  function prefersReduced(){ try{ return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }catch(e){ return false; } }
+
+  function dwightTourInit(json){
+    var d={}; try{ d=JSON.parse(json)||{}; }catch(e){}
+    VERBS=d.verbs||[]; TRUST=d.trust||[]; CONSENT=d.consent||{};
+    NEEDSKEY=!!d.needsKey; DOCS=d.docs||''; KEYS=d.keys||'';
+
+    var cards=document.querySelectorAll('#verbs .verb');
+    for(var i=0;i<cards.length;i++){
+      var v=VERBS[i]; cards[i].hidden=!v;
+      if(v){ cards[i].querySelector('.vn').textContent=v.name||''; cards[i].querySelector('.vt').textContent=v.tag||''; }
+    }
+    setText('ansverb', VERBS[0] && VERBS[0].name);
+
+    var chord=d.chord||'', keys=$('keys');
+    if(keys){ keys.textContent=''; keys.setAttribute('aria-label', chord);
+      if(chord) chord.split('+').forEach(function(k,i){
+        if(i){ var pl=document.createElement('span'); pl.textContent='+'; keys.appendChild(pl); }
+        var kb=document.createElement('kbd'); kb.textContent=k; keys.appendChild(kb); }); }
+
+    var tr=$('trust');
+    if(tr){ tr.textContent='';
+      TRUST.forEach(function(t){
+        var b=document.createElement('span'); b.className='badge';
+        var dot=document.createElement('span'); dot.className='dot';
+        b.appendChild(dot); b.appendChild(document.createTextNode(t)); tr.appendChild(b); }); }
+
+    setText('cAct', CONSENT.act); setText('cLine', CONSENT.line); setText('cMore', CONSENT.more);
+    setText('cReasonL', CONSENT.reasonLabel); setText('cApprove', CONSENT.approve);
+    var cc=$('consent'); if(cc) cc.hidden=!CONSENT.act;
+
+    REDUCED=prefersReduced();
+    document.documentElement.classList.toggle('reduced', REDUCED);
+    SEEN=[]; PLAYS=0;
+    var app=$('app'); if(app) app.removeAttribute('data-plays');
+    buildStages(); dwightTourGo(0);
+  }
+
+  function buildStages(){
+    var el=$('stages'); if(!el) return; el.textContent='';
+    STEPS.forEach(function(s,i){
+      var b=document.createElement('button'); b.type='button'; b.className='stage';
+      b.setAttribute('aria-label','Step '+(i+1)+': '+s.t);
+      var n=document.createElement('span'); n.className='n'; n.textContent=String(i+1);
+      b.appendChild(n); b.onclick=function(){ dwightTourGo(i); }; el.appendChild(b); });
+  }
+
+  // Motion plays ONCE when a step is reached, and again when Replay is pressed. It is never left running.
+  function play(){
+    var app=$('app'); if(!app || REDUCED) return;
+    app.classList.remove('play'); void app.offsetWidth; app.classList.add('play');
+    PLAYS++; app.setAttribute('data-plays', String(PLAYS));
+  }
+
+  function dwightTourGo(n){
+    var scenes=document.querySelectorAll('.scene'); if(!scenes.length) return;
+    STEP=Math.max(0, Math.min(n, scenes.length-1));
+    var last=STEP===scenes.length-1;
+    scenes.forEach(function(s,i){ s.classList.toggle('on', i===STEP); });
+    document.querySelectorAll('#stages .stage').forEach(function(s,i){
+      s.classList.toggle('done', i<STEP); s.classList.toggle('active', i===STEP);
+      if(i===STEP) s.setAttribute('aria-current','step'); else s.removeAttribute('aria-current'); });
+
+    var step=STEPS[STEP]||STEPS[0];
+    setText('act', step.t); setText('h', fill(step.h)); setText('p', fill(step.p));
+    var tr=$('trust'); if(tr) tr.hidden = !(STEP===0 && TRUST.length);
+    var kn=$('keynote'); if(kn) kn.classList.toggle('on', last && NEEDSKEY);
+
+    $('back').style.visibility = STEP===0 ? 'hidden' : 'visible';
+    $('docs').hidden = !(last && DOCS);
+    // Brief EN: on the key's own line above "Add your API key", the way to find out what a key is. Only while no key is stored, and only when the plugin offers the page.
+    $('getkey').hidden = !(last && NEEDSKEY && KEYS);
+    setText('next', !last ? 'Next' : (NEEDSKEY ? 'Add your API key' : 'Open Dwight'));
+
+    var app=$('app'); if(app) app.style.setProperty('--speed', SEEN[STEP] ? String(SEEN_SPEED) : '1');
+    SEEN[STEP]=true;
+    play();
+  }
+
+  // The Replay button plays it again, at full speed: somebody who asks to watch again wants to watch.
+  function dwightTourReplay(){
+    var app=$('app'); if(app) app.style.setProperty('--speed','1');
+    play();
+  }
+
+  // The last step's action is the only one that leaves this window, and it never runs a verb - a first-run surface must
+  // not be the thing that spends a new user's first money. With a key it says "finish" (the plugin closes the tour and
+  // points at the dock); without one it opens Settings.
+  function dwightNext(){
+    var last = STEP===document.querySelectorAll('.scene').length-1;
+    if(!last){ dwightTourGo(STEP+1); return; }
+    dwightSend(NEEDSKEY ? 'settings' : 'finish');
+  }
+
+  function dwightSetTheme(t){ document.body.classList.toggle('dark', t==='dark'); }
+
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape') dwightSend('close');
+    else if(e.key==='ArrowRight') dwightTourGo(STEP+1);
+    else if(e.key==='ArrowLeft') dwightTourGo(STEP-1); });
+  // THE KEYS MUST WORK WITHOUT A CLICK FIRST (Tharun's sitting, 2026-10-25: ArrowRight and Escape did nothing until
+  // he clicked inside the window, and a new user would not know to). The listener above sits on the document, so it
+  // needs the page to HOLD keyboard focus: the host hands the window focus on load (FirstRunTour), and here the body
+  // is made focusable and focused, so the first key after the tour appears is read by the page, not by Grasshopper.
+  function dwightTourFocus(){ try{ document.body.setAttribute('tabindex','-1'); window.focus(); document.body.focus(); }catch(e){} }
+  dwightTourFocus();
+</script></body></html>

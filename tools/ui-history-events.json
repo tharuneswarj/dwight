@@ -1,0 +1,1321 @@
+{
+  "note": "Rendered by HistoryTimelineTests from a scripted scenario through HistoryCore.TimelineView; it fails if this file differs. The shell's fixtures read it, so they hold only what the host can send (#1139). Regenerate with DWIGHT_WRITE_FIXTURES=1.",
+  "closed": {
+    "items": [
+      {
+        "type": "event",
+        "key": "00000005-0000-0000-0000-000000000000",
+        "state": "standing",
+        "word": "standing",
+        "verb": "Build",
+        "title": "A tower whose floor plates twist",
+        "count": 2,
+        "countWord": "2 steps",
+        "time": "5m",
+        "threadId": "abc",
+        "openChat": "Open chat",
+        "by": "approved by you",
+        "actions": [
+          {
+            "action": "before",
+            "id": "00000005-0000-0000-0000-000000000000",
+            "button": "Go back to before this"
+          }
+        ],
+        "steps": [
+          {
+            "id": "00000006-0000-0000-0000-000000000000",
+            "state": "takenback",
+            "word": "taken back",
+            "line": "Set Radius.",
+            "time": "5m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": "Dwight took this back because its check failed.",
+            "action": null
+          },
+          {
+            "id": "00000005-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Built C1.",
+            "time": "6m",
+            "by": "approved automatically (Do not ask)",
+            "yours": false,
+            "reverted": null,
+            "action": null
+          }
+        ]
+      },
+      {
+        "type": "yours",
+        "line": "Yours: Delete",
+        "ids": [
+          "0000005c-0000-0000-0000-000000000000"
+        ]
+      },
+      {
+        "type": "event",
+        "key": "00000004-0000-0000-0000-000000000000",
+        "state": "standing",
+        "word": "standing",
+        "verb": "Reorganise",
+        "title": "Reorganised the layout with labelled inputs and outputs.",
+        "count": 1,
+        "countWord": null,
+        "time": "8m",
+        "threadId": null,
+        "openChat": null,
+        "by": "approved by you",
+        "actions": [
+          {
+            "action": "back",
+            "id": "00000004-0000-0000-0000-000000000000",
+            "button": "Go back to here"
+          },
+          {
+            "action": "before",
+            "id": "00000004-0000-0000-0000-000000000000",
+            "button": "Go back to before this"
+          }
+        ],
+        "steps": [
+          {
+            "id": "00000004-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Reorganised the layout with labelled inputs and outputs.",
+            "time": "8m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "back",
+              "id": "00000004-0000-0000-0000-000000000000",
+              "button": "Go back to here"
+            }
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "00000001-0000-0000-0000-000000000000",
+        "state": "standing",
+        "word": "standing",
+        "verb": "Build",
+        "title": "A tower whose floor plates twist",
+        "count": 3,
+        "countWord": "3 steps",
+        "time": "9m",
+        "threadId": "abc",
+        "openChat": "Open chat",
+        "by": "approved by you",
+        "actions": [
+          {
+            "action": "back",
+            "id": "00000003-0000-0000-0000-000000000000",
+            "button": "Go back to here"
+          },
+          {
+            "action": "before",
+            "id": "00000001-0000-0000-0000-000000000000",
+            "button": "Go back to before this"
+          }
+        ],
+        "steps": [
+          {
+            "id": "00000003-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Added 2 wires, deleted 1 component.",
+            "time": "9m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "back",
+              "id": "00000003-0000-0000-0000-000000000000",
+              "button": "Go back to here"
+            }
+          },
+          {
+            "id": "0000005b-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Yours: Move",
+            "time": "",
+            "yours": true,
+            "reverted": null,
+            "action": null
+          },
+          {
+            "id": "00000002-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Built A1.",
+            "time": "11m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "back",
+              "id": "00000002-0000-0000-0000-000000000000",
+              "button": "Go back to here"
+            }
+          },
+          {
+            "id": "00000001-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Laid down a scaffold map.",
+            "time": "12m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "back",
+              "id": "00000001-0000-0000-0000-000000000000",
+              "button": "Go back to here"
+            }
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "00000014-0000-0000-0000-000000000000",
+        "state": "gone",
+        "word": "gone",
+        "verb": "Build",
+        "title": "",
+        "count": 2,
+        "countWord": "2 steps",
+        "time": "10h",
+        "threadId": null,
+        "openChat": null,
+        "by": null,
+        "actions": [],
+        "steps": [
+          {
+            "id": "00000015-0000-0000-0000-000000000000",
+            "state": "gone",
+            "word": "gone",
+            "line": "Built one of X1, X2.",
+            "time": "10h",
+            "by": null,
+            "yours": false,
+            "reverted": null,
+            "action": null
+          },
+          {
+            "id": "00000014-0000-0000-0000-000000000000",
+            "state": "takenback",
+            "word": "taken back",
+            "line": "Changed existing components.",
+            "time": "10h",
+            "by": null,
+            "yours": false,
+            "reverted": "Dwight took this back because its check failed.",
+            "action": null
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "utc:2026-10-29T10:00:00.0000000Z",
+        "state": "unknown",
+        "word": "position unknown",
+        "verb": "Reorganise",
+        "title": "Re-arranged the layout.",
+        "count": 1,
+        "countWord": null,
+        "time": "2d",
+        "threadId": null,
+        "openChat": null,
+        "by": null,
+        "actions": [],
+        "steps": [
+          {
+            "id": "",
+            "state": "unknown",
+            "word": "position unknown",
+            "line": "Re-arranged the layout.",
+            "time": "2d",
+            "by": null,
+            "yours": false,
+            "reverted": null,
+            "action": null
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "0000001e-0000-0000-0000-000000000000",
+        "state": "gone",
+        "word": "gone",
+        "verb": "Build",
+        "title": "A tower whose floor plates twist",
+        "count": 1,
+        "countWord": null,
+        "time": "2d",
+        "threadId": "abc",
+        "openChat": "Open chat",
+        "by": "approved by you",
+        "actions": [],
+        "steps": [
+          {
+            "id": "0000001e-0000-0000-0000-000000000000",
+            "state": "gone",
+            "word": "gone",
+            "line": "+4 components, +6 wires, 0 groups (what Grasshopper recorded)",
+            "time": "2d",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": null
+          }
+        ]
+      }
+    ],
+    "heading": "Timeline",
+    "historyHeading": "History",
+    "newChat": "New chat",
+    "expandAll": "Expand all",
+    "collapseAll": "Collapse all",
+    "back": "Back to history",
+    "historyEmpty": "No history yet on this file.",
+    "empty": "Dwight has not changed this file yet.",
+    "confirm": null,
+    "confirmIds": [],
+    "yes": "Go back",
+    "no": "Cancel",
+    "note": null
+  },
+  "undone": {
+    "items": [
+      {
+        "type": "event",
+        "key": "00000008-0000-0000-0000-000000000000",
+        "state": "undone",
+        "word": "undone",
+        "verb": "Build",
+        "title": "New chat",
+        "count": 1,
+        "countWord": null,
+        "time": "2m",
+        "threadId": "def",
+        "openChat": null,
+        "by": "approved by you",
+        "actions": [
+          {
+            "action": "redo",
+            "id": "00000008-0000-0000-0000-000000000000",
+            "button": "Redo to here"
+          }
+        ],
+        "steps": [
+          {
+            "id": "00000008-0000-0000-0000-000000000000",
+            "state": "undone",
+            "word": "undone",
+            "line": "Placed a Square, Spot 5, beside empty_number.",
+            "time": "2m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "redo",
+              "id": "00000008-0000-0000-0000-000000000000",
+              "button": "Redo to here"
+            }
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "00000007-0000-0000-0000-000000000000",
+        "state": "undone",
+        "word": "undone",
+        "verb": "Simplify",
+        "title": "Simplified the logic.",
+        "count": 1,
+        "countWord": null,
+        "time": "3m",
+        "threadId": null,
+        "openChat": null,
+        "by": "approved by you",
+        "actions": [
+          {
+            "action": "redo",
+            "id": "00000007-0000-0000-0000-000000000000",
+            "button": "Redo to here"
+          }
+        ],
+        "steps": [
+          {
+            "id": "00000007-0000-0000-0000-000000000000",
+            "state": "undone",
+            "word": "undone",
+            "line": "Simplified the logic.",
+            "time": "3m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "redo",
+              "id": "00000007-0000-0000-0000-000000000000",
+              "button": "Redo to here"
+            }
+          }
+        ]
+      },
+      {
+        "type": "here",
+        "line": "You are here"
+      },
+      {
+        "type": "event",
+        "key": "00000005-0000-0000-0000-000000000000",
+        "state": "standing",
+        "word": "standing",
+        "verb": "Build",
+        "title": "A tower whose floor plates twist",
+        "count": 2,
+        "countWord": "2 steps",
+        "time": "5m",
+        "threadId": "abc",
+        "openChat": "Open chat",
+        "by": "approved by you",
+        "actions": [
+          {
+            "action": "before",
+            "id": "00000005-0000-0000-0000-000000000000",
+            "button": "Go back to before this"
+          }
+        ],
+        "steps": [
+          {
+            "id": "00000006-0000-0000-0000-000000000000",
+            "state": "takenback",
+            "word": "taken back",
+            "line": "Set Radius.",
+            "time": "5m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": "Dwight took this back because its check failed.",
+            "action": null
+          },
+          {
+            "id": "00000005-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Built C1.",
+            "time": "6m",
+            "by": "approved automatically (Do not ask)",
+            "yours": false,
+            "reverted": null,
+            "action": null
+          }
+        ]
+      },
+      {
+        "type": "yours",
+        "line": "Yours: Delete",
+        "ids": [
+          "0000005c-0000-0000-0000-000000000000"
+        ]
+      },
+      {
+        "type": "event",
+        "key": "00000004-0000-0000-0000-000000000000",
+        "state": "standing",
+        "word": "standing",
+        "verb": "Reorganise",
+        "title": "Reorganised the layout with labelled inputs and outputs.",
+        "count": 1,
+        "countWord": null,
+        "time": "8m",
+        "threadId": null,
+        "openChat": null,
+        "by": "approved by you",
+        "actions": [
+          {
+            "action": "back",
+            "id": "00000004-0000-0000-0000-000000000000",
+            "button": "Go back to here"
+          },
+          {
+            "action": "before",
+            "id": "00000004-0000-0000-0000-000000000000",
+            "button": "Go back to before this"
+          }
+        ],
+        "steps": [
+          {
+            "id": "00000004-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Reorganised the layout with labelled inputs and outputs.",
+            "time": "8m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "back",
+              "id": "00000004-0000-0000-0000-000000000000",
+              "button": "Go back to here"
+            }
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "00000001-0000-0000-0000-000000000000",
+        "state": "standing",
+        "word": "standing",
+        "verb": "Build",
+        "title": "A tower whose floor plates twist",
+        "count": 3,
+        "countWord": "3 steps",
+        "time": "9m",
+        "threadId": "abc",
+        "openChat": "Open chat",
+        "by": "approved by you",
+        "actions": [
+          {
+            "action": "back",
+            "id": "00000003-0000-0000-0000-000000000000",
+            "button": "Go back to here"
+          },
+          {
+            "action": "before",
+            "id": "00000001-0000-0000-0000-000000000000",
+            "button": "Go back to before this"
+          }
+        ],
+        "steps": [
+          {
+            "id": "00000003-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Added 2 wires, deleted 1 component.",
+            "time": "9m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "back",
+              "id": "00000003-0000-0000-0000-000000000000",
+              "button": "Go back to here"
+            }
+          },
+          {
+            "id": "0000005b-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Yours: Move",
+            "time": "",
+            "yours": true,
+            "reverted": null,
+            "action": null
+          },
+          {
+            "id": "00000002-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Built A1.",
+            "time": "11m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "back",
+              "id": "00000002-0000-0000-0000-000000000000",
+              "button": "Go back to here"
+            }
+          },
+          {
+            "id": "00000001-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Laid down a scaffold map.",
+            "time": "12m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "back",
+              "id": "00000001-0000-0000-0000-000000000000",
+              "button": "Go back to here"
+            }
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "00000014-0000-0000-0000-000000000000",
+        "state": "gone",
+        "word": "gone",
+        "verb": "Build",
+        "title": "",
+        "count": 2,
+        "countWord": "2 steps",
+        "time": "10h",
+        "threadId": null,
+        "openChat": null,
+        "by": null,
+        "actions": [],
+        "steps": [
+          {
+            "id": "00000015-0000-0000-0000-000000000000",
+            "state": "gone",
+            "word": "gone",
+            "line": "Built one of X1, X2.",
+            "time": "10h",
+            "by": null,
+            "yours": false,
+            "reverted": null,
+            "action": null
+          },
+          {
+            "id": "00000014-0000-0000-0000-000000000000",
+            "state": "takenback",
+            "word": "taken back",
+            "line": "Changed existing components.",
+            "time": "10h",
+            "by": null,
+            "yours": false,
+            "reverted": "Dwight took this back because its check failed.",
+            "action": null
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "utc:2026-10-29T10:00:00.0000000Z",
+        "state": "unknown",
+        "word": "position unknown",
+        "verb": "Reorganise",
+        "title": "Re-arranged the layout.",
+        "count": 1,
+        "countWord": null,
+        "time": "2d",
+        "threadId": null,
+        "openChat": null,
+        "by": null,
+        "actions": [],
+        "steps": [
+          {
+            "id": "",
+            "state": "unknown",
+            "word": "position unknown",
+            "line": "Re-arranged the layout.",
+            "time": "2d",
+            "by": null,
+            "yours": false,
+            "reverted": null,
+            "action": null
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "0000001e-0000-0000-0000-000000000000",
+        "state": "gone",
+        "word": "gone",
+        "verb": "Build",
+        "title": "A tower whose floor plates twist",
+        "count": 1,
+        "countWord": null,
+        "time": "2d",
+        "threadId": "abc",
+        "openChat": "Open chat",
+        "by": "approved by you",
+        "actions": [],
+        "steps": [
+          {
+            "id": "0000001e-0000-0000-0000-000000000000",
+            "state": "gone",
+            "word": "gone",
+            "line": "+4 components, +6 wires, 0 groups (what Grasshopper recorded)",
+            "time": "2d",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": null
+          }
+        ]
+      }
+    ],
+    "heading": "Timeline",
+    "historyHeading": "History",
+    "newChat": "New chat",
+    "expandAll": "Expand all",
+    "collapseAll": "Collapse all",
+    "back": "Back to history",
+    "historyEmpty": "No history yet on this file.",
+    "empty": "Dwight has not changed this file yet.",
+    "confirm": null,
+    "confirmIds": [],
+    "yes": "Go back",
+    "no": "Cancel",
+    "note": null
+  },
+  "confirm": {
+    "items": [
+      {
+        "type": "event",
+        "key": "00000005-0000-0000-0000-000000000000",
+        "state": "standing",
+        "word": "standing",
+        "verb": "Build",
+        "title": "A tower whose floor plates twist",
+        "count": 2,
+        "countWord": "2 steps",
+        "time": "5m",
+        "threadId": "abc",
+        "openChat": "Open chat",
+        "by": "approved by you",
+        "actions": [
+          {
+            "action": "before",
+            "id": "00000005-0000-0000-0000-000000000000",
+            "button": "Go back to before this"
+          }
+        ],
+        "steps": [
+          {
+            "id": "00000006-0000-0000-0000-000000000000",
+            "state": "takenback",
+            "word": "taken back",
+            "line": "Set Radius.",
+            "time": "5m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": "Dwight took this back because its check failed.",
+            "action": null
+          },
+          {
+            "id": "00000005-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Built C1.",
+            "time": "6m",
+            "by": "approved automatically (Do not ask)",
+            "yours": false,
+            "reverted": null,
+            "action": null
+          }
+        ]
+      },
+      {
+        "type": "yours",
+        "line": "Yours: Delete",
+        "ids": [
+          "0000005c-0000-0000-0000-000000000000"
+        ]
+      },
+      {
+        "type": "event",
+        "key": "00000004-0000-0000-0000-000000000000",
+        "state": "standing",
+        "word": "standing",
+        "verb": "Reorganise",
+        "title": "Reorganised the layout with labelled inputs and outputs.",
+        "count": 1,
+        "countWord": null,
+        "time": "8m",
+        "threadId": null,
+        "openChat": null,
+        "by": "approved by you",
+        "actions": [
+          {
+            "action": "back",
+            "id": "00000004-0000-0000-0000-000000000000",
+            "button": "Go back to here"
+          },
+          {
+            "action": "before",
+            "id": "00000004-0000-0000-0000-000000000000",
+            "button": "Go back to before this"
+          }
+        ],
+        "steps": [
+          {
+            "id": "00000004-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Reorganised the layout with labelled inputs and outputs.",
+            "time": "8m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "back",
+              "id": "00000004-0000-0000-0000-000000000000",
+              "button": "Go back to here"
+            }
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "00000001-0000-0000-0000-000000000000",
+        "state": "standing",
+        "word": "standing",
+        "verb": "Build",
+        "title": "A tower whose floor plates twist",
+        "count": 3,
+        "countWord": "3 steps",
+        "time": "9m",
+        "threadId": "abc",
+        "openChat": "Open chat",
+        "by": "approved by you",
+        "actions": [
+          {
+            "action": "back",
+            "id": "00000003-0000-0000-0000-000000000000",
+            "button": "Go back to here"
+          },
+          {
+            "action": "before",
+            "id": "00000001-0000-0000-0000-000000000000",
+            "button": "Go back to before this"
+          }
+        ],
+        "steps": [
+          {
+            "id": "00000003-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Added 2 wires, deleted 1 component.",
+            "time": "9m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "back",
+              "id": "00000003-0000-0000-0000-000000000000",
+              "button": "Go back to here"
+            }
+          },
+          {
+            "id": "0000005b-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Yours: Move",
+            "time": "",
+            "yours": true,
+            "reverted": null,
+            "action": null
+          },
+          {
+            "id": "00000002-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Built A1.",
+            "time": "11m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "back",
+              "id": "00000002-0000-0000-0000-000000000000",
+              "button": "Go back to here"
+            }
+          },
+          {
+            "id": "00000001-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Laid down a scaffold map.",
+            "time": "12m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "back",
+              "id": "00000001-0000-0000-0000-000000000000",
+              "button": "Go back to here"
+            }
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "00000014-0000-0000-0000-000000000000",
+        "state": "gone",
+        "word": "gone",
+        "verb": "Build",
+        "title": "",
+        "count": 2,
+        "countWord": "2 steps",
+        "time": "10h",
+        "threadId": null,
+        "openChat": null,
+        "by": null,
+        "actions": [],
+        "steps": [
+          {
+            "id": "00000015-0000-0000-0000-000000000000",
+            "state": "gone",
+            "word": "gone",
+            "line": "Built one of X1, X2.",
+            "time": "10h",
+            "by": null,
+            "yours": false,
+            "reverted": null,
+            "action": null
+          },
+          {
+            "id": "00000014-0000-0000-0000-000000000000",
+            "state": "takenback",
+            "word": "taken back",
+            "line": "Changed existing components.",
+            "time": "10h",
+            "by": null,
+            "yours": false,
+            "reverted": "Dwight took this back because its check failed.",
+            "action": null
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "utc:2026-10-29T10:00:00.0000000Z",
+        "state": "unknown",
+        "word": "position unknown",
+        "verb": "Reorganise",
+        "title": "Re-arranged the layout.",
+        "count": 1,
+        "countWord": null,
+        "time": "2d",
+        "threadId": null,
+        "openChat": null,
+        "by": null,
+        "actions": [],
+        "steps": [
+          {
+            "id": "",
+            "state": "unknown",
+            "word": "position unknown",
+            "line": "Re-arranged the layout.",
+            "time": "2d",
+            "by": null,
+            "yours": false,
+            "reverted": null,
+            "action": null
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "0000001e-0000-0000-0000-000000000000",
+        "state": "gone",
+        "word": "gone",
+        "verb": "Build",
+        "title": "A tower whose floor plates twist",
+        "count": 1,
+        "countWord": null,
+        "time": "2d",
+        "threadId": "abc",
+        "openChat": "Open chat",
+        "by": "approved by you",
+        "actions": [],
+        "steps": [
+          {
+            "id": "0000001e-0000-0000-0000-000000000000",
+            "state": "gone",
+            "word": "gone",
+            "line": "+4 components, +6 wires, 0 groups (what Grasshopper recorded)",
+            "time": "2d",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": null
+          }
+        ]
+      }
+    ],
+    "heading": "Timeline",
+    "historyHeading": "History",
+    "newChat": "New chat",
+    "expandAll": "Expand all",
+    "collapseAll": "Collapse all",
+    "back": "Back to history",
+    "historyEmpty": "No history yet on this file.",
+    "empty": "Dwight has not changed this file yet.",
+    "confirm": "This undoes 4 changes, 1 of them yours (Delete) and 3 of Dwight's. Go back?",
+    "confirmIds": [
+      "00000005-0000-0000-0000-000000000000",
+      "0000005c-0000-0000-0000-000000000000",
+      "00000004-0000-0000-0000-000000000000",
+      "00000003-0000-0000-0000-000000000000"
+    ],
+    "yes": "Go back",
+    "no": "Cancel",
+    "note": null
+  },
+  "note-result": {
+    "items": [
+      {
+        "type": "event",
+        "key": "00000005-0000-0000-0000-000000000000",
+        "state": "standing",
+        "word": "standing",
+        "verb": "Build",
+        "title": "A tower whose floor plates twist",
+        "count": 2,
+        "countWord": "2 steps",
+        "time": "5m",
+        "threadId": "abc",
+        "openChat": "Open chat",
+        "by": "approved by you",
+        "actions": [
+          {
+            "action": "before",
+            "id": "00000005-0000-0000-0000-000000000000",
+            "button": "Go back to before this"
+          }
+        ],
+        "steps": [
+          {
+            "id": "00000006-0000-0000-0000-000000000000",
+            "state": "takenback",
+            "word": "taken back",
+            "line": "Set Radius.",
+            "time": "5m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": "Dwight took this back because its check failed.",
+            "action": null
+          },
+          {
+            "id": "00000005-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Built C1.",
+            "time": "6m",
+            "by": "approved automatically (Do not ask)",
+            "yours": false,
+            "reverted": null,
+            "action": null
+          }
+        ]
+      },
+      {
+        "type": "yours",
+        "line": "Yours: Delete",
+        "ids": [
+          "0000005c-0000-0000-0000-000000000000"
+        ]
+      },
+      {
+        "type": "event",
+        "key": "00000004-0000-0000-0000-000000000000",
+        "state": "standing",
+        "word": "standing",
+        "verb": "Reorganise",
+        "title": "Reorganised the layout with labelled inputs and outputs.",
+        "count": 1,
+        "countWord": null,
+        "time": "8m",
+        "threadId": null,
+        "openChat": null,
+        "by": "approved by you",
+        "actions": [
+          {
+            "action": "back",
+            "id": "00000004-0000-0000-0000-000000000000",
+            "button": "Go back to here"
+          },
+          {
+            "action": "before",
+            "id": "00000004-0000-0000-0000-000000000000",
+            "button": "Go back to before this"
+          }
+        ],
+        "steps": [
+          {
+            "id": "00000004-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Reorganised the layout with labelled inputs and outputs.",
+            "time": "8m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "back",
+              "id": "00000004-0000-0000-0000-000000000000",
+              "button": "Go back to here"
+            }
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "00000001-0000-0000-0000-000000000000",
+        "state": "standing",
+        "word": "standing",
+        "verb": "Build",
+        "title": "A tower whose floor plates twist",
+        "count": 3,
+        "countWord": "3 steps",
+        "time": "9m",
+        "threadId": "abc",
+        "openChat": "Open chat",
+        "by": "approved by you",
+        "actions": [
+          {
+            "action": "back",
+            "id": "00000003-0000-0000-0000-000000000000",
+            "button": "Go back to here"
+          },
+          {
+            "action": "before",
+            "id": "00000001-0000-0000-0000-000000000000",
+            "button": "Go back to before this"
+          }
+        ],
+        "steps": [
+          {
+            "id": "00000003-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Added 2 wires, deleted 1 component.",
+            "time": "9m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "back",
+              "id": "00000003-0000-0000-0000-000000000000",
+              "button": "Go back to here"
+            }
+          },
+          {
+            "id": "0000005b-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Yours: Move",
+            "time": "",
+            "yours": true,
+            "reverted": null,
+            "action": null
+          },
+          {
+            "id": "00000002-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Built A1.",
+            "time": "11m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "back",
+              "id": "00000002-0000-0000-0000-000000000000",
+              "button": "Go back to here"
+            }
+          },
+          {
+            "id": "00000001-0000-0000-0000-000000000000",
+            "state": "standing",
+            "word": "standing",
+            "line": "Laid down a scaffold map.",
+            "time": "12m",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": {
+              "action": "back",
+              "id": "00000001-0000-0000-0000-000000000000",
+              "button": "Go back to here"
+            }
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "00000014-0000-0000-0000-000000000000",
+        "state": "gone",
+        "word": "gone",
+        "verb": "Build",
+        "title": "",
+        "count": 2,
+        "countWord": "2 steps",
+        "time": "10h",
+        "threadId": null,
+        "openChat": null,
+        "by": null,
+        "actions": [],
+        "steps": [
+          {
+            "id": "00000015-0000-0000-0000-000000000000",
+            "state": "gone",
+            "word": "gone",
+            "line": "Built one of X1, X2.",
+            "time": "10h",
+            "by": null,
+            "yours": false,
+            "reverted": null,
+            "action": null
+          },
+          {
+            "id": "00000014-0000-0000-0000-000000000000",
+            "state": "takenback",
+            "word": "taken back",
+            "line": "Changed existing components.",
+            "time": "10h",
+            "by": null,
+            "yours": false,
+            "reverted": "Dwight took this back because its check failed.",
+            "action": null
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "utc:2026-10-29T10:00:00.0000000Z",
+        "state": "unknown",
+        "word": "position unknown",
+        "verb": "Reorganise",
+        "title": "Re-arranged the layout.",
+        "count": 1,
+        "countWord": null,
+        "time": "2d",
+        "threadId": null,
+        "openChat": null,
+        "by": null,
+        "actions": [],
+        "steps": [
+          {
+            "id": "",
+            "state": "unknown",
+            "word": "position unknown",
+            "line": "Re-arranged the layout.",
+            "time": "2d",
+            "by": null,
+            "yours": false,
+            "reverted": null,
+            "action": null
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "key": "0000001e-0000-0000-0000-000000000000",
+        "state": "gone",
+        "word": "gone",
+        "verb": "Build",
+        "title": "A tower whose floor plates twist",
+        "count": 1,
+        "countWord": null,
+        "time": "2d",
+        "threadId": "abc",
+        "openChat": "Open chat",
+        "by": "approved by you",
+        "actions": [],
+        "steps": [
+          {
+            "id": "0000001e-0000-0000-0000-000000000000",
+            "state": "gone",
+            "word": "gone",
+            "line": "+4 components, +6 wires, 0 groups (what Grasshopper recorded)",
+            "time": "2d",
+            "by": "approved by you",
+            "yours": false,
+            "reverted": null,
+            "action": null
+          }
+        ]
+      }
+    ],
+    "heading": "Timeline",
+    "historyHeading": "History",
+    "newChat": "New chat",
+    "expandAll": "Expand all",
+    "collapseAll": "Collapse all",
+    "back": "Back to history",
+    "historyEmpty": "No history yet on this file.",
+    "empty": "Dwight has not changed this file yet.",
+    "confirm": null,
+    "confirmIds": [],
+    "yes": "Go back",
+    "no": "Cancel",
+    "note": "Went back 4 changes. Standing: Built A1; Laid down a scaffold map."
+  },
+  "empty": {
+    "items": [],
+    "heading": "Timeline",
+    "historyHeading": "History",
+    "newChat": "New chat",
+    "expandAll": "Expand all",
+    "collapseAll": "Collapse all",
+    "back": "Back to history",
+    "historyEmpty": "No history yet on this file.",
+    "empty": "Dwight has not changed this file yet.",
+    "confirm": null,
+    "confirmIds": [],
+    "yes": "Go back",
+    "no": "Cancel",
+    "note": null
+  },
+  "dockRows": [
+    {
+      "icon": "B",
+      "action": "Build",
+      "subtitle": "A tower whose floor plates twist",
+      "chat": true,
+      "live": null,
+      "liveWord": null,
+      "state": "ok",
+      "meta": "4m ago",
+      "from": null
+    },
+    {
+      "icon": "E",
+      "action": "Explain",
+      "subtitle": "1,087 components",
+      "chat": false,
+      "live": null,
+      "liveWord": null,
+      "state": "stopped",
+      "meta": "9m ago",
+      "from": null
+    },
+    {
+      "icon": "S",
+      "action": "Simplify",
+      "subtitle": "better logic",
+      "chat": false,
+      "live": null,
+      "liveWord": null,
+      "state": "ok",
+      "meta": "22m ago",
+      "from": null
+    },
+    {
+      "icon": "D",
+      "action": "Diagnose",
+      "subtitle": "3 faults",
+      "chat": false,
+      "live": null,
+      "liveWord": null,
+      "state": "failed",
+      "meta": "38m ago",
+      "from": null
+    },
+    {
+      "icon": "E",
+      "action": "Explain",
+      "subtitle": "8 components",
+      "chat": false,
+      "live": null,
+      "liveWord": null,
+      "state": "ok",
+      "meta": "3h ago",
+      "from": "site_v2.gh"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Headless unit tests for the Phase 6 layout engine (WP-A). The engine is GH-free and Rhino-free, so
+       the pure source files are LINK-COMPILED into this test assembly (no reference to Dwight.gha, which
+       would drag in Grasshopper/RhinoCommon and cannot load outside Rhino). MSAGL is referenced directly.
+       This keeps the engine physically in the Dwight assembly (one .gha, nothing extra to embed) while
+       still proving the deterministic guarantees outside the host. Run: dotnet test tests/Dwight.Layout.Tests -->
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <NoWarn>NETSDK1138</NoWarn> <!-- net7.0 is EOL; we match the plugin's target deliberately -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Msagl" Version="1.1.6" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="xunit" Version="2.6.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The pure layout engine, link-compiled (these files reference only MSAGL + BCL, never Grasshopper). -->
+    <Compile Include="..\..\Dwight\Layout\LayoutTypes.cs" Link="engine\LayoutTypes.cs" />
+    <Compile Include="..\..\Dwight\Layout\ILayoutAlgorithm.cs" Link="engine\ILayoutAlgorithm.cs" />
+    <Compile Include="..\..\Dwight\Layout\MsaglLayout.cs" Link="engine\MsaglLayout.cs" />
+    <Compile Include="..\..\Dwight\Layout\LayoutEngine.cs" Link="engine\LayoutEngine.cs" />
+    <Compile Include="..\..\Dwight\Layout\ClusterLayout.cs" Link="engine\ClusterLayout.cs" />
+    <Compile Include="..\..\Dwight\Layout\ClusterArrangements.cs" Link="engine\ClusterArrangements.cs" />
+    <Compile Include="..\..\Dwight\Layout\MacroRemap.cs" Link="engine\MacroRemap.cs" />
+  </ItemGroup>
+
+</Project>

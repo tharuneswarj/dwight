@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Brief EU (4 November 2026): the chord's native menu, BUILT headlessly, so a test holds the items a person sees - the
+       Notes entry and its submenu, the tick, the order, the brand reaching every submenu - rather than the source text. The
+       builder (ChordMenu) is GH-free and Eto-free and link-compiled in (ADR-091); the chord's wiring to the live verbs
+       (DwightCanvasPopup) needs Grasshopper and is not. WinForms needs the -windows framework, which is why this is its own
+       project rather than a file in the net7.0 ones. Nothing is shown: a ContextMenuStrip is built, read and disposed.
+       Run: dotnet test tests/Dwight.Menu.Tests -->
+
+  <PropertyGroup>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <NoWarn>NETSDK1138</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="xunit" Version="2.6.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The builder, and the brand it applies: the renderer, the font and the fore colour, all from the tokens. -->
+    <Compile Include="..\..\Dwight\UI\ChordMenu.cs" Link="ui\ChordMenu.cs" />
+    <Compile Include="..\..\Dwight\UI\MenuBrand.cs" Link="ui\MenuBrand.cs" />
+    <Compile Include="..\..\Dwight\UI\DwightMenuRenderer.cs" Link="ui\DwightMenuRenderer.cs" />
+    <Compile Include="..\..\Dwight\Branding\UiTokens.cs" Link="branding\UiTokens.cs" />
+    <Compile Include="..\..\Dwight\Branding\ActionIcons.cs" Link="branding\ActionIcons.cs" />
+    <Compile Include="..\..\Dwight\Branding\ActionIcons.Glyphs.cs" Link="branding\ActionIcons.Glyphs.cs" />
+    <!-- The verbs' names. The builder takes nothing else: Explain's modes are the chord's to wire, and the notes switch's name is held
+         equal to NotesVisibility.Label in the Agent tests, because the notes core drags in the store and cannot be compiled here. -->
+    <Compile Include="..\..\Dwight\DwightVerbs.cs" Link="DwightVerbs.cs" />
+  </ItemGroup>
+
+</Project>

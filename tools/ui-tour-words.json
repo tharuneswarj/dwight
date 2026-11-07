@@ -1,0 +1,44 @@
+{
+  "verbs": [
+    {
+      "name": "Explain",
+      "desc": "Read back what a selection does, in plain language.",
+      "tag": "What does this do?"
+    },
+    {
+      "name": "Diagnose",
+      "desc": "Find what is broken or suspect, and say why it is.",
+      "tag": "Why is it broken?"
+    },
+    {
+      "name": "Reorganise",
+      "desc": "Lay the definition out in labelled groups. What it computes is guaranteed unchanged.",
+      "tag": "Tidy it so it reads."
+    },
+    {
+      "name": "Simplify",
+      "desc": "Propose better logic as a minimal diff, and you tick off the parts you want.",
+      "tag": "Same result, better built."
+    },
+    {
+      "name": "Build",
+      "desc": "Plan and build new work, in a conversation.",
+      "tag": "Build it with me."
+    }
+  ],
+  "chord": "Ctrl+Shift+Right-click",
+  "needsKey": true,
+  "docs": "https://dwight.tha.run/docs",
+  "keys": "https://dwight.tha.run/docs/keys",
+  "trust": [
+    "Bring your own key",
+    "A fully-local option"
+  ],
+  "consent": {
+    "act": "Build A1.",
+    "line": "Checked after it runs; reverts itself if the check fails; one Ctrl-Z.",
+    "more": "What this does and what it cannot",
+    "reasonLabel": "Dwight's reason for asking",
+    "approve": "Yes, go ahead"
+  }
+}

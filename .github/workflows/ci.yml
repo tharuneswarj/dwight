@@ -1,0 +1,113 @@
+name: CI
+
+# WP-5 (Phase 7.0): build the plugin + run every test project on a Windows runner, and gate on the
+# vulnerable-package scan. No Grasshopper/Rhino and no Yak on the runner - the APPDATA deploy target is
+# gated off by CI=true (see Dwight.csproj), and Yak packaging is a local/launch step, not CI.
+
+# MINUTES (#836). A Windows runner bills at 2x, and this job is ~3.5 minutes, so every run costs ~7 billed
+# minutes. Three rules keep that honest without weakening the gate:
+#   1. A DOCS-ONLY COMMIT RUNS NOTHING. The project notes are written many times a day and cannot break a build.
+#      paths-ignore is evaluated per push, so a commit touching docs AND code still runs (the ignore applies
+#      only when EVERY changed path matches).
+#   2. A DRAFT PR RUNS NOTHING. Our chats push repeatedly while iterating and need the verdict when the PR is
+#      ready - marking it ready triggers a run, so nothing merges without one (#618).
+#   3. A SUPERSEDED RUN IS CANCELLED. Three pushes in ten minutes cost one run, not three.
+# None of these lets an unmeasured COMMIT reach main: the ready-for-review run and the post-merge push run
+# both still happen.
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+  pull_request:
+    types: [ opened, synchronize, reopened, ready_for_review ]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          # 9.0.x satisfies global.json; 7.0.x is installed too so the net7.0-windows targeting packs resolve.
+          dotnet-version: |
+            7.0.x
+            9.0.x
+
+      - name: Restore
+        run: dotnet restore Dwight.sln
+
+      - name: Build
+        run: dotnet build Dwight.sln -c Debug --no-restore
+
+      - name: Test
+        run: dotnet test Dwight.sln -c Debug --no-build
+
+      # #275: the shells carry JavaScript that no compiler sees. A parse error there defines NO shell
+      # functions, so every verb completes its work, records its history, and leaves the loader up
+      # forever - with nothing thrown, because there is no error to throw. This is that compiler.
+      - name: Shell JavaScript syntax gate
+        run: node tools/check-shell-js.js
+
+      # #317: the same class one layer down. A prompt shipped carrying a literal 0x08, because an editing
+      # step ate one of the two backslashes in a LaTeX example, and C# then read the survivor plus b as a
+      # backspace escape. It compiles, it renders as nothing, and it looks right in every diff - an
+      # invisible byte in text we send to a model. Two of the four escape-eating slips this work-package
+      # produced actually shipped; both were only ever going to be caught mechanically.
+      - name: Control-character gate
+        run: node tools/check-source-chars.js
+
+      # #883: no user-visible string promises a future of the product. A pass found strings telling users what
+      # would arrive "in a later phase" - one pointing at a segmenter that had shipped phases earlier - and a
+      # paperclip inside Scaffold promising attachments "with Scaffold". The class came back because nothing
+      # checked for it (#318). High-precision phrases only, never "yet" (#336: most "yet" is a true statement
+      # about the user's own work). It runs its committed controls first and fails as BROKEN if it misses one.
+      - name: Product copy gate
+        run: node tools/check-product-copy.js
+
+      # #275/#320: the syntax gate proves the script PARSES; it cannot prove any function in it still
+      # WORKS. Demonstrated rather than assumed - an id typo injected into dwightSetBody leaves the syntax
+      # gate reporting "0 failed" and fails this one by name. Every window-facing entry point in all three
+      # shells is called with fixture data and must not throw and must produce its named DOM change.
+      # It does NOT check appearance, and it does not replace the per-verb render check by eye.
+      - name: Install shell-gate dependencies
+        run: npm ci
+
+      - name: Shell render smoke harness
+        run: node tools/check-shell-render.js
+
+      # #899: dark mode painted light brand colours on every surface - the token aliases were declared on
+      # :root only, so they resolved against the light scale and body inherited the result. Every alias
+      # (read from the token file, never listed here) must compute to its target in both themes. It runs
+      # in headless Chrome, not jsdom: jsdom never resolves var(), so a jsdom gate passed on this very
+      # defect. It tests itself on a planted copy first, and a missing browser fails, never passes.
+      - name: Token-alias gate
+        run: node tools/check-token-aliases.js
+
+      # #334: the third language in the repo gets its compiler. tools/probe-deploy.py is the one instrument
+      # CI can NEVER run - it needs Rhino - so its correctness rested on review alone, and a FLAGS/flags typo
+      # would have thrown NameError on the test machine and killed both halves of it at once, reporting as
+      # "the probe errored" rather than as a build verdict. Probe-verified in both directions: it catches
+      # that exact defect by name, and passes legitimate closures, comprehensions, lambdas and class bodies.
+      - name: Python undefined-name gate
+        run: python tools/check-python-names.py
+
+      - name: Vulnerable-package gate
+        shell: pwsh
+        run: |
+          $out = dotnet list Dwight.sln package --vulnerable --include-transitive | Out-String
+          Write-Host $out
+          if ($out -match 'has the following vulnerable packages') {
+            Write-Error 'Vulnerable packages detected - see the list above. Pin a patched version.'
+            exit 1
+          }
+          Write-Host 'No vulnerable packages.'

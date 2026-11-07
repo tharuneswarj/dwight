@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Headless unit tests for the Phase 6 segmenter (WP-B). Like the layout tests, the pure GH-free source
+       files are LINK-COMPILED in (no reference to Dwight.gha / Grasshopper). The segmenter core uses only
+       the BCL - no MSAGL - so this project references neither. Run: dotnet test tests/Dwight.Segment.Tests -->
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <NoWarn>NETSDK1138</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="xunit" Version="2.6.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\Dwight\Segment\SegmentTypes.cs" Link="segment\SegmentTypes.cs" />
+    <Compile Include="..\..\Dwight\Segment\DataflowGraph.cs" Link="segment\DataflowGraph.cs" />
+    <Compile Include="..\..\Dwight\Segment\Dominators.cs" Link="segment\Dominators.cs" />
+    <Compile Include="..\..\Dwight\Segment\Rpst.cs" Link="segment\Rpst.cs" />
+    <Compile Include="..\..\Dwight\Segment\Betweenness.cs" Link="segment\Betweenness.cs" />
+    <Compile Include="..\..\Dwight\Segment\Stage2.cs" Link="segment\Stage2.cs" />
+    <Compile Include="..\..\Dwight\Segment\Segmenter.cs" Link="segment\Segmenter.cs" />
+    <Compile Include="..\..\Dwight\Segment\SegmentScorer.cs" Link="segment\SegmentScorer.cs" />
+    <!-- CommunityDetector is parked for Stage 2 but still compiled + tested so it does not bit-rot. -->
+    <Compile Include="..\..\Dwight\Segment\CommunityDetector.cs" Link="segment\CommunityDetector.cs" />
+  </ItemGroup>
+
+</Project>

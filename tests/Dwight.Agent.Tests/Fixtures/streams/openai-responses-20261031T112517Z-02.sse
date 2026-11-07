@@ -1,0 +1,28 @@
+: REDUCED from a live capture, 31 October 2026 (GPT-5.6 Terra, the next step: reasoning then one call). Every event is real and in its real order. Only the whole-response echo on the lifecycle events is cut to its reply fields, and each encrypted_content is replaced.
+event: response.created
+data: {"type":"response.created","response":{"id":"resp_0d19c4028af674bd016ae5d01d514887d2a5c8a133247530ff","object":"response","created_at":1793445917,"status":"in_progress","completed_at":null,"error":null,"incomplete_details":null,"max_output_tokens":17200,"model":"gpt-5.6-terra","output":[],"parallel_tool_calls":true,"reasoning":{"context":"all_turns","effort":"medium","mode":"standard","summary":null},"store":false,"tool_choice":"auto","usage":null},"sequence_number":0}
+
+event: response.in_progress
+data: {"type":"response.in_progress","response":{"id":"resp_0d19c4028af674bd016ae5d01d514887d2a5c8a133247530ff","object":"response","created_at":1793445917,"status":"in_progress","completed_at":null,"error":null,"incomplete_details":null,"max_output_tokens":17200,"model":"gpt-5.6-terra","output":[],"parallel_tool_calls":true,"reasoning":{"context":"all_turns","effort":"medium","mode":"standard","summary":null},"store":false,"tool_choice":"auto","usage":null},"sequence_number":1}
+
+event: response.output_item.added
+data: {"type":"response.output_item.added","item":{"id":"rs_0d19c4028af674bd016ae5d01dd70487d2a7dfd309304a70d5","type":"reasoning","content":[],"encrypted_content":"ENCRYPTED-CONTENT-REDUCED-4","summary":[]},"output_index":0,"sequence_number":2}
+
+event: response.output_item.done
+data: {"type":"response.output_item.done","item":{"id":"rs_0d19c4028af674bd016ae5d01dd70487d2a7dfd309304a70d5","type":"reasoning","content":[],"encrypted_content":"ENCRYPTED-CONTENT-REDUCED-5","summary":[]},"output_index":0,"sequence_number":3}
+
+event: response.output_item.added
+data: {"type":"response.output_item.added","item":{"id":"fc_0d19c4028af674bd016ae5d01e8e9c87d2a7fd37fbb4dd83a3","type":"function_call","status":"in_progress","arguments":"","call_id":"call_zhLVt1yjG8GLyYztyfjFzBos","name":"get_scaffold_map"},"output_index":1,"sequence_number":4}
+
+event: response.function_call_arguments.delta
+data: {"type":"response.function_call_arguments.delta","delta":"{}","item_id":"fc_0d19c4028af674bd016ae5d01e8e9c87d2a7fd37fbb4dd83a3","obfuscation":"raKWu2oxGiWiEQ","output_index":1,"sequence_number":5}
+
+event: response.function_call_arguments.done
+data: {"type":"response.function_call_arguments.done","arguments":"{}","item_id":"fc_0d19c4028af674bd016ae5d01e8e9c87d2a7fd37fbb4dd83a3","output_index":1,"sequence_number":6}
+
+event: response.output_item.done
+data: {"type":"response.output_item.done","item":{"id":"fc_0d19c4028af674bd016ae5d01e8e9c87d2a7fd37fbb4dd83a3","type":"function_call","status":"completed","arguments":"{}","call_id":"call_zhLVt1yjG8GLyYztyfjFzBos","name":"get_scaffold_map"},"output_index":1,"sequence_number":7}
+
+event: response.completed
+data: {"type":"response.completed","response":{"id":"resp_0d19c4028af674bd016ae5d01d514887d2a5c8a133247530ff","object":"response","created_at":1793445917,"status":"completed","completed_at":1793445918,"error":null,"incomplete_details":null,"max_output_tokens":17200,"model":"gpt-5.6-terra","output":[{"id":"rs_0d19c4028af674bd016ae5d01dd70487d2a7dfd309304a70d5","type":"reasoning","content":[],"encrypted_content":"ENCRYPTED-CONTENT-REDUCED-6","summary":[]},{"id":"fc_0d19c4028af674bd016ae5d01e8e9c87d2a7fd37fbb4dd83a3","type":"function_call","status":"completed","arguments":"{}","call_id":"call_zhLVt1yjG8GLyYztyfjFzBos","name":"get_scaffold_map"}],"parallel_tool_calls":true,"reasoning":{"context":"all_turns","effort":"medium","mode":"standard","summary":null},"store":false,"tool_choice":"auto","usage":{"input_tokens":11435,"input_tokens_details":{"cache_write_tokens":370,"cached_tokens":11062},"output_tokens":76,"output_tokens_details":{"reasoning_tokens":58},"total_tokens":11511}},"sequence_number":8}
+

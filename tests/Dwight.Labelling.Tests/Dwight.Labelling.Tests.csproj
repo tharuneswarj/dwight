@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Headless unit tests for the Phase 6 WP-C labelling format core (the per-cluster summary, the send
+       payload, the response parse, and the content-hash cache). The GH-free source files are link-compiled
+       in; System.Text.Json is referenced for the payload. Run: dotnet test tests/Dwight.Labelling.Tests -->
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <NoWarn>NETSDK1138</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="xunit" Version="2.6.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\Dwight\Labelling\LabelTypes.cs" Link="labelling\LabelTypes.cs" />
+    <Compile Include="..\..\Dwight\Labelling\ClusterSummaries.cs" Link="labelling\ClusterSummaries.cs" />
+    <Compile Include="..\..\Dwight\Labelling\LabelCache.cs" Link="labelling\LabelCache.cs" />
+    <!-- WP-5: the cache's GH-free serialization core (persistence to %APPDATA%; the file I/O stays in LabelCache
+         and is opt-in by the host, so these tests never read or write the user's real cache). -->
+    <Compile Include="..\..\Dwight\Labelling\LabelCacheStore.cs" Link="labelling\LabelCacheStore.cs" />
+    <!-- WP-3.4: the GH-free labelling orchestration + its LLM-seam deps, link-compiled so the cache/miss/
+         failure/arrangement-only logic is unit-tested against a fake provider. -->
+    <Compile Include="..\..\Dwight\Labelling\ClusterLabellerCore.cs" Link="labelling\ClusterLabellerCore.cs" />
+    <!-- U29 (#918): the region noun and the rule that it is never an installed component type's name. -->
+    <Compile Include="..\..\Dwight\Labelling\RegionVocabulary.cs" Link="labelling\RegionVocabulary.cs" />
+    <Compile Include="..\..\Dwight\Llm\ILlmProvider.cs" Link="llm\ILlmProvider.cs" />
+    <Compile Include="..\..\Dwight\Llm\LlmTypes.cs" Link="llm\LlmTypes.cs" />
+    <!-- LlmRequest's default answer budget is defined there (#216), so the two travel together. -->
+    <Compile Include="..\..\Dwight\Llm\ThinkingBudget.cs" Link="llm\ThinkingBudget.cs" />
+    <Compile Include="..\..\Dwight\Llm\StructuredOutput.cs" Link="llm\StructuredOutput.cs" />
+    <Compile Include="..\..\Dwight\Session\Spend.cs" Link="session\Spend.cs" />
+    <Compile Include="..\..\Dwight\Session\SpendLedgerCore.cs" Link="session\SpendLedgerCore.cs" />
+    <Compile Include="..\..\Dwight\DwightVerbs.cs" Link="DwightVerbs.cs" />
+    <Compile Include="..\..\Dwight\Prompts\Prompts.cs" Link="prompts\Prompts.cs" />
+  </ItemGroup>
+
+</Project>

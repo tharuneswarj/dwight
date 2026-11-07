@@ -1,0 +1,98 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Dwight targets Rhino 8 on Windows only, using the modern .NET 7 surface.
+         (The template offers net48/net7.0 multi-targeting for Rhino 6/7 too; we
+         narrow to the single Rhino 8 Windows target to keep the build loop fast.) -->
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <TargetExt>.gha</TargetExt>
+    <NoWarn>NU1701;NETSDK1086</NoWarn>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Assembly / Yak metadata -->
+    <Version>1.0.2</Version>
+    <Title>Dwight</Title>
+    <Company>Tharun Eswar</Company>
+    <Description>A Grasshopper plugin for Rhino 8 that adds five tools to the canvas (Explain, Diagnose, Reorganise, Simplify and Build), each doing its exact work in code and using a language model for the one part that needs judgement; open source (Apache-2.0), on your own API key or fully local with Ollama.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- GhJSON.Grasshopper 1.0.0 requires Grasshopper/RhinoCommon 8.24, so the
+         Grasshopper reference is bumped to match (avoids an NU1605 downgrade).
+         Runtime assemblies come from the user's installed Rhino (ExcludeAssets=runtime). -->
+    <PackageReference Include="GhJSON.Core" Version="1.0.0" />
+    <PackageReference Include="GhJSON.Grasshopper" Version="1.0.0" />
+    <PackageReference Include="Grasshopper" Version="8.24.25281.15001" ExcludeAssets="runtime" />
+    <!-- WP-2.4: pin System.Text.Json directly. The GhJSON chain drags in 8.0.0, which carries two High
+         advisories (GHSA-hh2w-p6rv-4g7w and GHSA-8g4q-xg66-9fp4); a direct reference wins the restore and
+         ships the patched build. -->
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <!-- Eto.Forms for the read pop-up and settings dialog (ADR-012/021). Version matches the
+         Eto (2.11.0.0) that Rhino 8 loads; ExcludeAssets=runtime so Rhino provides it at runtime. -->
+    <PackageReference Include="Eto.Forms" Version="2.11.0" ExcludeAssets="runtime" />
+    <!-- Markdig parses Explain's Markdown; Dwight renders the AST to native Eto controls (ADR-045,
+         no WebView). Costura.Fody embeds Markdig INTO Dwight.gha (see FodyWeavers.xml) and removes
+         the loose DLL from the output, so it never ships as a file that could clash with another
+         plugin's copy in the Libraries folder. Only Markdig is embedded; the GhJSON deps are
+         untouched. Costura/Fody are build-time only (PrivateAssets=all). -->
+    <PackageReference Include="Markdig" Version="0.37.0" />
+    <PackageReference Include="Costura.Fody" Version="5.7.0" PrivateAssets="all" />
+    <PackageReference Include="Fody" Version="6.8.2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Msagl" Version="1.1.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The real WebView panel shell (ADR-048): chrome + injectable body + JS<->C# bridge. -->
+    <EmbeddedResource Include="Resources\panel-shell.html" LogicalName="Dwight.PanelShell.html" />
+    <!-- The shared shell substrate (Phase 3b): token + component CSS, inlined into every surface by ShellAssets. -->
+    <EmbeddedResource Include="Resources\dwight-tokens.css" LogicalName="Dwight.Tokens.css" />
+    <EmbeddedResource Include="Resources\dwight-icons.svg" LogicalName="Dwight.Icons.svg" />
+    <EmbeddedResource Include="Resources\dwight-dropdown.js" LogicalName="Dwight.Dropdown.js" />
+    <EmbeddedResource Include="Resources\dwight-links.js" LogicalName="Dwight.Links.js" />
+    <EmbeddedResource Include="Resources\dwight-deck.js" LogicalName="Dwight.Deck.js" />
+    <EmbeddedResource Include="Resources\dwight-components.css" LogicalName="Dwight.Components.css" />
+    <!-- WP-2.2: self-hosted brand fonts as data URIs, inlined into every shell so a strict CSP can forbid
+         all external network (no Google Fonts fetch). -->
+    <EmbeddedResource Include="Resources\dwight-fonts.css" LogicalName="Dwight.Fonts.css" />
+    <!-- The bottom-right dock (Plan 3): per-file command history surface. -->
+    <EmbeddedResource Include="Resources\dock-shell.html" LogicalName="Dwight.DockShell.html" />
+    <!-- The settings surface (Plan 4): provider/model/theme/key on the shared shell. -->
+    <EmbeddedResource Include="Resources\settings.html" LogicalName="Dwight.Settings.html" />
+    <!-- Report a problem: the diagnostic block and two buttons, on the same shell. -->
+    <EmbeddedResource Include="Resources\feedback.html" LogicalName="Dwight.Feedback.html" />
+    <EmbeddedResource Include="Resources\note.html" LogicalName="Dwight.Note.html" />
+    <!-- Brief DA: the Walk's bar. -->
+    <EmbeddedResource Include="Resources\walk-bar.html" LogicalName="Dwight.WalkBar.html" />
+    <!-- The first-run tour: five cards on the same shell, shown once, reopenable from Settings. -->
+    <EmbeddedResource Include="Resources\tour.html" LogicalName="Dwight.Tour.html" />
+    <!-- The bundled model catalogue (ADR-081): seed for the user-editable %APPDATA%\Dwight\models.json. -->
+    <EmbeddedResource Include="Resources\models.json" LogicalName="Dwight.Models.json" />
+  </ItemGroup>
+
+  <!-- WinForms is needed for the canvas menu (ToolStripMenuItem) and later Eto popups. -->
+  <PropertyGroup Condition="$(TargetFramework.Contains('-windows')) or $(TargetFramework.StartsWith('net4'))">
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <!-- Dev loop: copy the built .gha (and any dependency DLLs) into Grasshopper's
+       Libraries folder after every build, so testing is just "rebuild, restart Rhino".
+       WP-5: gated OFF in CI ('$(CI)' != 'true') - there is no Grasshopper on the runner and no reason to
+       write to a user profile. A locked .gha (Rhino open) surfaces as a clear WARNING (WarnAndContinue), not
+       a silent skip that leaves a stale deploy. -->
+  <Target Name="DeployToGrasshopperLibraries" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT' and '$(CI)' != 'true'">
+    <PropertyGroup>
+      <DwightDeployDir>$(APPDATA)\Grasshopper\Libraries\Dwight</DwightDeployDir>
+    </PropertyGroup>
+    <ItemGroup>
+      <DwightDeployFiles Include="$(TargetDir)*.gha" />
+      <DwightDeployFiles Include="$(TargetDir)*.dll" />
+    </ItemGroup>
+    <MakeDir Directories="$(DwightDeployDir)" />
+    <Message Importance="high" Text="Dwight: deploying $(TargetFileName) to $(DwightDeployDir) (close Rhino first if the .gha is locked)." />
+    <Copy SourceFiles="@(DwightDeployFiles)" DestinationFolder="$(DwightDeployDir)" SkipUnchangedFiles="true" Retries="0" ContinueOnError="WarnAndContinue" />
+  </Target>
+
+</Project>

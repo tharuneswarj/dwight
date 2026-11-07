@@ -1,0 +1,59 @@
+<!-- Tabler Icons 3.50.0 (MIT, see NOTICE.md), outline. Written by tools/build-icon-sprite.js; do not edit by hand. -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+<symbol id="ic-goto" viewBox="0 0 24 24" data-tabler="focus-centered"><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M4 8v-2a2 2 0 0 1 2 -2h2"/><path d="M4 16v2a2 2 0 0 0 2 2h2"/><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M16 20h2a2 2 0 0 0 2 -2v-2"/></symbol>
+<symbol id="ic-moon" viewBox="0 0 24 24" data-tabler="moon"><path d="M12 4.35c0.112 0 0.224 0 0.334 0 a6.375 6.375 0 0 0 6.732 10.579 a7.65 7.65 0 1 1 -7.066 -10.586 l0 0.007"/></symbol>
+<symbol id="ic-sun" viewBox="0 0 24 24" data-tabler="sun"><path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"/></symbol>
+<symbol id="ic-minimise" viewBox="0 0 24 24" data-tabler="minus"><path d="M5 12l14 0"/></symbol>
+<symbol id="ic-close" viewBox="0 0 24 24" data-tabler="x"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></symbol>
+<symbol id="ic-check" viewBox="0 0 24 24" data-tabler="check"><path d="M5 12l5 5l10 -10"/></symbol>
+<symbol id="ic-chev" viewBox="0 0 24 24" data-tabler="chevron-right"><path d="M9 6l6 6l-6 6"/></symbol>
+<symbol id="ic-caret" viewBox="0 0 24 24" data-tabler="chevron-down"><path d="M6 9l6 6l6 -6"/></symbol>
+<symbol id="ic-ban" viewBox="0 0 24 24" data-tabler="ban"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M5.7 5.7l12.6 12.6"/></symbol>
+<symbol id="ic-lock" viewBox="0 0 24 24" data-tabler="lock"><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6"/><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M8 11v-4a4 4 0 1 1 8 0v4"/></symbol>
+<symbol id="ic-file" viewBox="0 0 24 24" data-tabler="file-text"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2"/><path d="M9 9l1 0"/><path d="M9 13l6 0"/><path d="M9 17l6 0"/></symbol>
+<symbol id="ic-undo" viewBox="0 0 24 24" data-tabler="arrow-back-up"><path d="M9 14l-4 -4l4 -4"/><path d="M5 10h11a4 4 0 1 1 0 8h-1"/></symbol>
+<symbol id="ic-flag" viewBox="0 0 24 24" data-tabler="flag"><path d="M5 5a5 5 0 0 1 7 0a5 5 0 0 0 7 0v9a5 5 0 0 1 -7 0a5 5 0 0 0 -7 0v-9"/><path d="M5 21v-7"/></symbol>
+<symbol id="ic-dot" viewBox="0 0 24 24" data-tabler="point"><path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/></symbol>
+<symbol id="ic-replay" viewBox="0 0 24 24" data-tabler="rotate-clockwise"><path d="M4.05 11a8 8 0 1 1 .5 4m-.5 5v-5h5"/></symbol>
+<symbol id="ic-model" viewBox="0 0 24 24" data-tabler="cpu"><path d="M5 6a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1l0 -12"/><path d="M9 9h6v6h-6l0 -6"/><path d="M3 10h2"/><path d="M3 14h2"/><path d="M10 3v2"/><path d="M14 3v2"/><path d="M21 10h-2"/><path d="M21 14h-2"/><path d="M14 21v-2"/><path d="M10 21v-2"/></symbol>
+<symbol id="ic-ask" viewBox="0 0 24 24" data-tabler="shield-lock"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/><path d="M11 11a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12l0 2.5"/></symbol>
+<symbol id="ic-scripts_and_deletions" viewBox="0 0 24 24" data-tabler="shield-half"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/><path d="M12 3v18"/></symbol>
+<symbol id="ic-never" viewBox="0 0 24 24" data-tabler="shield-off"><path d="M17.67 17.667a12 12 0 0 1 -5.67 3.333a12 12 0 0 1 -8.5 -15c.794 .036 1.583 -.006 2.357 -.124m3.128 -.926a11.997 11.997 0 0 0 3.015 -1.95a12 12 0 0 0 8.5 3a12 12 0 0 1 -1.116 9.376"/><path d="M3 3l18 18"/></symbol>
+<symbol id="ic-full" viewBox="0 0 24 24" data-tabler="bolt"><path d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11"/></symbol>
+<symbol id="ic-stop" viewBox="0 0 24 24" data-tabler="player-stop"><path d="M5 7a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2l0 -10"/></symbol>
+<symbol id="ic-send" viewBox="0 0 24 24" data-tabler="send"><path d="M10 14l11 -11"/><path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"/></symbol>
+<symbol id="ic-attach" viewBox="0 0 24 24" data-tabler="paperclip"><path d="M15 7l-6.5 6.5a1.5 1.5 0 0 0 3 3l6.5 -6.5a3 3 0 0 0 -6 -6l-6.5 6.5a4.5 4.5 0 0 0 9 9l6.5 -6.5"/></symbol>
+<symbol id="ic-explain" viewBox="0 0 24 24" data-tabler="message-2"><path d="M8 9h8"/><path d="M8 13h6"/><path d="M9 18h-3a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-3l-3 3l-3 -3"/></symbol>
+<symbol id="ic-diagnose" viewBox="0 0 24 24" data-tabler="stethoscope"><path d="M6 4h-1a2 2 0 0 0 -2 2v3.5a5.5 5.5 0 0 0 11 0v-3.5a2 2 0 0 0 -2 -2h-1"/><path d="M8 15a6 6 0 1 0 12 0v-3"/><path d="M11 3v2"/><path d="M6 3v2"/><path d="M18 10a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/></symbol>
+<symbol id="ic-reorganise" viewBox="0 0 24 24" data-tabler="layout-grid"><path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M14 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/></symbol>
+<symbol id="ic-simplify" viewBox="0 0 24 24" data-tabler="arrows-minimize"><path d="M5 9l4 0l0 -4"/><path d="M3 3l6 6"/><path d="M5 15l4 0l0 4"/><path d="M3 21l6 -6"/><path d="M19 9l-4 0l0 -4"/><path d="M15 9l6 -6"/><path d="M19 15l-4 0l0 4"/><path d="M15 15l6 6"/></symbol>
+<symbol id="ic-build" viewBox="0 0 24 24" data-tabler="hammer"><path d="M11.414 10l-7.383 7.418a2.091 2.091 0 0 0 0 2.967a2.11 2.11 0 0 0 2.976 0l7.407 -7.385"/><path d="M18.121 15.293l2.586 -2.586a1 1 0 0 0 0 -1.414l-7.586 -7.586a1 1 0 0 0 -1.414 0l-2.586 2.586a1 1 0 0 0 0 1.414l7.586 7.586a1 1 0 0 0 1.414 0"/></symbol>
+<symbol id="ic-edit" viewBox="0 0 24 24" data-tabler="pencil"><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/><path d="M13.5 6.5l4 4"/></symbol>
+<symbol id="ic-code" viewBox="0 0 24 24" data-tabler="code"><path d="M7 8l-4 4l4 4"/><path d="M17 8l4 4l-4 4"/><path d="M14 4l-4 16"/></symbol>
+<symbol id="ic-slider" viewBox="0 0 24 24" data-tabler="adjustments-horizontal"><path d="M12 6a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M4 6l8 0"/><path d="M16 6l4 0"/><path d="M6 12a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M4 12l2 0"/><path d="M10 12l10 0"/><path d="M15 18a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M4 18l11 0"/><path d="M19 18l1 0"/></symbol>
+<symbol id="ic-bold" viewBox="0 0 24 24" data-tabler="bold"><path d="M7 5h6a3.5 3.5 0 0 1 0 7h-6l0 -7"/><path d="M13 12h1a3.5 3.5 0 0 1 0 7h-7v-7"/></symbol>
+<symbol id="ic-list" viewBox="0 0 24 24" data-tabler="list"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></symbol>
+<symbol id="ic-numbers" viewBox="0 0 24 24" data-tabler="list-numbers"><path d="M11 6h9"/><path d="M11 12h9"/><path d="M12 18h8"/><path d="M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4"/><path d="M6 10v-6l-2 2"/></symbol>
+<symbol id="ic-notepin" viewBox="0 0 24 24" data-tabler="pinned"><path d="M9 4v6l-2 4v2h10v-2l-2 -4v-6"/><path d="M12 16l0 5"/><path d="M8 4l8 0"/></symbol>
+<symbol id="ic-wires" viewBox="0 0 24 24" data-tabler="vector-spline"><path d="M17 4a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -2"/><path d="M3 18a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -2"/><path d="M17 5c-6.627 0 -12 5.373 -12 12"/></symbol>
+<symbol id="ic-connection" viewBox="0 0 24 24" data-tabler="plug"><path d="M9.785 6l8.215 8.215l-2.054 2.054a5.81 5.81 0 1 1 -8.215 -8.215l2.054 -2.054"/><path d="M4 20l3.5 -3.5"/><path d="M15 4l-3.5 3.5"/><path d="M20 9l-3.5 3.5"/></symbol>
+<symbol id="ic-note" viewBox="0 0 24 24" data-tabler="note"><path d="M13 20l7 -7"/><path d="M13 20v-6a1 1 0 0 1 1 -1h6v-7a2 2 0 0 0 -2 -2h-12a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7"/></symbol>
+<symbol id="ic-you" viewBox="0 0 24 24" data-tabler="user"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></symbol>
+<symbol id="ic-usage" viewBox="0 0 24 24" data-tabler="chart-bar"><path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -6"/><path d="M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -10"/><path d="M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -14"/><path d="M4 20h14"/></symbol>
+<symbol id="ic-about" viewBox="0 0 24 24" data-tabler="info-circle"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></symbol>
+<symbol id="ic-pin" viewBox="0 0 24 24" data-tabler="layout-sidebar"><path d="M4 6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"/><path d="M9 4l0 16"/></symbol>
+<symbol id="ic-menu" viewBox="0 0 24 24" data-tabler="menu-2"><path d="M4 6l16 0"/><path d="M4 12l16 0"/><path d="M4 18l16 0"/></symbol>
+<symbol id="ic-back" viewBox="0 0 24 24" data-tabler="arrow-left"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></symbol>
+<symbol id="ic-plus" viewBox="0 0 24 24" data-tabler="plus"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></symbol>
+<symbol id="ic-timeline" viewBox="0 0 24 24" data-tabler="git-commit"><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M12 3l0 6"/><path d="M12 15l0 6"/></symbol>
+<symbol id="ic-expand" viewBox="0 0 24 24" data-tabler="chevrons-down"><path d="M7 7l5 5l5 -5"/><path d="M7 13l5 5l5 -5"/></symbol>
+<symbol id="ic-collapse" viewBox="0 0 24 24" data-tabler="chevrons-up"><path d="M7 11l5 -5l5 5"/><path d="M7 17l5 -5l5 5"/></symbol>
+<symbol id="ic-here" viewBox="0 0 24 24" data-tabler="map-pin"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></symbol>
+<symbol id="ic-redo" viewBox="0 0 24 24" data-tabler="arrow-forward-up"><path d="M15 14l4 -4l-4 -4"/><path d="M19 10h-11a4 4 0 1 0 0 8h1"/></symbol>
+<symbol id="ic-chat" viewBox="0 0 24 24" data-tabler="messages"><path d="M21 14l-3 -3h-7a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1h9a1 1 0 0 1 1 1v10"/><path d="M14 15v2a1 1 0 0 1 -1 1h-7l-3 3v-10a1 1 0 0 1 1 -1h2"/></symbol>
+<symbol id="ic-up" viewBox="0 0 24 24" data-tabler="arrow-up"><path d="M12 5l0 14"/><path d="M18 11l-6 -6"/><path d="M6 11l6 -6"/></symbol>
+<symbol id="ic-down" viewBox="0 0 24 24" data-tabler="arrow-down"><path d="M12 5l0 14"/><path d="M18 13l-6 6"/><path d="M6 13l6 6"/></symbol>
+<symbol id="ic-play" viewBox="0 0 24 24" data-tabler="player-play"><path d="M7 4v16l13 -8l-13 -8"/></symbol>
+<symbol id="ic-pause" viewBox="0 0 24 24" data-tabler="player-pause"><path d="M6 6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -12"/><path d="M14 6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -12"/></symbol>
+<symbol id="ic-focus" viewBox="0 0 24 24" data-tabler="arrows-maximize"><path d="M16 4l4 0l0 4"/><path d="M14 10l6 -6"/><path d="M8 20l-4 0l0 -4"/><path d="M4 20l6 -6"/><path d="M16 20l4 0l0 -4"/><path d="M14 14l6 6"/><path d="M8 4l-4 0l0 4"/><path d="M4 4l6 6"/></symbol>
+</svg>
